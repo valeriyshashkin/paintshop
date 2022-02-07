@@ -1,5 +1,7 @@
 function MyApp({ Component, pageProps }) {
-  return (
+  const getLayout = Component.getLayout || ((page) => page);
+
+  return getLayout(
     <>
       <Component {...pageProps} />
       <style jsx global>{`
