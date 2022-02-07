@@ -1,5 +1,6 @@
 import Card from "../components/Card";
 import Header from "../components/Header";
+import Content from "../components/Content";
 
 const products = [
   {
@@ -33,27 +34,16 @@ const products = [
 ];
 
 export default function Home() {
-  return (
-    <>
-      <div className="catalog">
-        {products.map(({ title, price }, id) => (
-          <Card key={id} title={title} price={price} />
-        ))}
-      </div>
-      <style jsx>{`
-        .catalog {
-          margin-top: 60px;
-        }
-      `}</style>
-    </>
-  );
+  return products.map(({ title, price }, id) => (
+    <Card key={id} title={title} price={price} />
+  ));
 }
 
 Home.getLayout = (page) => {
   return (
     <>
       <Header />
-      {page}
+      <Content>{page}</Content>
     </>
   );
 };

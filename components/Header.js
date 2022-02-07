@@ -42,7 +42,7 @@ export default function Header({ back, cart }) {
       <style jsx>{`
         header {
           background: white;
-          padding: 15px;
+          padding: 15px 10px;
           display: flex;
           align-items: center;
           justify-content: ${back ? "flex-start" : "space-between"};

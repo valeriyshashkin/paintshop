@@ -1,14 +1,84 @@
 import Header from "../components/Header";
+import Card from "../components/Card";
+import Content from "../components/Content";
+
+const products = [
+  {
+    title: "Белая краска тратата тратата тратата",
+    price: "1000",
+  },
+  {
+    title: "Белая краска тратата тратата тратата",
+    price: "1000",
+  },
+  {
+    title: "Белая краска тратата тратата тратата",
+    price: "1000",
+  },
+  {
+    title: "Белая краска тратата тратата тратата",
+    price: "1000",
+  },
+  {
+    title: "Белая краска тратата тратата тратата",
+    price: "1000",
+  },
+  {
+    title: "Белая краска тратата тратата тратата",
+    price: "1000",
+  },
+  {
+    title: "Белая краска тратата тратата тратата",
+    price: "1000",
+  },
+];
 
 export default function Cart() {
-  return "Корзина";
+  return (
+    <>
+      <div>
+        <p className="total">
+          Итого: <span className="price">1000 ₽</span>
+        </p>
+        <p className="tip">
+          Чтобы заказать товары, напишите нам на почту{" "}
+          <a href="mailto:admin@admin.com">admin@admin.com</a>. В тексте письма
+          укажите товары, которые вы хотите приобрести.
+        </p>
+      </div>
+      {products.map(({ title, price }, id) => (
+        <Card cart key={id} title={title} price={price} />
+      ))}
+      <style jsx>{`
+        div {
+          padding: 10px;
+        }
+
+        p {
+          margin: 0;
+        }
+
+        .price {
+          font-weight: bold;
+        }
+
+        .tip {
+          margin-top: 10px;
+        }
+
+        .total {
+          font-size: 30px;
+        }
+      `}</style>
+    </>
+  );
 }
 
 Cart.getLayout = (page) => {
   return (
     <>
       <Header back cart />
-      {page}
+      <Content>{page}</Content>
     </>
   );
 };
