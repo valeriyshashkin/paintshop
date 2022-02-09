@@ -7,36 +7,43 @@ const products = [
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
 ];
 
 export default function Home() {
-  return products.map(({ title, price }, id) => (
-    <Card key={id} title={title} price={price} />
+  return products.map(({ title, price, href }, id) => (
+    <Card key={id} title={title} price={price} href={href} />
   ));
 }
 

@@ -7,30 +7,37 @@ const products = [
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
   {
     title: "Белая краска тратата тратата тратата",
     price: "1000",
+    href: "/product/777/paint",
   },
 ];
 
@@ -47,8 +54,8 @@ export default function Cart() {
           укажите товары, которые вы хотите приобрести.
         </p>
       </div>
-      {products.map(({ title, price }, id) => (
-        <Card cart key={id} title={title} price={price} />
+      {products.map(({ title, price, href }, id) => (
+        <Card cart key={id} title={title} price={price} href={href} />
       ))}
       <style jsx>{`
         div {

@@ -1,9 +1,19 @@
-export default function Card({ title, price, cart }) {
+import Link from "next/link";
+
+export default function Card({ title, price, cart, href }) {
   return (
     <div className="card">
-      <div className="image"></div>
+      <Link href={href}>
+        <a className="image-link">
+          <div className="image"></div>
+        </a>
+      </Link>
       <div className="description">
-        <p className="title">{title}</p>
+        <Link href={href}>
+          <a className="title-link">
+            <p className="title">{title}</p>
+          </a>
+        </Link>
         <div className="price-and-button">
           <p className="price">{price} ₽</p>
           <div className="button">
@@ -41,14 +51,29 @@ export default function Card({ title, price, cart }) {
           padding-bottom: 0;
         }
 
+        .image-link {
+          min-width: 30%;
+          padding-bottom: 30%;
+          position: relative;
+        }
+
         .image {
           background: gray;
-          padding-bottom: 30%;
-          min-width: 30%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: -1;
         }
 
         p {
           margin: 0;
+        }
+
+        .title-link {
+          text-decoration: none;
+          color: inherit;
         }
 
         .price {
