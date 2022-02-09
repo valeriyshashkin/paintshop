@@ -1,6 +1,7 @@
 import Header from "../components/Header";
 import Card from "../components/Card";
 import Content from "../components/Content";
+import Head from "next/head";
 
 const products = [
   {
@@ -77,6 +78,9 @@ export default function Cart() {
 Cart.getLayout = (page) => {
   return (
     <>
+      <Head>
+        <title>Корзина</title>
+      </Head>
       <Header back cart />
       <Content>{page}</Content>
     </>

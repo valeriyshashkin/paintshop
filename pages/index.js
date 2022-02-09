@@ -1,6 +1,7 @@
 import Card from "../components/Card";
 import Header from "../components/Header";
 import Content from "../components/Content";
+import Head from "next/head";
 
 const products = [
   {
@@ -42,6 +43,9 @@ export default function Home() {
 Home.getLayout = (page) => {
   return (
     <>
+      <Head>
+        <title>Каталог красок</title>
+      </Head>
       <Header />
       <Content>{page}</Content>
     </>
