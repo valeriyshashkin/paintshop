@@ -59,7 +59,7 @@ export default function Cart() {
       ))}
       <style jsx>{`
         div {
-          padding: 10px;
+          padding-bottom: 10px;
         }
 
         p {

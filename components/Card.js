@@ -47,8 +47,8 @@ export default function Card({ title, price, cart, href }) {
         .card {
           width: 100%;
           display: flex;
-          padding: 10px;
-          padding-bottom: 0;
+          padding: 10px 0;
+          padding-top: 0;
         }
 
         .image-link {

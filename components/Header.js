@@ -23,7 +23,11 @@ export default function Header({ back, cart }) {
         </>
       ) : (
         <>
-          <h1>Краски</h1>
+          <Link href="/">
+            <a>
+              <h1>Краски</h1>
+            </a>
+          </Link>
           <Link href="/cart">
             <a>
               <svg
@@ -64,6 +68,11 @@ export default function Header({ back, cart }) {
 
         .cart {
           justify-content: flex-start;
+        }
+
+        a {
+          text-decoration: none;
+          color: inherit;
         }
       `}</style>
     </header>
