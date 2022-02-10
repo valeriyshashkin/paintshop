@@ -11,6 +11,7 @@ export default function Product() {
     <>
       <div className="image"></div>
       <h1>Белая краска тратата тратата тратата</h1>
+      <p className="price">1000 ₽</p>
       <div className="button">Добавить в корзину</div>
       <p className="description-title">Описание</p>
       <p className="description">
@@ -37,6 +38,13 @@ export default function Product() {
           text-align: center;
           padding: 15px 0;
           border-radius: 8px;
+        }
+
+        .price {
+          font-weight: bold;
+          font-size: 30px;
+          margin: 0;
+          margin-bottom: 15px;
         }
 
         .description-title {
