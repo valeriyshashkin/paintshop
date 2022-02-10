@@ -30,14 +30,14 @@ export default function Product() {
         }
 
         .button {
-          background: gray;
+          background: var(--blue);
           color: white;
           font-size: 16px;
           display: inline-block;
           width: 100%;
           text-align: center;
           padding: 15px 0;
-          border-radius: 8px;
+          border-radius: var(--radius);
         }
 
         .price {

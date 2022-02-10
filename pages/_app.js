@@ -5,6 +5,12 @@ function MyApp({ Component, pageProps }) {
     <>
       <Component {...pageProps} />
       <style jsx global>{`
+        :root {
+          --blue: #3737ff;
+          --radius: 8px;
+          --red: #ff5555;
+        }
+
         body {
           margin: 0;
         }

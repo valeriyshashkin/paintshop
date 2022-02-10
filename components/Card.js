@@ -95,10 +95,10 @@ export default function Card({ title, price, cart, href }) {
         }
 
         .button {
-          background: gray;
+          background: var(--blue);
           display: inline-flex;
           padding: 8px;
-          border-radius: 8px;
+          border-radius: var(--radius);
         }
       `}</style>
     </div>

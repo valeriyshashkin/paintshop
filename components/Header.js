@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-export default function Header({ back, cart }) {
+export default function Header({ back, cart, admin }) {
+  const router = useRouter();
+
+  function logout() {
+    fetch("/api/logout").then(() => router.push("/admin"));
+  }
+
   return (
     <header>
       {back ? (
@@ -28,23 +35,42 @@ export default function Header({ back, cart }) {
               <h1>Краски</h1>
             </a>
           </Link>
-          <Link href="/cart">
-            <a>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                enableBackground="new 0 0 24 24"
-                height="24px"
-                viewBox="0 0 24 24"
-                width="24px"
-                fill="#000000"
-              >
-                <g>
-                  <rect fill="none" height="24" width="24" />
-                  <path d="M18,6h-2c0-2.21-1.79-4-4-4S8,3.79,8,6H6C4.9,6,4,6.9,4,8v12c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8C20,6.9,19.1,6,18,6z M12,4c1.1,0,2,0.9,2,2h-4C10,4.9,10.9,4,12,4z M18,20H6V8h2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V8h4v2c0,0.55,0.45,1,1,1s1-0.45,1-1V8 h2V20z" />
-                </g>
-              </svg>
-            </a>
-          </Link>
+          {admin ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              enableBackground="new 0 0 24 24"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+              fill="#000000"
+              onClick={logout}
+            >
+              <g>
+                <path d="M0,0h24v24H0V0z" fill="none" />
+              </g>
+              <g>
+                <path d="M17,8l-1.41,1.41L17.17,11H9v2h8.17l-1.58,1.58L17,16l4-4L17,8z M5,5h7V3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h7v-2H5V5z" />
+              </g>
+            </svg>
+          ) : (
+            <Link href="/cart">
+              <a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  enableBackground="new 0 0 24 24"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  width="24px"
+                  fill="#000000"
+                >
+                  <g>
+                    <rect fill="none" height="24" width="24" />
+                    <path d="M18,6h-2c0-2.21-1.79-4-4-4S8,3.79,8,6H6C4.9,6,4,6.9,4,8v12c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8C20,6.9,19.1,6,18,6z M12,4c1.1,0,2,0.9,2,2h-4C10,4.9,10.9,4,12,4z M18,20H6V8h2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V8h4v2c0,0.55,0.45,1,1,1s1-0.45,1-1V8 h2V20z" />
+                  </g>
+                </svg>
+              </a>
+            </Link>
+          )}
         </>
       )}
       <style jsx>{`
