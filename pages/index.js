@@ -53,8 +53,10 @@ Home.getLayout = (page) => {
       <Head>
         <title>Каталог красок</title>
       </Head>
-      <Header />
-      <Content>{page}</Content>
+      <Content>
+        <Header />
+        {page}
+      </Content>
     </>
   );
 };

@@ -88,8 +88,10 @@ Cart.getLayout = (page) => {
       <Head>
         <title>Корзина</title>
       </Head>
-      <Header back cart />
-      <Content>{page}</Content>
+      <Content>
+        <Header back cart />
+        {page}
+      </Content>
     </>
   );
 };

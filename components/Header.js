@@ -82,8 +82,12 @@ export default function Header({ back, cart, admin }) {
           justify-content: ${back ? "flex-start" : "space-between"};
           position: fixed;
           top: 0;
+          left: 0;
+          right: 0;
           width: 100%;
           box-sizing: border-box;
+          max-width: 1044px;
+          margin: 0 auto;
         }
 
         h1 {

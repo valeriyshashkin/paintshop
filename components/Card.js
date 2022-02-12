@@ -57,6 +57,13 @@ export default function Card({ title, price, cart, href }) {
           position: relative;
         }
 
+        @media (min-width: 768px) {
+          .image-link {
+            min-width: 20%;
+            padding-bottom: 20%;
+          }
+        }
+
         .image {
           background: gray;
           position: absolute;
@@ -76,9 +83,21 @@ export default function Card({ title, price, cart, href }) {
           color: inherit;
         }
 
+        @media (min-width: 425px) {
+          .title-link {
+            font-size: 24px;
+          }
+        }
+
         .price {
           font-size: 20px;
           font-weight: bold;
+        }
+
+        @media (min-width: 425px) {
+          .price {
+            font-size: 26px;
+          }
         }
 
         .description {
@@ -86,6 +105,7 @@ export default function Card({ title, price, cart, href }) {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          width: 100%;
         }
 
         .price-and-button {
