@@ -1,5 +1,5 @@
-import setCookie from "../../utils/cookies";
 import jwt from "jsonwebtoken";
+import { serialize } from "cookie";
 
 export default function handler(req, res) {
   if (req.method === "POST") {
@@ -9,15 +9,18 @@ export default function handler(req, res) {
       res.json({ error: true });
     }
 
-    setCookie(
-      res,
-      "auth",
-      jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1y" }),
-      {
-        maxAge: 365 * 24 * 60 * 60 * 1000,
-        path: "/",
-      }
+    res.setHeader(
+      "Set-Cookie",
+      serialize(
+        "auth",
+        jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1y" }),
+        {
+          maxAge: 365 * 24 * 60 * 60 * 1000,
+          path: "/",
+        }
+      )
     );
+
     res.json({ error: false });
   }
 }
