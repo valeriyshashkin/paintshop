@@ -1,12 +1,8 @@
-import { useRouter } from "next/router";
 import Header from "../../../components/Header";
 import Content from "../../../components/Content";
 import Head from "next/head";
 
 export default function Product() {
-  const router = useRouter();
-  const { id, slug } = router.query;
-
   return (
     <div className="page">
       <div className="image half"></div>
