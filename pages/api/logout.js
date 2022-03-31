@@ -1,6 +1,6 @@
-import setCookie from "../../utils/cookies";
+import { serialize } from "cookie";
 
 export default function handler(req, res) {
-  setCookie(res, "auth", "", { maxAge: 0, path: "/" });
+  res.setHeader("Set-Cookie", serialize("auth", "", { maxAge: 0, path: "/" }));
   res.end();
 }
