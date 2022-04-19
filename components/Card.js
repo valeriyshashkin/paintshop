@@ -57,6 +57,7 @@ function Button({ active, cart, onClick }) {
           align-items: center;
           cursor: pointer;
           border: 1px solid ${active ? "black" : "var(--blue)"};
+          user-select: none;
         }
 
         .buy-text {
@@ -84,7 +85,7 @@ function Button({ active, cart, onClick }) {
 export default function Card({ title, price, cart, href }) {
   const [active, setActive] = useState(false);
 
-  function toggleCard() {
+  function toggleActive() {
     setActive(!active);
   }
 
@@ -103,7 +104,7 @@ export default function Card({ title, price, cart, href }) {
         </Link>
         <div className="price-and-button">
           <p className="price">{price} ₽</p>
-          <Button onClick={toggleCard} cart={cart} active={active} />
+          <Button onClick={toggleActive} cart={cart} active={active} />
         </div>
       </div>
       <style jsx>{`
