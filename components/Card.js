@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { useState } from "react";
 
-function Button({ active, cart }) {
+function Button({ active, cart, onClick }) {
   return (
     <>
-      <div className="button">
+      <div className="button" onClick={onClick}>
         {cart ? (
           <>
             <svg
@@ -20,33 +21,48 @@ function Button({ active, cart }) {
           </>
         ) : (
           <>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 0 24 24"
-              width="24px"
-              fill="white"
-            >
-              <path d="M0 0h24v24H0V0z" fill="none" />
-              <path d="M15.55 13c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.37-.66-.11-1.48-.87-1.48H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2h7.45zM6.16 6h12.15l-2.76 5H8.53L6.16 6zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
-            </svg>
-            <div className="buy-text">В корзину</div>
+            {active ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 0 24 24"
+                width="24px"
+                fill="black"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 0 24 24"
+                width="24px"
+                fill="white"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M15.55 13c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.37-.66-.11-1.48-.87-1.48H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2h7.45zM6.16 6h12.15l-2.76 5H8.53L6.16 6zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+              </svg>
+            )}
+            <div className="buy-text">{active ? "Добавлено" : "В корзину"}</div>
           </>
         )}
       </div>
       <style jsx>{`
         .button {
-          background: var(--blue);
+          background: ${active ? "white" : "var(--blue)"};
           display: inline-flex;
           padding: 8px;
           border-radius: var(--radius);
           align-items: center;
+          cursor: pointer;
+          border: 1px solid ${active ? "black" : "var(--blue)"};
         }
 
         .buy-text {
           display: none;
           padding-left: 8px;
-          color: white;
+          color: ${active ? "black" : "white"};
         }
 
         @media (min-width: 540px) {
@@ -62,10 +78,16 @@ function Button({ active, cart }) {
         }
       `}</style>
     </>
-  )
+  );
 }
 
 export default function Card({ title, price, cart, href }) {
+  const [active, setActive] = useState(false);
+
+  function toggleCard() {
+    setActive(!active);
+  }
+
   return (
     <div className="card">
       <Link href={href}>
@@ -81,7 +103,7 @@ export default function Card({ title, price, cart, href }) {
         </Link>
         <div className="price-and-button">
           <p className="price">{price} ₽</p>
-          <Button cart={cart} />
+          <Button onClick={toggleCard} cart={cart} active={active} />
         </div>
       </div>
       <style jsx>{`
