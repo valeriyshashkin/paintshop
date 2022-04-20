@@ -81,6 +81,7 @@ export default function Admin() {
           border-radius: var(--radius);
           width: 100%;
           border: none;
+          cursor: pointer;
         }
 
         .button[disabled] {
