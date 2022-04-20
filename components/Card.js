@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
-function Button({ active, cart, onClick }) {
+function Button({ active, cart, onClick, admin }) {
   return (
     <>
       <div className="button" onClick={onClick}>
@@ -18,6 +19,20 @@ function Button({ active, cart, onClick }) {
               <path d="M1.41 1.13L0 2.54l4.39 4.39 2.21 4.66-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h7.46l1.38 1.38c-.5.36-.83.95-.83 1.62 0 1.1.89 2 1.99 2 .67 0 1.26-.33 1.62-.84L21.46 24l1.41-1.41L1.41 1.13zM7 15l1.1-2h2.36l2 2H7zM20 4H7.12l2 2h9.19l-2.76 5h-1.44l1.94 1.94c.54-.14.99-.49 1.25-.97l3.58-6.49C21.25 4.82 20.76 4 20 4zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2z" />
             </svg>
             <div className="buy-text">Убрать</div>
+          </>
+        ) : admin ? (
+          <>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+              fill="white"
+            >
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
+            </svg>
+            <div className="buy-text">Редактировать</div>
           </>
         ) : (
           <>
@@ -82,11 +97,16 @@ function Button({ active, cart, onClick }) {
   );
 }
 
-export default function Card({ title, price, cart, href }) {
+export default function Card({ title, price, cart, href, admin }) {
   const [active, setActive] = useState(false);
+  const router = useRouter();
 
   function toggleActive() {
     setActive(!active);
+  }
+
+  function toEdit() {
+    router.push("/admin/products/edit");
   }
 
   return (
@@ -104,7 +124,12 @@ export default function Card({ title, price, cart, href }) {
         </Link>
         <div className="price-and-button">
           <p className="price">{price} ₽</p>
-          <Button onClick={toggleActive} cart={cart} active={active} />
+          <Button
+            onClick={admin ? toEdit : toggleActive}
+            cart={cart}
+            active={active}
+            admin={admin}
+          />
         </div>
       </div>
       <style jsx>{`
