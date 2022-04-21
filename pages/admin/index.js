@@ -39,14 +39,33 @@ export default function Admin() {
       });
   }
 
+  function submit({ key }) {
+    if (key !== "Enter") {
+      return;
+    }
+
+    login();
+  }
+
   return (
     <>
       <h1>Вход</h1>
       {error && (
         <div className="error">Неправильно введена почта или пароль.</div>
       )}
-      <input placeholder="Почта" value={email} onChange={handleEmail} />
-      <input placeholder="Пароль" value={password} onChange={handlePassword} />
+      <input
+        onKeyUp={submit}
+        placeholder="Почта"
+        value={email}
+        onChange={handleEmail}
+      />
+      <input
+        onKeyUp={submit}
+        placeholder="Пароль"
+        value={password}
+        onChange={handlePassword}
+        type="password"
+      />
       <button className="button" onClick={login} disabled={loading}>
         {loading ? "Загрузка..." : "Войти"}
       </button>
@@ -72,6 +91,7 @@ export default function Admin() {
         }
 
         .button {
+          display: block;
           padding: 15px 0;
           font-size: 20px;
           color: white;
@@ -84,10 +104,6 @@ export default function Admin() {
           cursor: pointer;
         }
 
-        .button[disabled] {
-          background: gray;
-        }
-
         .error {
           background: var(--red);
           padding: 15px;
@@ -95,6 +111,24 @@ export default function Admin() {
           color: white;
           margin-top: 15px;
           border: 1px solid red;
+        }
+
+        @media (min-width: 700px) {
+          input,
+          .button,
+          .error {
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .error {
+            width: 47%;
+          }
+        }
+
+        .button[disabled] {
+          background: gray;
         }
       `}</style>
     </>
