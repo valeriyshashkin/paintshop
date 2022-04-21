@@ -170,6 +170,7 @@ export default function Card({ title, price, cart, href, admin }) {
         .title-link {
           text-decoration: none;
           color: inherit;
+          margin-right: auto;
         }
 
         @media (min-width: 425px) {

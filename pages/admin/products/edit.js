@@ -97,7 +97,7 @@ Edit.getLayout = (page) => {
   return (
     <>
       <Head>
-        <title>Редактировать продукт</title>
+        <title>Редактировать товар</title>
       </Head>
       <Header admin />
       <Content>{page}</Content>
