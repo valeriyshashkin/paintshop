@@ -59,7 +59,7 @@ export default function Products() {
       </div>
       <div className="button-create" onClick={toCreate}>
         <svg
-          fill="white"
+          fill="black"
           xmlns="http://www.w3.org/2000/svg"
           height="48"
           width="48"
@@ -77,7 +77,6 @@ export default function Products() {
           position: fixed;
           bottom: 0;
           right: 0;
-          background: var(--red);
           border-radius: 100px;
           width: 60px;
           height: 60px;
@@ -87,6 +86,8 @@ export default function Products() {
           margin-bottom: 10px;
           margin-right: 10px;
           cursor: pointer;
+          background: white;
+          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
         }
 
         @media (min-width: 1024px) {

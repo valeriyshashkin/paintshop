@@ -1,9 +1,10 @@
 import Head from "next/head";
 import Header from "../../../components/Header";
 import Content from "../../../components/Content";
+import Product from "../../../components/Product";
 
 export default function Create() {
-  return "Добавить товар";
+  return <Product />;
 }
 
 Create.getLayout = (page) => {
