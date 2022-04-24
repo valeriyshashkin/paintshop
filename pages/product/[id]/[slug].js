@@ -2,11 +2,15 @@ import Header from "../../../components/Header";
 import Content from "../../../components/Content";
 import Head from "next/head";
 import { useState } from "react";
+import prisma from "../../../utils/prisma";
+import slugify from "slugify";
 
 function Button({ active, onClick }) {
   return (
     <>
-      <div onClick={onClick} className="button">{active ? "Добавлено" : "Добавить в корзину"}</div>
+      <div onClick={onClick} className="button">
+        {active ? "Добавлено" : "Добавить в корзину"}
+      </div>
       <style jsx>{`
         .button {
           background: ${active ? "white" : "var(--blue)"};
@@ -23,10 +27,10 @@ function Button({ active, onClick }) {
         }
       `}</style>
     </>
-  )
+  );
 }
 
-export default function Product() {
+export default function Product({ name, description, price }) {
   const [active, setActive] = useState(false);
 
   function toggleActive() {
@@ -37,14 +41,11 @@ export default function Product() {
     <div className="page">
       <div className="image half"></div>
       <div className="after-image half">
-        <h1>Белая краска тратата тратата тратата</h1>
-        <p className="price">1000 ₽</p>
+        <h1>{name}</h1>
+        <p className="price">{price} ₽</p>
         <Button onClick={toggleActive} active={active} />
         <p className="description-title">Описание</p>
-        <p className="description">
-          Здесь должно быть описание тратата тратата тратата тратата тратата
-          тратата тратата тратата тратата тратата тратата тратата тратата
-        </p>
+        <p className="description">{description}</p>
       </div>
       <style jsx>{`
         .image {
@@ -94,6 +95,45 @@ export default function Product() {
       `}</style>
     </div>
   );
+}
+
+export async function getStaticProps({ params }) {
+  const product = await prisma.product.findUnique({
+    where: {
+      publicId: params.id,
+    },
+    select: {
+      name: true,
+      description: true,
+      price: true,
+    },
+  });
+
+  return {
+    props: product,
+    revalidate: 60,
+  };
+}
+
+export async function getStaticPaths() {
+  const products = await prisma.product.findMany({
+    select: {
+      publicId: true,
+      name: true,
+    },
+  });
+
+  const paths = products.map(({ publicId, name }) => ({
+    params: {
+      id: publicId,
+      slug: slugify(name),
+    },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
 }
 
 Product.getLayout = (page) => {

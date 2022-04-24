@@ -4,6 +4,7 @@ import Header from "../../../components/Header";
 import Navigation from "../../../components/Navigation";
 import Card from "../../../components/Card";
 import { useRouter } from "next/router";
+import getProducts from "../../../utils/getProducts";
 
 const products = [
   {
@@ -43,7 +44,7 @@ const products = [
   },
 ];
 
-export default function Products() {
+export default function Products({ products }) {
   const router = useRouter();
 
   function toCreate() {
@@ -53,8 +54,8 @@ export default function Products() {
   return (
     <>
       <div>
-        {products.map(({ title, price, href }, id) => (
-          <Card key={id} title={title} price={price} href={href} admin />
+        {products.map(({ name, price, href }, id) => (
+          <Card key={id} title={name} price={price} href={href} admin />
         ))}
       </div>
       <div className="button-create" onClick={toCreate}>
@@ -87,7 +88,8 @@ export default function Products() {
           margin-right: 10px;
           cursor: pointer;
           background: white;
-          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
         }
 
         @media (min-width: 1024px) {
@@ -99,6 +101,13 @@ export default function Products() {
       `}</style>
     </>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: { products: await getProducts() },
+    revalidate: 60,
+  };
 }
 
 Products.getLayout = (page) => {
