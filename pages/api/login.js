@@ -1,12 +1,15 @@
 import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
+import prisma from "../../utils/prisma";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === "POST") {
     const { email, password } = JSON.parse(req.body);
+    const admin = await prisma.admin.findUnique({ where: { email } });
 
-    if (email !== "admin@admin.com" || password !== "admin") {
+    if (!admin || password !== admin.password) {
       res.json({ error: true });
+      return;
     }
 
     res.setHeader(

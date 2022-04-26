@@ -44,6 +44,7 @@ export default function Header({ back, cart, admin }) {
               width="24px"
               fill="#000000"
               onClick={logout}
+              className="logout"
             >
               <g>
                 <path d="M0,0h24v24H0V0z" fill="none" />
@@ -88,6 +89,10 @@ export default function Header({ back, cart, admin }) {
           box-sizing: border-box;
           max-width: 1044px;
           margin: 0 auto;
+        }
+
+        .logout {
+          cursor: pointer;
         }
 
         h1 {
