@@ -14,5 +14,6 @@ export default async function getProducts() {
     name,
     price,
     href: `/product/${publicId}/${slugify(name)}`,
+    publicId,
   }));
 }

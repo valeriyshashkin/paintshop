@@ -97,7 +97,7 @@ function Button({ active, cart, onClick, admin }) {
   );
 }
 
-export default function Card({ title, price, cart, href, admin }) {
+export default function Card({ title, price, cart, href, publicId, admin }) {
   const [active, setActive] = useState(false);
   const router = useRouter();
 
@@ -106,7 +106,7 @@ export default function Card({ title, price, cart, href, admin }) {
   }
 
   function toEdit() {
-    router.push("/admin/products/edit");
+    router.push(`/admin/products/${publicId}`);
   }
 
   return (

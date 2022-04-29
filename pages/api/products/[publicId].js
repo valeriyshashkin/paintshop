@@ -7,6 +7,11 @@ export default async function handler(req, res) {
     where: {
       publicId,
     },
+    select: {
+      price: true,
+      name: true,
+      description: true,
+    },
   });
 
   res.json({ product });

@@ -31,8 +31,8 @@ export default function Products() {
   return (
     <>
       <div>
-        {products.map(({ name, price, href }, id) => (
-          <Card key={id} title={name} price={price} href={href} admin />
+        {products.map(({ name, price, href, publicId }, id) => (
+          <Card key={id} title={name} price={price} href={href} publicId={publicId} admin />
         ))}
       </div>
       <div className="button-create" onClick={toCreate}>
