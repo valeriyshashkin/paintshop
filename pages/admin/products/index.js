@@ -4,51 +4,28 @@ import Header from "../../../components/Header";
 import Navigation from "../../../components/Navigation";
 import Card from "../../../components/Card";
 import { useRouter } from "next/router";
-import getProducts from "../../../utils/getProducts";
+import useSWR from "swr";
+import fetcher from "../../../utils/fetcher";
+import { useState } from "react";
+import { useEffect } from "react";
 
-const products = [
-  {
-    title: "Белая краска тратата тратата тратата",
-    price: "1000",
-    href: "/product/777/paint",
-  },
-  {
-    title: "Белая краска тратата тратата тратата",
-    price: "1000",
-    href: "/product/777/paint",
-  },
-  {
-    title: "Белая краска тратата тратата тратата",
-    price: "1000",
-    href: "/product/777/paint",
-  },
-  {
-    title: "Белая краска тратата тратата тратата",
-    price: "1000",
-    href: "/product/777/paint",
-  },
-  {
-    title: "Белая краска тратата тратата тратата",
-    price: "1000",
-    href: "/product/777/paint",
-  },
-  {
-    title: "Белая краска тратата тратата тратата",
-    price: "1000",
-    href: "/product/777/paint",
-  },
-  {
-    title: "Белая краска тратата тратата тратата",
-    price: "1000",
-    href: "/product/777/paint",
-  },
-];
-
-export default function Products({ products }) {
+export default function Products() {
+  const { data } = useSWR("/api/products/get", fetcher);
+  const [products, setProducts] = useState([]);
   const router = useRouter();
 
   function toCreate() {
     router.push("/admin/products/create");
+  }
+
+  useEffect(() => {
+    if (data) {
+      setProducts(data.products);
+    }
+  }, [data]);
+
+  if (!data) {
+    return "Загрузка...";
   }
 
   return (
@@ -101,13 +78,6 @@ export default function Products({ products }) {
       `}</style>
     </>
   );
-}
-
-export async function getStaticProps() {
-  return {
-    props: { products: await getProducts() },
-    revalidate: 60,
-  };
 }
 
 Products.getLayout = (page) => {
