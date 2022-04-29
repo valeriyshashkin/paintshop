@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 export default function Products() {
-  const { data } = useSWR("/api/products/get", fetcher);
+  const { data } = useSWR("/api/products", fetcher);
   const [products, setProducts] = useState([]);
   const router = useRouter();
 
