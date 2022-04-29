@@ -17,20 +17,17 @@ export default function Cart() {
       ? JSON.parse(localStorage.getItem("cart"))
       : [];
   const [products, setProducts] = useState([]);
-  let data;
-  let mutate;
 
-  if (publicIds.length > 0) {
-    const { data: swrData, mutate: swrMutate } = useSWR(
-      `/api/cart/${JSON.stringify(publicIds)}`,
-      fetcher
-    );
-    data = swrData;
-    mutate = swrMutate;
-  }
+  const { data, mutate } = useSWR(
+    publicIds.length > 0 ? `/api/cart/${JSON.stringify(publicIds)}` : null,
+    fetcher
+  );
 
   function onRemoveFromCart(publicId) {
-    mutate(products.filter(id => id !== publicId), false);
+    mutate(
+      products.filter((id) => id !== publicId),
+      false
+    );
   }
 
   useEffect(() => {
