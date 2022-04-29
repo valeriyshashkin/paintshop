@@ -5,8 +5,8 @@ import Head from "next/head";
 import getProducts from "../utils/getProducts";
 
 export default function Home({ products }) {
-  return products.map(({ name, price, href }, id) => (
-    <Card key={id} title={name} price={price} href={href} />
+  return products.map(({ name, price, href, publicId }, id) => (
+    <Card key={id} title={name} price={price} publicId={publicId} href={href} />
   ));
 }
 

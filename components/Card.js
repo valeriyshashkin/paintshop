@@ -102,6 +102,18 @@ export default function Card({ title, price, cart, href, publicId, admin }) {
   const router = useRouter();
 
   function toggleActive() {
+    if (!active) {
+      const card = JSON.parse(localStorage.getItem("card")) || [];
+      card.push(publicId);
+      localStorage.setItem("card", JSON.stringify(card));
+    } else {
+      const card = JSON.parse(localStorage.getItem("card")) || [];
+      localStorage.setItem(
+        "card",
+        JSON.stringify(card.filter((id) => id !== publicId))
+      );
+    }
+
     setActive(!active);
   }
 
