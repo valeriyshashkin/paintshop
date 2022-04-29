@@ -7,37 +7,41 @@ import Link from "next/link";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import { useEffect } from "react";
+import { getCookie, setCookies } from "cookies-next";
 
 export default function Cart() {
-  const [cartIsEmpty, setCartIsEmpty] = useState(
-    typeof window !== "undefined" ? localStorage.getItem("cart") : true
-  );
-  const publicIds =
-    typeof window !== "undefined"
-      ? JSON.parse(localStorage.getItem("cart"))
-      : [];
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const { data, mutate } = useSWR(
-    publicIds.length > 0 ? `/api/cart/${JSON.stringify(publicIds)}` : null,
+    getCookie("cart") ? "/api/cart" : null,
     fetcher
   );
 
   function onRemoveFromCart(publicId) {
-    mutate(
-      products.filter((id) => id !== publicId),
-      false
-    );
+    mutate(() => {
+      const filteredIds = JSON.parse(getCookie("cart")).filter(
+        (p) => p !== publicId
+      );
+      setCookies("cart", JSON.stringify(filteredIds));
+      const filteredProducts = products.filter((p) => p.publicId !== publicId);
+      setProducts(filteredProducts);
+      return filteredProducts;
+    }, false);
   }
 
   useEffect(() => {
+    if (!getCookie("cart")) {
+      setLoading(false);
+    }
+
     if (data) {
       setProducts(data);
-      setCartIsEmpty(false);
+      setLoading(false);
     }
   }, [data]);
 
-  if (!data) {
+  if (loading) {
     return "Загрузка...";
   }
 
@@ -53,7 +57,7 @@ export default function Cart() {
           укажите товары, которые вы хотите приобрести.
         </p>
       </div>
-      {cartIsEmpty && (
+      {!loading && !data.length && (
         <div className="card-is-empty">
           Корзина пуста. Добавьте любой товар из{" "}
           <Link href="/">

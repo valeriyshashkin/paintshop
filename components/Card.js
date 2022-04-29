@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { setCookies, getCookie } from "cookies-next";
 
 function Button({ active, cart, onClick, admin }) {
   return (
@@ -111,15 +112,12 @@ export default function Card({
 
   function toggleActive() {
     if (!active) {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cart = JSON.parse(getCookie("cart") || "[]");
       cart.push(publicId);
-      localStorage.setItem("cart", JSON.stringify(cart));
+      setCookies("cart", JSON.stringify(cart));
     } else {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(cart.filter((id) => id !== publicId))
-      );
+      const cart = JSON.parse(getCookie("cart") || "[]");
+      setCookies("cart", JSON.stringify(cart.filter((id) => id !== publicId)));
     }
 
     setActive(!active);
