@@ -97,20 +97,28 @@ function Button({ active, cart, onClick, admin }) {
   );
 }
 
-export default function Card({ title, price, cart, href, publicId, admin }) {
+export default function Card({
+  title,
+  price,
+  cart,
+  href,
+  publicId,
+  admin,
+  onRemoveFromCart,
+}) {
   const [active, setActive] = useState(false);
   const router = useRouter();
 
   function toggleActive() {
     if (!active) {
-      const card = JSON.parse(localStorage.getItem("card")) || [];
-      card.push(publicId);
-      localStorage.setItem("card", JSON.stringify(card));
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.push(publicId);
+      localStorage.setItem("cart", JSON.stringify(cart));
     } else {
-      const card = JSON.parse(localStorage.getItem("card")) || [];
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
       localStorage.setItem(
-        "card",
-        JSON.stringify(card.filter((id) => id !== publicId))
+        "cart",
+        JSON.stringify(cart.filter((id) => id !== publicId))
       );
     }
 
@@ -119,6 +127,10 @@ export default function Card({ title, price, cart, href, publicId, admin }) {
 
   function toEdit() {
     router.push(`/admin/products/${publicId}`);
+  }
+
+  function handleRemove() {
+    onRemoveFromCart(publicId);
   }
 
   return (
@@ -137,7 +149,7 @@ export default function Card({ title, price, cart, href, publicId, admin }) {
         <div className="price-and-button">
           <p className="price">{price} ₽</p>
           <Button
-            onClick={admin ? toEdit : toggleActive}
+            onClick={admin ? toEdit : cart ? handleRemove : toggleActive}
             cart={cart}
             active={active}
             admin={admin}

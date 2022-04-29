@@ -1,8 +1,9 @@
 import prisma from "./prisma";
 import slugify from "slugify";
 
-export default async function getProducts() {
+export default async function getProducts(publicIds) {
   const products = await prisma.product.findMany({
+    where: publicIds && { publicId: { in: publicIds } },
     select: {
       name: true,
       publicId: true,
