@@ -8,6 +8,7 @@ import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
+import { CardSkeleton } from "../components/Card";
 
 export default function Cart() {
   const [products, setProducts] = useState([]);
@@ -41,10 +42,6 @@ export default function Cart() {
     }
   }, [data]);
 
-  if (loading) {
-    return "Загрузка...";
-  }
-
   return (
     <>
       <div>
@@ -57,6 +54,15 @@ export default function Cart() {
           укажите товары, которые вы хотите приобрести.
         </p>
       </div>
+      {loading && (
+        <>
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </>
+      )}
       {!loading && !products.length && (
         <div className="card-is-empty">
           Корзина пуста. Добавьте любой товар из{" "}

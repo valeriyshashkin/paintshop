@@ -8,6 +8,7 @@ import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
 import { useState } from "react";
 import { useEffect } from "react";
+import { CardSkeleton } from "../../../components/Card";
 
 export default function Products() {
   const { data } = useSWR("/api/products", fetcher);
@@ -25,14 +26,37 @@ export default function Products() {
   }, [data]);
 
   if (!data) {
-    return "Загрузка...";
+    return (
+      <>
+        <div className="page">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+        <style jsx>{`
+          .page {
+            margin-top: 10px;
+            margin-bottom: 70px;
+          }
+        `}</style>
+      </>
+    );
   }
 
   return (
     <>
-      <div>
+      <div className="page">
         {products.map(({ name, price, href, publicId }, id) => (
-          <Card key={id} title={name} price={price} href={href} publicId={publicId} admin />
+          <Card
+            key={id}
+            title={name}
+            price={price}
+            href={href}
+            publicId={publicId}
+            admin
+          />
         ))}
       </div>
       <div className="button-create" onClick={toCreate}>
@@ -46,7 +70,7 @@ export default function Products() {
         </svg>
       </div>
       <style jsx>{`
-        div {
+        .page {
           margin-top: 10px;
           margin-bottom: 70px;
         }

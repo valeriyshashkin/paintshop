@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { setCookies, getCookie } from "cookies-next";
 
-function Button({ active, cart, onClick, admin }) {
+function Button({ active, cart, onClick, admin, skeleton }) {
   return (
     <>
       <div className="button" onClick={onClick}>
@@ -48,6 +48,8 @@ function Button({ active, cart, onClick, admin }) {
                 <path d="M0 0h24v24H0V0z" fill="none" />
                 <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
               </svg>
+            ) : skeleton ? (
+              <div className="button-placeholder"></div>
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -66,20 +68,30 @@ function Button({ active, cart, onClick, admin }) {
       </div>
       <style jsx>{`
         .button {
-          background: ${active ? "white" : "var(--blue)"};
+          background: ${active
+            ? "white"
+            : skeleton
+            ? "lightgray"
+            : "var(--blue)"};
           display: inline-flex;
           padding: 8px;
           border-radius: var(--radius);
           align-items: center;
-          cursor: pointer;
-          border: 1px solid ${active ? "black" : "var(--blue)"};
+          cursor: ${skeleton ? "auto" : "pointer"};
+          border: 1px solid
+            ${active ? "black" : skeleton ? "lightgray" : "var(--blue)"};
           user-select: none;
+        }
+
+        .button-placeholder {
+          width: 24px;
+          height: 24px;
         }
 
         .buy-text {
           display: none;
           padding-left: 8px;
-          color: ${active ? "black" : "white"};
+          color: ${active ? "black" : skeleton ? "lightgray" : "white"};
         }
 
         @media (min-width: 540px) {
@@ -176,7 +188,7 @@ export default function Card({
         }
 
         .image {
-          background: gray;
+          background: lightgray;
           position: absolute;
           top: 0;
           left: 0;
@@ -204,6 +216,115 @@ export default function Card({
         .price {
           font-size: 20px;
           font-weight: bold;
+        }
+
+        @media (min-width: 425px) {
+          .price {
+            font-size: 26px;
+          }
+        }
+
+        .description {
+          padding-left: 10px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          width: 100%;
+        }
+
+        .price-and-button {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        @media (min-width: 540px) {
+          .price-and-button {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+export function CardSkeleton() {
+  return (
+    <div className="card">
+      <a className="image-link">
+        <div className="image"></div>
+      </a>
+      <div className="description">
+        <a className="title-link">
+          <p className="title"></p>
+        </a>
+        <div className="price-and-button">
+          <p className="price"></p>
+          <Button skeleton />
+        </div>
+      </div>
+      <style jsx>{`
+        .card {
+          width: 100%;
+          display: flex;
+          padding: 10px 0;
+          padding-top: 0;
+        }
+
+        .image-link {
+          min-width: 30%;
+          padding-bottom: 30%;
+          position: relative;
+        }
+
+        @media (min-width: 768px) {
+          .image-link {
+            min-width: 20%;
+            padding-bottom: 20%;
+          }
+        }
+
+        .image {
+          background: lightgray;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: -1;
+        }
+
+        p {
+          margin: 0;
+        }
+
+        .title-link {
+          text-decoration: none;
+          color: inherit;
+          margin-right: auto;
+          background: lightgray;
+          height: 20px;
+          width: 100%;
+          max-width: 400px;
+          border-radius: var(--radius);
+        }
+
+        @media (min-width: 425px) {
+          .title-link {
+            font-size: 24px;
+            height: 30px;
+          }
+        }
+
+        .price {
+          font-size: 20px;
+          font-weight: bold;
+          height: 40px;
+          width: calc(100% - 42px - 10px);
+          max-width: 200px;
+          background: lightgray;
+          border-radius: var(--radius);
         }
 
         @media (min-width: 425px) {
