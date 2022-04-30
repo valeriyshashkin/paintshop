@@ -39,6 +39,15 @@ export default function Product({ edit, publicId }) {
     }).then(() => router.push("/admin/products"));
   }
 
+  function remove() {
+    if (confirm("Вы уверены, что хотите удалить этот товар?")) {
+      fetch("/api/products/delete", {
+        method: "POST",
+        body: JSON.stringify({ publicId }),
+      }).then(() => router.push("/admin/products"));
+    }
+  }
+
   useEffect(() => {
     if (edit) {
       setName(edit.name);
@@ -60,7 +69,11 @@ export default function Product({ edit, publicId }) {
         <div className="button-save" onClick={edit ? save : create}>
           {edit ? "Сохранить" : "Добавить"}
         </div>
-        {edit && <div className="button-delete">Удалить товар</div>}
+        {edit && (
+          <div className="button-delete" onClick={remove}>
+            Удалить товар
+          </div>
+        )}
       </div>
       <style jsx>{`
         input {
