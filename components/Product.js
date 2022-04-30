@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSWRConfig } from "swr";
 
-export default function Product({ edit }) {
+export default function Product({ edit, publicId }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   function changeName(e) {
     setName(e.target.value);
@@ -20,7 +22,15 @@ export default function Product({ edit }) {
     setPrice(e.target.value);
   }
 
-  function save() {}
+  function save() {
+    fetch("/api/products/edit", {
+      method: "POST",
+      body: JSON.stringify({ name, description, price, publicId }),
+    }).then(() => {
+      mutate(`/api/products/${publicId}`, { name, description, price });
+      router.push("/admin/products");
+    });
+  }
 
   function create() {
     fetch("/api/products/create", {

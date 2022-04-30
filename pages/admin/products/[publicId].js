@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 export default function Edit() {
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState();
   const router = useRouter();
   const { publicId } = router.query;
   const { data } = useSWR(`/api/products/${publicId}`, fetcher);
@@ -24,7 +24,7 @@ export default function Edit() {
     return "Загрузка...";
   }
 
-  return <Product edit={product} />;
+  return <Product edit={product} publicId={publicId} />;
 }
 
 Edit.getLayout = (page) => {
