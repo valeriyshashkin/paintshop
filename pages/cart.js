@@ -57,7 +57,7 @@ export default function Cart() {
           укажите товары, которые вы хотите приобрести.
         </p>
       </div>
-      {!loading && !data.length && (
+      {!loading && !products.length && (
         <div className="card-is-empty">
           Корзина пуста. Добавьте любой товар из{" "}
           <Link href="/">
