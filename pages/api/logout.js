@@ -1,6 +1,6 @@
-import { serialize } from "cookie";
+import { removeCookies } from "cookies-next";
 
 export default function handler(req, res) {
-  res.setHeader("Set-Cookie", serialize("auth", "", { maxAge: 0, path: "/" }));
+  removeCookies("auth", { req, res });
   res.end();
 }

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { serialize } from "cookie";
+import { setCookies } from "cookies-next";
 import prisma from "../../utils/prisma";
 
 export default async function handler(req, res) {
@@ -12,16 +12,14 @@ export default async function handler(req, res) {
       return;
     }
 
-    res.setHeader(
-      "Set-Cookie",
-      serialize(
-        "auth",
-        jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1y" }),
-        {
-          maxAge: 365 * 24 * 60 * 60 * 1000,
-          path: "/",
-        }
-      )
+    setCookies(
+      "auth",
+      jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1y" }),
+      {
+        req,
+        res,
+        maxAge: 365 * 24 * 60 * 60 * 1000,
+      }
     );
 
     res.json({ error: false });
