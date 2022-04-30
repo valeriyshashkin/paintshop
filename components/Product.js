@@ -20,8 +20,13 @@ export default function Product({ edit }) {
     setPrice(e.target.value);
   }
 
-  function cancel() {
-    router.push("/admin/products");
+  function save() {}
+
+  function create() {
+    fetch("/api/products/create", {
+      method: "POST",
+      body: JSON.stringify({ name, description, price }),
+    }).then(() => router.push("/admin/products"));
   }
 
   useEffect(() => {
@@ -42,7 +47,9 @@ export default function Product({ edit }) {
         <textarea value={description} onChange={changeDescription} />
         <label>Цена</label>
         <input value={price} onChange={changePrice} />
-        <div className="button-save">{edit ? "Сохранить" : "Добавить"}</div>
+        <div className="button-save" onClick={edit ? save : create}>
+          {edit ? "Сохранить" : "Добавить"}
+        </div>
         {edit && <div className="button-delete">Удалить товар</div>}
       </div>
       <style jsx>{`
