@@ -48,6 +48,8 @@ export default function Product({ edit, publicId }) {
     }
   }
 
+  function upload() {}
+
   useEffect(() => {
     if (edit) {
       setName(edit.name);
@@ -58,7 +60,17 @@ export default function Product({ edit, publicId }) {
 
   return (
     <div className="page">
-      <div className="image half"></div>
+      <div className="image half">
+        <input
+          id="file-upload"
+          type="file"
+          accept="image/*"
+          onChange={upload}
+        />
+        <label className="upload" htmlFor="file-upload">
+          Загрузить фото
+        </label>
+      </div>
       <div className="after-image half">
         <label>Название</label>
         <input value={name} onChange={changeName} />
@@ -76,6 +88,25 @@ export default function Product({ edit, publicId }) {
         )}
       </div>
       <style jsx>{`
+        #file-upload {
+          opacity: 0;
+          width: 0;
+          position: absolute;
+        }
+
+        .upload {
+          background: lightgray;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          text-align: center;
+          padding: 20px 0;
+          color: black;
+          cursor: pointer;
+          user-select: none;
+        }
+
         input {
           display: block;
           padding: 15px;
@@ -107,6 +138,7 @@ export default function Product({ edit, publicId }) {
           padding-bottom: 100%;
           background: gray;
           margin-bottom: 20px;
+          position: relative;
         }
 
         @media (min-width: 700px) {
