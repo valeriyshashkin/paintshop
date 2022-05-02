@@ -5,7 +5,7 @@ export default function Content({ children }) {
       <style jsx>{`
         div {
           margin: 0 auto;
-          margin-top: 60px;
+          margin-top: 62px;
           padding: 0 10px;
           max-width: 1024px;
         }

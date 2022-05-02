@@ -7,6 +7,7 @@ import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
 import { useEffect } from "react";
 import { useState } from "react";
+import { ProductSkeleton } from "../../../components/Product";
 
 export default function Edit() {
   const [product, setProduct] = useState();
@@ -21,7 +22,7 @@ export default function Edit() {
   }, [data]);
 
   if (!data) {
-    return "Загрузка...";
+    return <ProductSkeleton />;
   }
 
   return <Product edit={product} publicId={publicId} />;
