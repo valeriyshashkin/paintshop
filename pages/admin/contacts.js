@@ -2,7 +2,7 @@ import Head from "next/head";
 import Content from "../../components/Content";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import fetcher from "../../utils/fetcher";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -61,11 +61,20 @@ function ContactsSkeleton() {
 }
 
 export default function Contacts() {
-  const { data } = useSWR("/api/contact/get", fetcher);
+  const { data, mutate } = useSWR("/api/contacts", fetcher);
   const [email, setEmail] = useState("");
 
   function changeEmail(e) {
     setEmail(e.target.value);
+  }
+
+  function save() {
+    fetch("/api/contacts/edit", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }).then(() => {
+      mutate({ contacts: { email } });
+    });
   }
 
   useEffect(() => {
@@ -83,7 +92,9 @@ export default function Contacts() {
       <div className="page">
         <label>Электронная почта для заказов</label>
         <input value={email} onChange={changeEmail} />
-        <div className="button">Сохранить</div>
+        <div className="button" onClick={save}>
+          Сохранить
+        </div>
       </div>
       <style jsx>{`
         .button {
