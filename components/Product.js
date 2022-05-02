@@ -234,6 +234,7 @@ export function ProductSkeleton() {
           border-radius: var(--radius);
           color: lightgray;
           margin-bottom: 20px;
+          user-select: none;
         }
       `}</style>
     </div>
