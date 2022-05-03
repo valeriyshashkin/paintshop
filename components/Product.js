@@ -2,11 +2,14 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useSWRConfig } from "swr";
+import Image from "next/image";
 
 export default function Product({ edit, publicId }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [src, setSrc] = useState();
+  const [image, setImage] = useState();
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -48,7 +51,23 @@ export default function Product({ edit, publicId }) {
     }
   }
 
-  function upload() {}
+  function changeFile(e) {
+    if (!e.target.files || e.target.files.length === 0) {
+      return;
+    }
+
+    setImage(e.target.files[0]);
+  }
+
+  useEffect(() => {
+    if (!image) {
+      return;
+    }
+
+    setSrc(URL.createObjectURL(image));
+
+    return () => URL.revokeObjectURL(image);
+  }, [image])
 
   useEffect(() => {
     if (edit) {
@@ -61,11 +80,12 @@ export default function Product({ edit, publicId }) {
   return (
     <div className="page">
       <div className="image half">
+        {src && <Image src={src} layout="fill" objectFit="cover" />}
         <input
           id="file-upload"
           type="file"
           accept="image/*"
-          onChange={upload}
+          onChange={changeFile}
         />
         <label className="upload" htmlFor="file-upload">
           Загрузить фото
@@ -95,14 +115,14 @@ export default function Product({ edit, publicId }) {
         }
 
         .upload {
-          background: lightgray;
+          background: rgb(128 128 128 / 70%);
           position: absolute;
           bottom: 0;
           left: 0;
           right: 0;
           text-align: center;
           padding: 20px 0;
-          color: black;
+          color: white;
           cursor: pointer;
           user-select: none;
         }
@@ -136,7 +156,7 @@ export default function Product({ edit, publicId }) {
         .image {
           width: 100%;
           padding-bottom: 100%;
-          background: gray;
+          background: lightgray;
           margin-bottom: 20px;
           position: relative;
         }
