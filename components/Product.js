@@ -80,7 +80,7 @@ export default function Product({ edit, publicId }) {
   return (
     <div className="page">
       <div className="image half">
-        {src && <Image src={src} layout="fill" objectFit="cover" />}
+        {src && <Image src={src} layout="fill" objectFit="cover" alt="" />}
         <input
           id="file-upload"
           type="file"
