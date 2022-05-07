@@ -45,6 +45,28 @@ export default function Products() {
     );
   }
 
+  if (data.error) {
+    router.push("/admin");
+
+    return (
+      <>
+        <div className="page">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+        <style jsx>{`
+          .page {
+            margin-top: 10px;
+            margin-bottom: 70px;
+          }
+        `}</style>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="page">

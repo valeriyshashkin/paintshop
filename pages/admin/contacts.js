@@ -6,6 +6,7 @@ import useSWR, { mutate } from "swr";
 import fetcher from "../../utils/fetcher";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 function ContactsSkeleton() {
   return (
@@ -63,6 +64,8 @@ function ContactsSkeleton() {
 export default function Contacts() {
   const { data, mutate } = useSWR("/api/contacts", fetcher);
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   function changeEmail(e) {
     setEmail(e.target.value);
@@ -78,12 +81,25 @@ export default function Contacts() {
   }
 
   useEffect(() => {
+    fetch("/api/user")
+      .then((res) => res.json())
+      .then(({ error }) => {
+        if (error) {
+          router.push("/admin");
+          return;
+        }
+
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
     if (data) {
       setEmail(data.contacts.email);
     }
   }, [data]);
 
-  if (!data) {
+  if (!data || loading) {
     return <ContactsSkeleton />;
   }
 

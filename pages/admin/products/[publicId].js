@@ -25,6 +25,11 @@ export default function Edit() {
     return <ProductSkeleton />;
   }
 
+  if (data.error) {
+    router.push("/admin");
+    return <ProductSkeleton />;
+  }
+
   return <Product edit={product} publicId={publicId} />;
 }
 
