@@ -9,8 +9,16 @@ import fetcher from "../utils/fetcher";
 export default function Home({ products }) {
   const { data } = useSWR("/api/cart", fetcher);
 
-  return products.map(({ name, price, href, publicId }, id) => (
-    <Card data={data} key={id} title={name} price={price} publicId={publicId} href={href} />
+  return products.map(({ name, price, href, publicId, src }, id) => (
+    <Card
+      src={src}
+      data={data}
+      key={id}
+      title={name}
+      price={price}
+      publicId={publicId}
+      href={href}
+    />
   ));
 }
 

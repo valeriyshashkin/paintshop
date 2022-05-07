@@ -19,6 +19,7 @@ export default async function handler(req, res) {
       price: true,
       name: true,
       description: true,
+      src: true,
     },
   });
 

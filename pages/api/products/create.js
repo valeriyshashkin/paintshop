@@ -11,7 +11,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const { name, description, price } = JSON.parse(req.body);
+    const { name, description, price, src } = JSON.parse(req.body);
 
     let publicId;
 
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
         description,
         price,
         publicId,
-        src: "",
+        src,
       },
     });
 

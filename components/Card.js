@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { setCookies, getCookie } from "cookies-next";
 import { useEffect } from "react";
 import { useSWRConfig } from "swr";
+import Image from "next/image";
 
 function Button({ active, cart, onClick, admin, skeleton }) {
   return (
@@ -121,6 +122,7 @@ export default function Card({
   publicId,
   admin,
   onRemoveFromCart,
+  src,
 }) {
   const [active, setActive] = useState(false);
   const router = useRouter();
@@ -158,7 +160,7 @@ export default function Card({
     <div className="card">
       <Link href={href}>
         <a className="image-link">
-          <div className="image"></div>
+          <Image src={src} layout="fill" objectFit="cover" alt="" />
         </a>
       </Link>
       <div className="description">
@@ -169,7 +171,7 @@ export default function Card({
         </Link>
         <div className="price-and-button">
           <p className="price">{price} ₽</p>
-          {data || cart ? (
+          {data || cart || admin ? (
             <Button
               onClick={admin ? toEdit : cart ? handleRemove : toggleActive}
               cart={cart}
@@ -200,16 +202,6 @@ export default function Card({
             min-width: 20%;
             padding-bottom: 20%;
           }
-        }
-
-        .image {
-          background: lightgray;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: -1;
         }
 
         p {

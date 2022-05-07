@@ -26,20 +26,71 @@ export default function Product({ edit, publicId }) {
   }
 
   function save() {
-    fetch("/api/products/edit", {
-      method: "POST",
-      body: JSON.stringify({ name, description, price, publicId }),
-    }).then(() => {
-      mutate(`/api/products/${publicId}`, { name, description, price });
-      router.push("/admin/products");
-    });
+    fetch("/api/images/sign")
+      .then((res) => res.json())
+      .then(({ timestamp, signature }) => {
+        const fd = new FormData();
+        fd.append("file", image);
+        fd.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
+        fd.append("timestamp", timestamp);
+        fd.append("signature", signature);
+
+        fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          { method: "POST", body: fd }
+        )
+          .then((res) => res.json())
+          .then(({ public_id }) => {
+            fetch("/api/products/edit", {
+              method: "POST",
+              body: JSON.stringify({
+                name,
+                description,
+                price,
+                publicId,
+                src: public_id,
+              }),
+            }).then(() => {
+              mutate(`/api/products/${publicId}`, {
+                name,
+                description,
+                price,
+              });
+              router.push("/admin/products");
+            });
+          });
+      });
   }
 
   function create() {
-    fetch("/api/products/create", {
-      method: "POST",
-      body: JSON.stringify({ name, description, price }),
-    }).then(() => router.push("/admin/products"));
+    fetch("/api/images/sign")
+      .then((res) => res.json())
+      .then(({ timestamp, signature }) => {
+        const fd = new FormData();
+        fd.append("file", image);
+        fd.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
+        fd.append("timestamp", timestamp);
+        fd.append("signature", signature);
+
+        fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          { method: "POST", body: fd }
+        )
+          .then((res) => res.json())
+          .then(({ public_id }) => {
+            fetch("/api/products/create", {
+              method: "POST",
+              body: JSON.stringify({
+                name,
+                description,
+                price,
+                src: public_id,
+              }),
+            }).then(() => {
+              router.push("/admin/products");
+            });
+          });
+      });
   }
 
   function remove() {
@@ -67,13 +118,14 @@ export default function Product({ edit, publicId }) {
     setSrc(URL.createObjectURL(image));
 
     return () => URL.revokeObjectURL(image);
-  }, [image])
+  }, [image]);
 
   useEffect(() => {
     if (edit) {
       setName(edit.name);
       setDescription(edit.description);
       setPrice(edit.price);
+      setSrc(edit.src);
     }
   }, [edit]);
 

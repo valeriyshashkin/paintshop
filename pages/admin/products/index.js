@@ -70,7 +70,7 @@ export default function Products() {
   return (
     <>
       <div className="page">
-        {products.map(({ name, price, href, publicId }, id) => (
+        {products.map(({ name, price, href, publicId, src }, id) => (
           <Card
             key={id}
             title={name}
@@ -78,6 +78,7 @@ export default function Products() {
             href={href}
             publicId={publicId}
             admin
+            src={src}
           />
         ))}
       </div>

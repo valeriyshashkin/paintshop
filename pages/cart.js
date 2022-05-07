@@ -51,8 +51,8 @@ export default function Cart({ contacts }) {
         </p>
         <p className="tip">
           Чтобы заказать товары, напишите нам на почту{" "}
-          <a href={`mailto:${contacts.email}`}>{contacts.email}</a>. В тексте письма
-          укажите товары, которые вы хотите приобрести.
+          <a href={`mailto:${contacts.email}`}>{contacts.email}</a>. В тексте
+          письма укажите товары, которые вы хотите приобрести.
         </p>
       </div>
       {loading && (
@@ -72,8 +72,9 @@ export default function Cart({ contacts }) {
           </Link>
         </div>
       )}
-      {products.map(({ name, price, href, publicId }, id) => (
+      {products.map(({ name, price, href, publicId, src }, id) => (
         <Card
+          src={src}
           cart
           key={id}
           title={name}

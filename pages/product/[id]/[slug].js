@@ -9,6 +9,7 @@ import fetcher from "../../../utils/fetcher";
 import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { useSWRConfig } from "swr";
+import Image from "next/image";
 
 function Button({ active, onClick, skeleton }) {
   return (
@@ -40,7 +41,7 @@ function Button({ active, onClick, skeleton }) {
   );
 }
 
-export default function Product({ name, description, price, publicId }) {
+export default function Product({ name, description, price, publicId, src }) {
   const [active, setActive] = useState(false);
   const { data } = useSWR("/api/cart", fetcher);
   const { mutate } = useSWRConfig();
@@ -67,7 +68,9 @@ export default function Product({ name, description, price, publicId }) {
 
   return (
     <div className="page">
-      <div className="image half"></div>
+      <div className="image half">
+        <Image src={src} layout="fill" objectFit="cover" alt="" />
+      </div>
       <div className="after-image half">
         <h1>{name}</h1>
         <p className="price">{price} ₽</p>
@@ -84,6 +87,7 @@ export default function Product({ name, description, price, publicId }) {
           width: 100%;
           padding-bottom: 100%;
           background: gray;
+          position: relative;
         }
 
         @media (min-width: 700px) {
@@ -139,6 +143,7 @@ export async function getStaticProps({ params }) {
       description: true,
       price: true,
       publicId: true,
+      src: true,
     },
   });
 
