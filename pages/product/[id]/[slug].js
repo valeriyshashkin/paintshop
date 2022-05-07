@@ -63,7 +63,7 @@ export default function Product({ name, description, price, publicId }) {
     if (data) {
       setActive(data.some((product) => product.publicId === publicId));
     }
-  }, [data]);
+  }, [data, publicId]);
 
   return (
     <div className="page">

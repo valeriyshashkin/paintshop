@@ -152,7 +152,7 @@ export default function Card({
     if (data) {
       setActive(data.some((product) => product.publicId === publicId));
     }
-  }, [data]);
+  }, [data, publicId]);
 
   return (
     <div className="card">
