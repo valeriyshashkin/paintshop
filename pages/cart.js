@@ -9,8 +9,9 @@ import fetcher from "../utils/fetcher";
 import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { CardSkeleton } from "../components/Card";
+import getContacts from "../utils/getContacts";
 
-export default function Cart() {
+export default function Cart({ contacts }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -50,7 +51,7 @@ export default function Cart() {
         </p>
         <p className="tip">
           Чтобы заказать товары, напишите нам на почту{" "}
-          <a href="mailto:admin@admin.com">admin@admin.com</a>. В тексте письма
+          <a href={`mailto:${contacts.email}`}>{contacts.email}</a>. В тексте письма
           укажите товары, которые вы хотите приобрести.
         </p>
       </div>
@@ -110,6 +111,13 @@ export default function Cart() {
       `}</style>
     </>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: { contacts: await getContacts() },
+    revalidate: 60,
+  };
 }
 
 Cart.getLayout = (page) => {
