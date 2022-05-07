@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { setCookies, getCookie } from "cookies-next";
+import { useEffect } from "react";
+import { useSWRConfig } from "swr";
 
 function Button({ active, cart, onClick, admin, skeleton }) {
   return (
@@ -111,6 +113,7 @@ function Button({ active, cart, onClick, admin, skeleton }) {
 }
 
 export default function Card({
+  data,
   title,
   price,
   cart,
@@ -121,6 +124,7 @@ export default function Card({
 }) {
   const [active, setActive] = useState(false);
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   function toggleActive() {
     if (!active) {
@@ -133,6 +137,7 @@ export default function Card({
     }
 
     setActive(!active);
+    mutate("/api/cart");
   }
 
   function toEdit() {
@@ -142,6 +147,12 @@ export default function Card({
   function handleRemove() {
     onRemoveFromCart(publicId);
   }
+
+  useEffect(() => {
+    if (data) {
+      setActive(data.some((product) => product.publicId === publicId));
+    }
+  }, [data]);
 
   return (
     <div className="card">
@@ -158,12 +169,16 @@ export default function Card({
         </Link>
         <div className="price-and-button">
           <p className="price">{price} ₽</p>
-          <Button
-            onClick={admin ? toEdit : cart ? handleRemove : toggleActive}
-            cart={cart}
-            active={active}
-            admin={admin}
-          />
+          {data || cart ? (
+            <Button
+              onClick={admin ? toEdit : cart ? handleRemove : toggleActive}
+              cart={cart}
+              active={active}
+              admin={admin}
+            />
+          ) : (
+            <Button skeleton />
+          )}
         </div>
       </div>
       <style jsx>{`

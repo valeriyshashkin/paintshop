@@ -4,8 +4,13 @@ import Head from "next/head";
 import { useState } from "react";
 import prisma from "../../../utils/prisma";
 import slugify from "slugify";
+import useSWR from "swr";
+import fetcher from "../../../utils/fetcher";
+import { useEffect } from "react";
+import { getCookie, setCookies } from "cookies-next";
+import { useSWRConfig } from "swr";
 
-function Button({ active, onClick }) {
+function Button({ active, onClick, skeleton }) {
   return (
     <>
       <div onClick={onClick} className="button">
@@ -13,16 +18,21 @@ function Button({ active, onClick }) {
       </div>
       <style jsx>{`
         .button {
-          background: ${active ? "white" : "var(--blue)"};
-          color: ${active ? "black" : "white"};
+          background: ${skeleton
+            ? "lightgray"
+            : active
+            ? "white"
+            : "var(--blue)"};
+          color: ${skeleton ? "lightgray" : active ? "black" : "white"};
           font-size: 16px;
           display: inline-block;
           width: 100%;
           text-align: center;
           padding: 15px 0;
           border-radius: var(--radius);
-          cursor: pointer;
-          border: 1px solid ${active ? "black" : "var(--blue)"};
+          cursor: ${skeleton ? "auto" : "pointer"};
+          border: 1px solid
+            ${skeleton ? "lightgray" : active ? "black" : "var(--blue)"};
           user-select: none;
         }
       `}</style>
@@ -30,12 +40,30 @@ function Button({ active, onClick }) {
   );
 }
 
-export default function Product({ name, description, price }) {
+export default function Product({ name, description, price, publicId }) {
   const [active, setActive] = useState(false);
+  const { data } = useSWR("/api/cart", fetcher);
+  const { mutate } = useSWRConfig();
 
   function toggleActive() {
+    if (!active) {
+      const cart = JSON.parse(getCookie("cart") || "[]");
+      cart.push(publicId);
+      setCookies("cart", JSON.stringify(cart));
+    } else {
+      const cart = JSON.parse(getCookie("cart") || "[]");
+      setCookies("cart", JSON.stringify(cart.filter((id) => id !== publicId)));
+    }
+
     setActive(!active);
+    mutate("/api/cart");
   }
+
+  useEffect(() => {
+    if (data) {
+      setActive(data.some((product) => product.publicId === publicId));
+    }
+  }, [data]);
 
   return (
     <div className="page">
@@ -43,7 +71,11 @@ export default function Product({ name, description, price }) {
       <div className="after-image half">
         <h1>{name}</h1>
         <p className="price">{price} ₽</p>
-        <Button onClick={toggleActive} active={active} />
+        {data ? (
+          <Button onClick={toggleActive} active={active} />
+        ) : (
+          <Button skeleton />
+        )}
         <p className="description-title">Описание</p>
         <p className="description">{description}</p>
       </div>
@@ -106,6 +138,7 @@ export async function getStaticProps({ params }) {
       name: true,
       description: true,
       price: true,
+      publicId: true,
     },
   });
 

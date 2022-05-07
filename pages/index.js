@@ -3,10 +3,14 @@ import Header from "../components/Header";
 import Content from "../components/Content";
 import Head from "next/head";
 import getProducts from "../utils/getProducts";
+import useSWR from "swr";
+import fetcher from "../utils/fetcher";
 
 export default function Home({ products }) {
+  const { data } = useSWR("/api/cart", fetcher);
+
   return products.map(({ name, price, href, publicId }, id) => (
-    <Card key={id} title={name} price={price} publicId={publicId} href={href} />
+    <Card data={data} key={id} title={name} price={price} publicId={publicId} href={href} />
   ));
 }
 
