@@ -91,7 +91,7 @@ export default function Contacts() {
 
         setLoading(false);
       });
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (data) {
