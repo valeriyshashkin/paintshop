@@ -12,6 +12,7 @@ export default function Product({ edit, publicId }) {
   const [src, setSrc] = useState();
   const [image, setImage] = useState();
   const [valid, setValid] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -28,6 +29,8 @@ export default function Product({ edit, publicId }) {
   }
 
   function save() {
+    setValid(false);
+    setLoading(true);
     fetch("/api/images/sign")
       .then((res) => res.json())
       .then(({ timestamp, signature }) => {
@@ -65,6 +68,8 @@ export default function Product({ edit, publicId }) {
   }
 
   function create() {
+    setValid(false);
+    setLoading(true);
     fetch("/api/images/sign")
       .then((res) => res.json())
       .then(({ timestamp, signature }) => {
@@ -157,7 +162,7 @@ export default function Product({ edit, publicId }) {
         <label>Цена</label>
         <input value={price} onChange={changePrice} />
         <div className="button-save" onClick={!valid ? undefined : edit ? save : create}>
-          {edit ? "Сохранить" : "Добавить"}
+          {loading ? "Загрузка..." : edit ? "Сохранить" : "Добавить"}
         </div>
         {edit && (
           <div className="button-delete" onClick={remove}>

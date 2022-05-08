@@ -65,6 +65,7 @@ export default function Contacts() {
   const { data, mutate } = useSWR("/api/contacts", fetcher);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
   const router = useRouter();
 
   function changeEmail(e) {
@@ -72,11 +73,13 @@ export default function Contacts() {
   }
 
   function save() {
+    setUpdating(true);
     fetch("/api/contacts/edit", {
       method: "POST",
       body: JSON.stringify({ email }),
     }).then(() => {
       mutate({ contacts: { email } });
+      setUpdating(false);
     });
   }
 
@@ -108,18 +111,19 @@ export default function Contacts() {
       <div className="page">
         <label>Электронная почта для заказов</label>
         <input value={email} onChange={changeEmail} />
-        <div className="button" onClick={save}>
-          Сохранить
+        <div className="button" onClick={updating ? undefined : save}>
+          {updating ? "Загрузка..." : "Сохранить"}
         </div>
       </div>
       <style jsx>{`
         .button {
           border-radius: 8px;
-          cursor: pointer;
+          cursor: ${updating ? "auto" : "pointer"};
           color: white;
-          background: var(--blue);
+          background: ${updating ? "gray" : "var(--blue)"};
           display: inline-block;
           padding: 10px;
+          user-select: none;
         }
 
         .page {
