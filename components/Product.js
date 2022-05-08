@@ -132,8 +132,8 @@ export default function Product({ edit, publicId }) {
   }, [edit]);
 
   useEffect(() => {
-    setValid(name && description && isNumber(price) && src);
-  }, [name, description, price, src]);
+    setValid(name && isNumber(price) && src);
+  }, [name, price, src]);
 
   return (
     <div className="page">
