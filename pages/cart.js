@@ -14,6 +14,7 @@ import getContacts from "../utils/getContacts";
 export default function Cart({ contacts }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const { data, mutate } = useSWR(
     getCookie("cart") ? "/api/cart" : null,
@@ -38,6 +39,7 @@ export default function Cart({ contacts }) {
     }
 
     if (data) {
+      setTotalPrice(data.reduce((a, b) => a + Number(b.price), 0));
       setProducts(data);
       setLoading(false);
     }
@@ -47,7 +49,7 @@ export default function Cart({ contacts }) {
     <>
       <div>
         <p className="total">
-          Итого: <span className="price">1000 ₽</span>
+          Итого: <span className="price">{totalPrice} ₽</span>
         </p>
         <p className="tip">
           Чтобы заказать товары, напишите нам на почту{" "}
@@ -99,6 +101,11 @@ export default function Cart({ contacts }) {
         }
 
         .price {
+          background: ${loading ? "lightgray" : "none"};
+          color: ${loading ? "lightgray" : "none"};
+          border-radius: var(--radius);
+          min-width: 100px;
+          display: inline-block;
           font-weight: bold;
         }
 
