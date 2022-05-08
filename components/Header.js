@@ -89,6 +89,7 @@ export default function Header({ back, cart, admin }) {
           box-sizing: border-box;
           max-width: 1044px;
           margin: 0 auto;
+          z-index: 1;
         }
 
         .logout {

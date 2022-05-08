@@ -79,8 +79,12 @@ export default function Product({ name, description, price, publicId, src }) {
         ) : (
           <Button skeleton />
         )}
-        <p className="description-title">Описание</p>
-        <p className="description">{description}</p>
+        {description && (
+          <>
+            <p className="description-title">Описание</p>
+            <p className="description">{description}</p>
+          </>
+        )}
       </div>
       <style jsx>{`
         .image {
