@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
+import isNumber from "is-number";
 
 export default function Product({ edit, publicId }) {
   const [name, setName] = useState("");
@@ -10,6 +11,7 @@ export default function Product({ edit, publicId }) {
   const [price, setPrice] = useState("");
   const [src, setSrc] = useState();
   const [image, setImage] = useState();
+  const [valid, setValid] = useState(false);
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -129,6 +131,10 @@ export default function Product({ edit, publicId }) {
     }
   }, [edit]);
 
+  useEffect(() => {
+    setValid(name && description && isNumber(price) && src);
+  }, [name, description, price, src]);
+
   return (
     <div className="page">
       <div className="image half">
@@ -150,7 +156,7 @@ export default function Product({ edit, publicId }) {
         <textarea value={description} onChange={changeDescription} />
         <label>Цена</label>
         <input value={price} onChange={changePrice} />
-        <div className="button-save" onClick={edit ? save : create}>
+        <div className="button-save" onClick={!valid ? undefined : edit ? save : create}>
           {edit ? "Сохранить" : "Добавить"}
         </div>
         {edit && (
@@ -239,12 +245,13 @@ export default function Product({ edit, publicId }) {
           padding: 10px;
           border-radius: var(--radius);
           color: white;
-          cursor: pointer;
+          cursor: ${valid ? "pointer" : "not-allowed"};
           margin-bottom: 20px;
+          user-select: none;
         }
 
         .button-save {
-          background: var(--blue);
+          background: ${valid ? "var(--blue)" : "gray"};
         }
 
         .button-delete {
