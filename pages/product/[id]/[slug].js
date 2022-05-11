@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 function Button({ active, onClick, skeleton }) {
   return (
@@ -41,10 +42,94 @@ function Button({ active, onClick, skeleton }) {
   );
 }
 
+function ProductSkeleton() {
+  return (
+    <div className="page">
+      <div className="image half"></div>
+      <div className="after-image half">
+        <h1>Название</h1>
+        <p className="price">1000 ₽</p>
+        <Button skeleton />
+        <p className="description-title">Описание</p>
+        <p className="description">Строка</p>
+        <p className="description">Строка</p>
+        <p className="description">Строка</p>
+      </div>
+      <style jsx>{`
+        .image {
+          width: 100%;
+          padding-bottom: 100%;
+          background: lightgray;
+          position: relative;
+        }
+
+        @media (min-width: 700px) {
+          .image {
+            padding-bottom: 50%;
+          }
+
+          .after-image {
+            margin-left: 10px;
+          }
+
+          .half {
+            width: 50%;
+          }
+
+          .page {
+            display: flex;
+            align-items: flex-start;
+          }
+        }
+
+        h1 {
+          margin: 10px 0;
+          color: lightgray;
+          width: 160px;
+          background: lightgray;
+          border-radius: var(--radius);
+          user-select: none;
+        }
+
+        .price {
+          font-weight: bold;
+          font-size: 30px;
+          margin: 0;
+          margin-bottom: 15px;
+          color: lightgray;
+          background: lightgray;
+          border-radius: var(--radius);
+          display: inline-block;
+          user-select: none;
+        }
+
+        .description-title {
+          font-size: 20px;
+          margin-bottom: 15px;
+          color: lightgray;
+          background: lightgray;
+          border-radius: var(--radius);
+          user-select: none;
+          display: inline-block;
+        }
+
+        .description {
+          margin-top: 0;
+          user-select: none;
+          border-radius: var(--radius);
+          color: lightgray;
+          background: lightgray;
+        }
+      `}</style>
+    </div>
+  );
+}
+
 export default function Product({ name, description, price, publicId, src }) {
   const [active, setActive] = useState(false);
   const { data } = useSWR("/api/cart", fetcher);
   const { mutate } = useSWRConfig();
+  const router = useRouter();
 
   function toggleActive() {
     if (!active) {
@@ -65,6 +150,10 @@ export default function Product({ name, description, price, publicId, src }) {
       setActive(data.some((product) => product.publicId === publicId));
     }
   }, [data, publicId]);
+
+  if (router.isFallback) {
+    return <ProductSkeleton />;
+  }
 
   return (
     <div className="page">
@@ -90,7 +179,7 @@ export default function Product({ name, description, price, publicId, src }) {
         .image {
           width: 100%;
           padding-bottom: 100%;
-          background: gray;
+          background: lightgray;
           position: relative;
         }
 
@@ -151,6 +240,10 @@ export async function getStaticProps({ params }) {
     },
   });
 
+  if (!product) {
+    return { notFound: true };
+  }
+
   return {
     props: product,
     revalidate: 60,
@@ -174,7 +267,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
