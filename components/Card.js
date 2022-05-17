@@ -60,7 +60,7 @@ export default function Card({
   }, [data, publicId]);
 
   return (
-    <div class="bg-white rounded-lg shadow-md">
+    <div className="bg-white rounded-lg shadow-md">
       <a href={href} className="w-full pb-full relative block">
         <Image
           className="rounded-t-lg"
@@ -70,14 +70,14 @@ export default function Card({
           alt=""
         />
       </a>
-      <div class="px-5 py-5">
+      <div className="px-5 py-5">
         <a href={href}>
-          <h5 class="text-xl font-semibold tracking-tight text-gray-900">
+          <h5 className="text-xl font-semibold tracking-tight text-gray-900">
             {title}
           </h5>
         </a>
-        <div class="flex justify-between items-center">
-          <span class="text-3xl font-bold text-gray-900">{price} ₽</span>
+        <div className="flex justify-between items-center">
+          <span className="text-3xl font-bold text-gray-900">{price} ₽</span>
           {data || cart || admin ? (
             <Button
               onClick={admin ? toEdit : cart ? handleRemove : toggleActive}
