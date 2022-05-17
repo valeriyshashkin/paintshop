@@ -135,7 +135,7 @@ Cart.getLayout = (page) => {
         <title>Корзина</title>
       </Head>
       <Content>
-        <Header back cart />
+        <Header />
         {page}
       </Content>
     </>

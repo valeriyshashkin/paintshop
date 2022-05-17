@@ -1,15 +1,3 @@
 export default function Content({ children }) {
-  return (
-    <div>
-      {children}
-      <style jsx>{`
-        div {
-          margin: 0 auto;
-          margin-top: 62px;
-          padding: 0 10px;
-          max-width: 1024px;
-        }
-      `}</style>
-    </div>
-  );
+  return <div className="p-4 w-full max-w-screen-lg mx-auto">{children}</div>;
 }

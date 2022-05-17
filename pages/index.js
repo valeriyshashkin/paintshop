@@ -9,17 +9,21 @@ import fetcher from "../utils/fetcher";
 export default function Home({ products }) {
   const { data } = useSWR("/api/cart", fetcher);
 
-  return products.map(({ name, price, href, publicId, src }, id) => (
-    <Card
-      src={src}
-      data={data}
-      key={id}
-      title={name}
-      price={price}
-      publicId={publicId}
-      href={href}
-    />
-  ));
+  return (
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {products.map(({ name, price, href, publicId, src }, id) => (
+        <Card
+          src={src}
+          data={data}
+          key={id}
+          title={name}
+          price={price}
+          publicId={publicId}
+          href={href}
+        />
+      ))}
+    </div>
+  );
 }
 
 export async function getStaticProps() {

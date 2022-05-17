@@ -9,6 +9,7 @@ import fetcher from "../../../utils/fetcher";
 import { useState } from "react";
 import { useEffect } from "react";
 import { CardSkeleton } from "../../../components/Card";
+import { PlusCircleIcon } from "@heroicons/react/outline";
 
 export default function Products() {
   const { data } = useSWR("/api/products", fetcher);
@@ -69,7 +70,11 @@ export default function Products() {
 
   return (
     <>
-      <div className="page">
+      <div className="btn btn-primary gap-2 my-4" onClick={toCreate}>
+        <PlusCircleIcon className="w-6 h-6" />
+        Добавить
+      </div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.map(({ name, price, href, publicId, src }, id) => (
           <Card
             key={id}
@@ -82,47 +87,6 @@ export default function Products() {
           />
         ))}
       </div>
-      <div className="button-create" onClick={toCreate}>
-        <svg
-          fill="black"
-          xmlns="http://www.w3.org/2000/svg"
-          height="48"
-          width="48"
-        >
-          <path d="M22.5 38V25.5H10V22.5H22.5V10H25.5V22.5H38V25.5H25.5V38Z" />
-        </svg>
-      </div>
-      <style jsx>{`
-        .page {
-          margin-top: 10px;
-          margin-bottom: 70px;
-        }
-
-        .button-create {
-          position: fixed;
-          bottom: 0;
-          right: 0;
-          border-radius: 100px;
-          width: 60px;
-          height: 60px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 10px;
-          margin-right: 10px;
-          cursor: pointer;
-          background: white;
-          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-        }
-
-        @media (min-width: 1024px) {
-          .button-create {
-            right: 50%;
-            transform: translateX(512px);
-          }
-        }
-      `}</style>
     </>
   );
 }
@@ -133,8 +97,8 @@ Products.getLayout = (page) => {
       <Head>
         <title>Товары</title>
       </Head>
-      <Header admin />
       <Content>
+        <Header admin />
         <Navigation active="products" />
         {page}
       </Content>

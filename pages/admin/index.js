@@ -2,6 +2,8 @@ import Content from "../../components/Content";
 import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { XCircleIcon } from "@heroicons/react/outline";
+import classNames from "classnames";
 
 export default function Admin() {
   const [email, setEmail] = useState("");
@@ -48,90 +50,38 @@ export default function Admin() {
   }
 
   return (
-    <>
-      <h1>Вход</h1>
+    <div className="flex flex-col max-w-sm mx-auto pt-48 space-y-4">
+      <h1 className="text-3xl font-bold text-center">Вход</h1>
       {error && (
-        <div className="error">Неправильно введена почта или пароль.</div>
+        <div className="alert alert-error">
+          <div>
+            <XCircleIcon className="h-6 w-6" />
+            <span>Неправильно введена почта или пароль.</span>
+          </div>
+        </div>
       )}
       <input
+        className="input bg-gray-200"
         onKeyUp={submit}
         placeholder="Почта"
         value={email}
         onChange={handleEmail}
       />
       <input
+        className="input bg-gray-200"
         onKeyUp={submit}
         placeholder="Пароль"
         value={password}
         onChange={handlePassword}
         type="password"
       />
-      <button className="button" onClick={login} disabled={loading}>
-        {loading ? "Загрузка..." : "Войти"}
+      <button
+        className={classNames("btn btn-primary", { loading: loading })}
+        onClick={login}
+      >
+        Войти
       </button>
-      <style jsx>{`
-        h1 {
-          text-align: center;
-          margin: 0;
-          margin-top: 100px;
-          font-size: 40px;
-        }
-
-        input {
-          display: block;
-          margin-top: 20px;
-          padding: 15px;
-          font-size: 20px;
-          border-radius: var(--radius);
-          border: none;
-          background: lightgray;
-          outline-color: var(--blue);
-          width: 100%;
-          box-sizing: border-box;
-        }
-
-        .button {
-          display: block;
-          padding: 15px 0;
-          font-size: 20px;
-          color: white;
-          background: var(--blue);
-          text-align: center;
-          margin-top: 20px;
-          border-radius: var(--radius);
-          width: 100%;
-          border: none;
-          cursor: pointer;
-        }
-
-        .error {
-          background: var(--red);
-          padding: 15px;
-          border-radius: var(--radius);
-          color: white;
-          margin-top: 15px;
-          border: 1px solid red;
-        }
-
-        @media (min-width: 700px) {
-          input,
-          .button,
-          .error {
-            width: 50%;
-            margin-left: auto;
-            margin-right: auto;
-          }
-
-          .error {
-            width: 47%;
-          }
-        }
-
-        .button[disabled] {
-          background: gray;
-        }
-      `}</style>
-    </>
+    </div>
   );
 }
 

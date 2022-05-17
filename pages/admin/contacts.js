@@ -7,6 +7,7 @@ import fetcher from "../../utils/fetcher";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import classNames from "classnames";
 
 function ContactsSkeleton() {
   return (
@@ -107,48 +108,20 @@ export default function Contacts() {
   }
 
   return (
-    <>
-      <div className="page">
-        <label>Электронная почта для заказов</label>
-        <input value={email} onChange={changeEmail} />
-        <div className="button" onClick={updating ? undefined : save}>
-          {updating ? "Загрузка..." : "Сохранить"}
-        </div>
+    <div className="flex flex-col max-w-sm space-y-4">
+      <label>Электронная почта для заказов</label>
+      <input
+        className="input bg-gray-200"
+        value={email}
+        onChange={changeEmail}
+      />
+      <div
+        className={classNames("btn btn-primary", { loading: updating })}
+        onClick={updating ? undefined : save}
+      >
+        {updating ? "Загрузка..." : "Сохранить"}
       </div>
-      <style jsx>{`
-        .button {
-          border-radius: 8px;
-          cursor: ${updating ? "auto" : "pointer"};
-          color: white;
-          background: ${updating ? "gray" : "var(--blue)"};
-          display: inline-block;
-          padding: 10px;
-          user-select: none;
-        }
-
-        .page {
-          margin-top: 20px;
-        }
-
-        input {
-          display: block;
-          padding: 15px;
-          background: lightgray;
-          border: none;
-          outline-color: var(--blue);
-          border-radius: var(--radius);
-          margin: 20px 0;
-          width: 100%;
-          box-sizing: border-box;
-        }
-
-        @media (min-width: 700px) {
-          input {
-            width: 50%;
-          }
-        }
-      `}</style>
-    </>
+    </div>
   );
 }
 
@@ -158,8 +131,8 @@ Contacts.getLayout = (page) => {
       <Head>
         <title>Контакты</title>
       </Head>
-      <Header admin />
       <Content>
+        <Header admin />
         <Navigation active="contacts" />
         {page}
       </Content>

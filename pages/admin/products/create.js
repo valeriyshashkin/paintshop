@@ -37,8 +37,10 @@ Create.getLayout = (page) => {
       <Head>
         <title>Добавить товар</title>
       </Head>
-      <Header admin />
-      <Content>{page}</Content>
+      <Content>
+        <Header admin />
+        {page}
+      </Content>
     </>
   );
 };
