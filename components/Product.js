@@ -143,7 +143,7 @@ export default function Product({ edit, publicId }) {
 
   return (
     <div className="grid sm:grid-cols-2 sm:gap-8">
-      <div className="w-full pb-full relative block">
+      <div className="w-full pb-full relative block bg-gray-200">
         {src && <Image src={src} layout="fill" objectFit="cover" alt="" />}
         <input
           id="file-upload"
