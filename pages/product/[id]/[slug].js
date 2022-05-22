@@ -11,34 +11,22 @@ import { getCookie, setCookies } from "cookies-next";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import classNames from "classnames";
 
 function Button({ active, onClick, skeleton }) {
+  if (skeleton) {
+    return <button className="btn btn-loading">Загрузка</button>;
+  }
+
   return (
-    <>
-      <div onClick={onClick} className="button">
-        {active ? "Добавлено" : "Добавить в корзину"}
-      </div>
-      <style jsx>{`
-        .button {
-          background: ${skeleton
-            ? "lightgray"
-            : active
-            ? "white"
-            : "var(--blue)"};
-          color: ${skeleton ? "lightgray" : active ? "black" : "white"};
-          font-size: 16px;
-          display: inline-block;
-          width: 100%;
-          text-align: center;
-          padding: 15px 0;
-          border-radius: var(--radius);
-          cursor: ${skeleton ? "auto" : "pointer"};
-          border: 1px solid
-            ${skeleton ? "lightgray" : active ? "black" : "var(--blue)"};
-          user-select: none;
-        }
-      `}</style>
-    </>
+    <button
+      onClick={onClick}
+      className={classNames("btn btn-primary w-full", {
+        "btn-outline": active,
+      })}
+    >
+      {active ? "Добавлено" : "В корзину"}
+    </button>
   );
 }
 
@@ -55,72 +43,6 @@ function ProductSkeleton() {
         <p className="description">Строка</p>
         <p className="description">Строка</p>
       </div>
-      <style jsx>{`
-        .image {
-          width: 100%;
-          padding-bottom: 100%;
-          background: lightgray;
-          position: relative;
-        }
-
-        @media (min-width: 700px) {
-          .image {
-            padding-bottom: 50%;
-          }
-
-          .after-image {
-            margin-left: 10px;
-          }
-
-          .half {
-            width: 50%;
-          }
-
-          .page {
-            display: flex;
-            align-items: flex-start;
-          }
-        }
-
-        h1 {
-          margin: 10px 0;
-          color: lightgray;
-          width: 160px;
-          background: lightgray;
-          border-radius: var(--radius);
-          user-select: none;
-        }
-
-        .price {
-          font-weight: bold;
-          font-size: 30px;
-          margin: 0;
-          margin-bottom: 15px;
-          color: lightgray;
-          background: lightgray;
-          border-radius: var(--radius);
-          display: inline-block;
-          user-select: none;
-        }
-
-        .description-title {
-          font-size: 20px;
-          margin-bottom: 15px;
-          color: lightgray;
-          background: lightgray;
-          border-radius: var(--radius);
-          user-select: none;
-          display: inline-block;
-        }
-
-        .description {
-          margin-top: 0;
-          user-select: none;
-          border-radius: var(--radius);
-          color: lightgray;
-          background: lightgray;
-        }
-      `}</style>
     </div>
   );
 }
@@ -156,13 +78,16 @@ export default function Product({ name, description, price, publicId, src }) {
   }
 
   return (
-    <div className="page">
-      <div className="image half">
+    <div className="grid sm:grid-cols-2 gap-8">
+      <Head>
+        <title>{name}</title>
+      </Head>
+      <div className="w-full pb-full relative block">
         <Image src={src} layout="fill" objectFit="cover" alt="" />
       </div>
-      <div className="after-image half">
-        <h1>{name}</h1>
-        <p className="price">{price} ₽</p>
+      <div>
+        <h1 className="text-xl font-semibold py-2">{name}</h1>
+        <p className="text-3xl font-bold pb-4">{price} ₽</p>
         {data ? (
           <Button onClick={toggleActive} active={active} />
         ) : (
@@ -170,58 +95,11 @@ export default function Product({ name, description, price, publicId, src }) {
         )}
         {description && (
           <>
-            <p className="description-title">Описание</p>
-            <p className="description">{description}</p>
+            <p className="text-xl pt-4">Описание</p>
+            <p>{description}</p>
           </>
         )}
       </div>
-      <style jsx>{`
-        .image {
-          width: 100%;
-          padding-bottom: 100%;
-          background: lightgray;
-          position: relative;
-        }
-
-        @media (min-width: 700px) {
-          .image {
-            padding-bottom: 50%;
-          }
-
-          .after-image {
-            margin-left: 10px;
-          }
-
-          .half {
-            width: 50%;
-          }
-
-          .page {
-            display: flex;
-            align-items: flex-start;
-          }
-        }
-
-        h1 {
-          margin: 10px 0;
-        }
-
-        .price {
-          font-weight: bold;
-          font-size: 30px;
-          margin: 0;
-          margin-bottom: 15px;
-        }
-
-        .description-title {
-          font-size: 20px;
-          margin-bottom: 15px;
-        }
-
-        .description {
-          margin-top: 0;
-        }
-      `}</style>
     </div>
   );
 }
@@ -273,12 +151,9 @@ export async function getStaticPaths() {
 
 Product.getLayout = (page) => {
   return (
-    <>
-      <Head>
-        <title>Товар</title>
-      </Head>
+    <Content>
       <Header />
-      <Content>{page}</Content>
-    </>
+      {page}
+    </Content>
   );
 };

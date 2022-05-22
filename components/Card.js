@@ -7,7 +7,7 @@ import { useSWRConfig } from "swr";
 import Image from "next/image";
 import classNames from "classnames";
 
-function Button({ active, cart, onClick, admin, skeleton }) {
+function Button({ active, cart, onClick, admin, skeleton, href }) {
   if (skeleton) {
     return <button className="btn loading">Загрузка</button>;
   }
@@ -17,11 +17,11 @@ function Button({ active, cart, onClick, admin, skeleton }) {
       Убрать
     </button>
   ) : admin ? (
-    <a className="btn btn-primary">Редактировать</a>
+    <a href={href} className="btn btn-primary">Изменить</a>
   ) : (
     <button
       onClick={onClick}
-      className={classNames("btn btn-primary", { "btn-ghost": active })}
+      className={classNames("btn btn-primary", { "btn-outline": active })}
     >
       {active ? "Добавлено" : "В корзину"}
     </button>
@@ -96,6 +96,7 @@ export default function Card({
               cart={cart}
               active={active}
               admin={admin}
+              href={`/admin/products/${publicId}`}
             />
           ) : (
             <Button skeleton />
@@ -103,28 +104,6 @@ export default function Card({
         </div>
       </div>
     </div>
-    // <Link href={href}>
-    //   <a className="card shadow-xl">
-    //     <figure>
-    //     </figure>
-    //     <div className="card-body">
-    //       <h2 className="title">{title}</h2>
-    //       <div className="price-and-button">
-    //         <p className="price">{price} ₽</p>
-    //         {data || cart || admin ? (
-    //           <Button
-    //             onClick={admin ? toEdit : cart ? handleRemove : toggleActive}
-    //             cart={cart}
-    //             active={active}
-    //             admin={admin}
-    //           />
-    //         ) : (
-    //           <Button skeleton />
-    //         )}
-    //       </div>
-    //     </div>
-    //   </a>
-    // </Link>
   );
 }
 
@@ -143,96 +122,6 @@ export function CardSkeleton() {
           <Button skeleton />
         </div>
       </div>
-      <style jsx>{`
-        .card {
-          width: 100%;
-          display: flex;
-          padding: 10px 0;
-          padding-top: 0;
-        }
-
-        .image-link {
-          min-width: 30%;
-          padding-bottom: 30%;
-          position: relative;
-        }
-
-        @media (min-width: 768px) {
-          .image-link {
-            min-width: 20%;
-            padding-bottom: 20%;
-          }
-        }
-
-        .image {
-          background: lightgray;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: -1;
-        }
-
-        p {
-          margin: 0;
-        }
-
-        .title-link {
-          text-decoration: none;
-          color: inherit;
-          margin-right: auto;
-          background: lightgray;
-          height: 20px;
-          width: 100%;
-          max-width: 400px;
-          border-radius: var(--radius);
-        }
-
-        @media (min-width: 425px) {
-          .title-link {
-            font-size: 24px;
-            height: 30px;
-          }
-        }
-
-        .price {
-          font-size: 20px;
-          font-weight: bold;
-          height: 40px;
-          width: calc(100% - 42px - 10px);
-          max-width: 200px;
-          background: lightgray;
-          border-radius: var(--radius);
-        }
-
-        @media (min-width: 425px) {
-          .price {
-            font-size: 26px;
-          }
-        }
-
-        .description {
-          padding-left: 10px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          width: 100%;
-        }
-
-        .price-and-button {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        @media (min-width: 540px) {
-          .price-and-button {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-        }
-      `}</style>
     </div>
   );
 }

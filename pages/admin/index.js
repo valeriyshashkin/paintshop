@@ -50,7 +50,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="flex flex-col max-w-sm mx-auto pt-48 space-y-4">
+    <div className="flex flex-col max-w-sm mx-auto pt-36 space-y-4">
       <h1 className="text-3xl font-bold text-center">Вход</h1>
       {error && (
         <div className="alert alert-error">
