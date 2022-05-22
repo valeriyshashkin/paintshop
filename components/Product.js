@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
 import isNumber from "is-number";
+import classNames from "classnames";
 
 export default function Product({ edit, publicId }) {
   const [name, setName] = useState("");
@@ -141,129 +142,60 @@ export default function Product({ edit, publicId }) {
   }, [name, price, src]);
 
   return (
-    <div className="page">
-      <div className="image half">
+    <div className="grid sm:grid-cols-2 sm:gap-8">
+      <div className="w-full pb-full relative block">
         {src && <Image src={src} layout="fill" objectFit="cover" alt="" />}
         <input
           id="file-upload"
           type="file"
           accept="image/*"
           onChange={changeFile}
+          className="opacity-0 w-0 absolute"
         />
-        <label className="upload" htmlFor="file-upload">
+        <label
+          className="absolute bottom-0 left-0 right-0 text-center bg-gray-500 py-5 opacity-90 text-white cursor-pointer"
+          htmlFor="file-upload"
+        >
           Загрузить фото
         </label>
       </div>
-      <div className="after-image half">
-        <label>Название</label>
-        <input value={name} onChange={changeName} />
-        <label>Описание</label>
-        <textarea value={description} onChange={changeDescription} />
-        <label>Цена</label>
-        <input value={price} onChange={changePrice} />
-        <div className="button-save" onClick={!valid ? undefined : edit ? save : create}>
-          {loading ? "Загрузка..." : edit ? "Сохранить" : "Добавить"}
-        </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Название</span>
+        </label>
+        <input
+          className="input bg-gray-200 w-full"
+          value={name}
+          onChange={changeName}
+        />
+        <label className="label">
+          <span className="label-text">Описание</span>
+        </label>
+        <textarea
+          className="textarea bg-gray-200 w-full"
+          value={description}
+          onChange={changeDescription}
+        />
+        <label className="label">
+          <span className="label-text">Цена</span>
+        </label>
+        <input
+          className="input bg-gray-200 w-full mb-4"
+          value={price}
+          onChange={changePrice}
+        />
+        <button
+          className={classNames("btn btn-primary w-full mb-4", { loading })}
+          onClick={!valid ? undefined : edit ? save : create}
+        >
+          {edit ? "Сохранить" : "Добавить"}
+        </button>
         {edit && (
-          <div className="button-delete" onClick={remove}>
-            Удалить товар
-          </div>
+          <button className="btn btn-error btn-outline w-full" onClick={remove}>
+            Удалить
+          </button>
         )}
       </div>
-      <style jsx>{`
-        #file-upload {
-          opacity: 0;
-          width: 0;
-          position: absolute;
-        }
-
-        .upload {
-          background: rgb(128 128 128 / 70%);
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          text-align: center;
-          padding: 20px 0;
-          color: white;
-          cursor: pointer;
-          user-select: none;
-        }
-
-        input {
-          display: block;
-          padding: 15px;
-          border-radius: var(--radius);
-          border: none;
-          background: lightgray;
-          margin: 20px 0;
-          width: 100%;
-          box-sizing: border-box;
-          outline-color: var(--blue);
-        }
-
-        textarea {
-          display: block;
-          margin: 20px 0;
-          background: lightgray;
-          border: none;
-          border-radius: var(--radius);
-          width: 100%;
-          outline-color: var(--blue);
-          padding: 15px;
-          box-sizing: border-box;
-          resize: none;
-          height: 100px;
-        }
-
-        .image {
-          width: 100%;
-          padding-bottom: 100%;
-          background: lightgray;
-          margin-bottom: 20px;
-          position: relative;
-        }
-
-        @media (min-width: 700px) {
-          .image {
-            padding-bottom: 50%;
-          }
-
-          .after-image {
-            margin-left: 10px;
-          }
-
-          .half {
-            width: 50%;
-          }
-
-          .page {
-            display: flex;
-            align-items: flex-start;
-          }
-        }
-
-        .button-save,
-        .button-delete {
-          display: inline-block;
-          background: gray;
-          padding: 10px;
-          border-radius: var(--radius);
-          color: white;
-          cursor: ${valid ? "pointer" : "not-allowed"};
-          margin-bottom: 20px;
-          user-select: none;
-        }
-
-        .button-save {
-          background: ${valid ? "var(--blue)" : "gray"};
-        }
-
-        .button-delete {
-          background: none;
-          color: var(--red);
-        }
-      `}</style>
     </div>
   );
 }
@@ -281,78 +213,6 @@ export function ProductSkeleton() {
         <div className="input"></div>
         <div className="button-save">Добавить</div>
       </div>
-      <style jsx>{`
-        label {
-          background: lightgray;
-          border-radius: var(--radius);
-          width: 100px;
-          display: block;
-          height: 19px;
-        }
-
-        .input {
-          display: block;
-          padding: 15px;
-          border-radius: var(--radius);
-          border: none;
-          background: lightgray;
-          margin: 20px 0;
-          width: 100%;
-          box-sizing: border-box;
-          outline-color: var(--blue);
-          height: 46px;
-        }
-
-        .textarea {
-          display: block;
-          margin: 20px 0;
-          background: lightgray;
-          border: none;
-          border-radius: var(--radius);
-          width: 100%;
-          outline-color: var(--blue);
-          padding: 15px;
-          box-sizing: border-box;
-          resize: none;
-          height: 100px;
-        }
-
-        .image {
-          width: 100%;
-          padding-bottom: 100%;
-          background: lightgray;
-          margin-bottom: 20px;
-        }
-
-        @media (min-width: 700px) {
-          .image {
-            padding-bottom: 50%;
-          }
-
-          .after-image {
-            margin-left: 10px;
-          }
-
-          .half {
-            width: 50%;
-          }
-
-          .page {
-            display: flex;
-            align-items: flex-start;
-          }
-        }
-
-        .button-save {
-          display: inline-block;
-          background: lightgray;
-          padding: 10px;
-          border-radius: var(--radius);
-          color: lightgray;
-          margin-bottom: 20px;
-          user-select: none;
-        }
-      `}</style>
     </div>
   );
 }

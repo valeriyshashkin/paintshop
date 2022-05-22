@@ -1,38 +1,23 @@
 import Link from "next/link";
+import classNames from "classnames";
 
 function NavigationLink({ active, href, children }) {
   return (
-    <>
-      <Link href={href}>
-        <a>{children}</a>
-      </Link>
-      <style jsx>{`
-        a {
-          padding: 15px;
-          display: block;
-          border-bottom: ${active ? "2px solid var(--blue)" : "none"};
-          text-decoration: none;
-          color: ${active ? "var(--blue)" : "gray"};
-        }
-      `}</style>
-    </>
+    <Link href={href}>
+      <a className={classNames("tab", { "tab-active": active })}>{children}</a>
+    </Link>
   );
 }
 
 export default function Navigation({ active }) {
   return (
-    <div>
+    <div className="tabs tabs-boxed w-fit">
       <NavigationLink href="/admin/products" active={active === "products"}>
         Товары
       </NavigationLink>
       <NavigationLink href="/admin/contacts" active={active === "contacts"}>
         Контакты
       </NavigationLink>
-      <style jsx>{`
-        div {
-          display: flex;
-        }
-      `}</style>
     </div>
   );
 }

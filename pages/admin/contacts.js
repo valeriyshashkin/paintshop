@@ -108,10 +108,12 @@ export default function Contacts() {
   }
 
   return (
-    <div className="flex flex-col max-w-sm space-y-4">
-      <label>Электронная почта для заказов</label>
+    <div className="flex flex-col max-w-sm">
+      <label className="label my-2">
+        <span className="label-text">Электронная почта для заказов</span>
+      </label>
       <input
-        className="input bg-gray-200"
+        className="input bg-gray-200 mb-4"
         value={email}
         onChange={changeEmail}
       />
@@ -119,7 +121,7 @@ export default function Contacts() {
         className={classNames("btn btn-primary", { loading: updating })}
         onClick={updating ? undefined : save}
       >
-        {updating ? "Загрузка..." : "Сохранить"}
+        Сохранить
       </div>
     </div>
   );
