@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { CardSkeleton } from "../components/Card";
 import getContacts from "../utils/getContacts";
+import { InformationCircleIcon } from "@heroicons/react/outline";
 
 export default function Cart({ contacts }) {
   const [products, setProducts] = useState([]);
@@ -48,75 +49,56 @@ export default function Cart({ contacts }) {
   return (
     <>
       <div>
-        <p className="total">
-          Итого: <span className="price">{totalPrice} ₽</span>
+        <p className="text-3xl">
+          Итого: <span className="font-bold">{totalPrice} ₽</span>
         </p>
-        <p className="tip">
-          Чтобы заказать товары, напишите нам на почту{" "}
-          <a href={`mailto:${contacts.email}`}>{contacts.email}</a>. В тексте
-          письма укажите товары, которые вы хотите приобрести.
-        </p>
+        <div className="alert shadow-lg my-5">
+          <div>
+            <InformationCircleIcon className="stroke-info flex-shrink-0 h-6 w-6" />
+            <span>
+              Чтобы заказать товары, напишите нам на почту{" "}
+              <a
+                className="link link-primary"
+                href={`mailto:${contacts.email}`}
+              >
+                {contacts.email}
+              </a>
+              . В тексте письма укажите товары, которые вы хотите приобрести.
+            </span>
+          </div>
+        </div>
       </div>
       {loading && (
-        <>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
-        </>
+        </div>
       )}
       {!loading && !products.length && (
-        <div className="card-is-empty">
+        <div className="text-center mt-24">
           Корзина пуста. Добавьте любой товар из{" "}
           <Link href="/">
             <a>каталога</a>
           </Link>
         </div>
       )}
-      {products.map(({ name, price, href, publicId, src }, id) => (
-        <Card
-          src={src}
-          cart
-          key={id}
-          title={name}
-          price={price}
-          href={href}
-          publicId={publicId}
-          onRemoveFromCart={onRemoveFromCart}
-        />
-      ))}
-      <style jsx>{`
-        div {
-          padding-bottom: 10px;
-        }
-
-        .card-is-empty {
-          margin-top: 120px;
-          text-align: center;
-        }
-
-        p {
-          margin: 0;
-        }
-
-        .price {
-          background: ${loading ? "lightgray" : "none"};
-          color: ${loading ? "lightgray" : "none"};
-          border-radius: var(--radius);
-          min-width: 100px;
-          display: inline-block;
-          font-weight: bold;
-        }
-
-        .tip {
-          margin-top: 10px;
-        }
-
-        .total {
-          font-size: 30px;
-        }
-      `}</style>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {products.map(({ name, price, href, publicId, src }, id) => (
+          <Card
+            src={src}
+            cart
+            key={id}
+            title={name}
+            price={price}
+            href={href}
+            publicId={publicId}
+            onRemoveFromCart={onRemoveFromCart}
+          />
+        ))}
+      </div>
     </>
   );
 }

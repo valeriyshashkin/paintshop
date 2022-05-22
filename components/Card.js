@@ -5,14 +5,26 @@ import { setCookies, getCookie } from "cookies-next";
 import { useEffect } from "react";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
+import classNames from "classnames";
 
 function Button({ active, cart, onClick, admin, skeleton }) {
+  if (skeleton) {
+    return <button className="btn loading">Загрузка</button>;
+  }
+
   return cart ? (
-    <button className="btn btn-primary">Убрать</button>
+    <button onClick={onClick} className="btn btn-primary">
+      Убрать
+    </button>
   ) : admin ? (
     <a className="btn btn-primary">Редактировать</a>
   ) : (
-    <button className="btn btn-primary">В корзину</button>
+    <button
+      onClick={onClick}
+      className={classNames("btn btn-primary", { "btn-ghost": active })}
+    >
+      {active ? "Добавлено" : "В корзину"}
+    </button>
   );
 }
 
@@ -72,7 +84,7 @@ export default function Card({
       </a>
       <div className="px-5 py-5">
         <a href={href}>
-          <h5 className="text-xl font-semibold tracking-tight text-gray-900">
+          <h5 className="text-xl pb-2 font-semibold tracking-tight text-gray-900">
             {title}
           </h5>
         </a>
