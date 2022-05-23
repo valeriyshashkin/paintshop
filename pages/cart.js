@@ -75,6 +75,7 @@ export default function Cart({ contacts }) {
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
+          <CardSkeleton />
         </div>
       )}
       {!loading && !products.length && (
