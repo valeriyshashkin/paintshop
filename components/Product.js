@@ -216,16 +216,17 @@ export default function Product({ edit, publicId }) {
 
 export function ProductSkeleton() {
   return (
-    <div className="page">
-      <div className="image half"></div>
-      <div className="after-image half">
-        <label></label>
-        <div className="input"></div>
-        <label></label>
-        <div className="textarea"></div>
-        <label></label>
-        <div className="input"></div>
-        <div className="button-save">Добавить</div>
+    <div className="grid sm:grid-cols-2 sm:gap-8">
+      <div className="w-full pb-full relative block bg-gray-100"></div>
+      <div>
+        <div className="h-[20px] rounded-lg my-2 w-full bg-gray-100"></div>
+        <div className="bg-gray-100 w-full h-[48px] rounded-lg" />
+        <div className="h-[20px] rounded-lg my-2 w-full bg-gray-100"></div>
+        <div className="bg-gray-100 w-full h-[74px] rounded-lg" />
+        <div className="h-[20px] rounded-lg mb-2 mt-4 w-full bg-gray-100"></div>
+        <div className="bg-gray-100 w-full mb-4 h-[48px] rounded-lg" />
+        <div className="h-[48px] w-full my-4 bg-gray-100 rounded-lg"></div>
+        <div className="h-[48px] w-full my-4 bg-gray-100 rounded-lg"></div>
       </div>
     </div>
   );

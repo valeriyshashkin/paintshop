@@ -21,12 +21,11 @@ export default function Edit() {
     }
   }, [data]);
 
-  if (!data) {
-    return <ProductSkeleton />;
+  if (data?.error) {
+    router.push("/admin");
   }
 
-  if (data.error) {
-    router.push("/admin");
+  if (!data || data.error) {
     return <ProductSkeleton />;
   }
 
