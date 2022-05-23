@@ -183,14 +183,14 @@ export default function Product({ edit, publicId }) {
         </button>
         {edit && (
           <label
-            for="delete-modal"
+            htmlFor="delete-modal"
             className="btn btn-error btn-outline w-full"
           >
             Удалить
           </label>
         )}
       </div>
-      <input type="checkbox" id="delete-modal" class="modal-toggle" />
+      <input type="checkbox" id="delete-modal" className="modal-toggle" />
       <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <h3 className="font-bold text-lg">
@@ -204,7 +204,7 @@ export default function Product({ edit, publicId }) {
             >
               Удалить
             </button>
-            <label for="delete-modal" className="btn btn-primary">
+            <label htmlFor="delete-modal" className="btn btn-primary">
               Отмена
             </label>
           </div>
