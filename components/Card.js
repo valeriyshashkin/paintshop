@@ -17,7 +17,9 @@ function Button({ active, cart, onClick, admin, skeleton, href }) {
       Убрать
     </button>
   ) : admin ? (
-    <a href={href} className="btn btn-primary">Изменить</a>
+    <a href={href} className="btn btn-primary">
+      Изменить
+    </a>
   ) : (
     <button
       onClick={onClick}
@@ -109,19 +111,9 @@ export default function Card({
 
 export function CardSkeleton() {
   return (
-    <div className="card">
-      <a className="image-link">
-        <div className="image"></div>
-      </a>
-      <div className="description">
-        <a className="title-link">
-          <p className="title"></p>
-        </a>
-        <div className="price-and-button">
-          <p className="price"></p>
-          <Button skeleton />
-        </div>
-      </div>
+    <div className="bg-gray-100 rounded-lg">
+      <div className="w-full pb-full block"></div>
+      <div className="px-5 py-5"></div>
     </div>
   );
 }

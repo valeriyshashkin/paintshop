@@ -11,54 +11,12 @@ import classNames from "classnames";
 
 function ContactsSkeleton() {
   return (
-    <>
-      <div className="page">
-        <label></label>
-        <div className="input"></div>
-        <div className="button">Сохранить</div>
-      </div>
-      <style jsx>{`
-        .button {
-          border-radius: 8px;
-          color: lightgray;
-          background: lightgray;
-          display: inline-block;
-          padding: 10px;
-          user-select: none;
-        }
-
-        .page {
-          margin-top: 20px;
-        }
-
-        label {
-          background: lightgray;
-          border-radius: var(--radius);
-          width: 100px;
-          display: block;
-          height: 19px;
-        }
-
-        .input {
-          display: block;
-          padding: 15px;
-          background: lightgray;
-          border: none;
-          outline-color: var(--blue);
-          border-radius: var(--radius);
-          margin: 20px 0;
-          width: 100%;
-          box-sizing: border-box;
-          height: 46px;
-        }
-
-        @media (min-width: 700px) {
-          .input {
-            width: 50%;
-          }
-        }
-      `}</style>
-    </>
+    <div className="flex flex-col max-w-sm">
+      <label className="bg-gray-100 my-4 h-[20px] rounded-lg">
+      </label>
+      <div className="bg-gray-100 mb-4 h-[48px] rounded-lg"></div>
+      <div className="bg-gray-100 h-[48px] rounded-lg my-4"></div>
+    </div>
   );
 }
 

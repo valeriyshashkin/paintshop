@@ -26,44 +26,22 @@ export default function Products() {
     }
   }, [data]);
 
-  if (!data) {
-    return (
-      <>
-        <div className="page">
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-        </div>
-        <style jsx>{`
-          .page {
-            margin-top: 10px;
-            margin-bottom: 70px;
-          }
-        `}</style>
-      </>
-    );
+  if (data?.error) {
+    router.push("/admin");
   }
 
-  if (data.error) {
-    router.push("/admin");
-
+  if (!data || data.error) {
     return (
       <>
-        <div className="page">
+        <div className="bg-gray-100 w-[140px] h-[48px] rounded-lg my-4"></div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
+          <CardSkeleton />  
           <CardSkeleton />
         </div>
-        <style jsx>{`
-          .page {
-            margin-top: 10px;
-            margin-bottom: 70px;
-          }
-        `}</style>
       </>
     );
   }
