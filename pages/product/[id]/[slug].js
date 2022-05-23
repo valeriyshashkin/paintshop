@@ -32,16 +32,14 @@ function Button({ active, onClick, skeleton }) {
 
 function ProductSkeleton() {
   return (
-    <div className="page">
-      <div className="image half"></div>
-      <div className="after-image half">
-        <h1>Название</h1>
-        <p className="price">1000 ₽</p>
-        <Button skeleton />
-        <p className="description-title">Описание</p>
-        <p className="description">Строка</p>
-        <p className="description">Строка</p>
-        <p className="description">Строка</p>
+    <div className="grid sm:grid-cols-2 gap-8">
+      <div className="w-full pb-full block bg-gray-100"></div>
+      <div>
+        <h1 className="bg-gray-100 rounded-lg my-2 h-[28px]"></h1>
+        <p className="bg-gray-100 rounded-lg mb-4 h-[36px]"></p>
+        <div className="h-[48px] w-full bg-gray-100 rounded-lg"></div>
+        <p className="text-xl mt-4 bg-gray-100 rounded-lg h-[28px]"></p>
+        <p className="bg-gray-100 mt-2 rounded-lg h-[24px]"></p>
       </div>
     </div>
   );

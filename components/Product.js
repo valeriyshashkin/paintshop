@@ -217,7 +217,7 @@ export default function Product({ edit, publicId }) {
 export function ProductSkeleton() {
   return (
     <div className="grid sm:grid-cols-2 sm:gap-8">
-      <div className="w-full pb-full relative block bg-gray-100"></div>
+      <div className="w-full pb-full block bg-gray-100"></div>
       <div>
         <div className="h-[20px] rounded-lg my-2 w-full bg-gray-100"></div>
         <div className="bg-gray-100 w-full h-[48px] rounded-lg" />
