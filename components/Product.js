@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
-import isNumber from "is-number";
 import classNames from "classnames";
 
 export default function Product({ edit, publicId }) {
@@ -12,7 +11,6 @@ export default function Product({ edit, publicId }) {
   const [price, setPrice] = useState("");
   const [src, setSrc] = useState();
   const [image, setImage] = useState();
-  const [valid, setValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { mutate } = useSWRConfig();
@@ -30,7 +28,6 @@ export default function Product({ edit, publicId }) {
   }
 
   function save() {
-    setValid(false);
     setLoading(true);
     fetch("/api/images/sign")
       .then((res) => res.json())
@@ -69,7 +66,6 @@ export default function Product({ edit, publicId }) {
   }
 
   function create() {
-    setValid(false);
     setLoading(true);
     fetch("/api/images/sign")
       .then((res) => res.json())
@@ -102,12 +98,11 @@ export default function Product({ edit, publicId }) {
   }
 
   function remove() {
-    if (confirm("Вы уверены, что хотите удалить этот товар?")) {
-      fetch("/api/products/delete", {
-        method: "POST",
-        body: JSON.stringify({ publicId }),
-      }).then(() => router.push("/admin/products"));
-    }
+    setLoading(true);
+    fetch("/api/products/delete", {
+      method: "POST",
+      body: JSON.stringify({ publicId }),
+    }).then(() => router.push("/admin/products"));
   }
 
   function changeFile(e) {
@@ -137,10 +132,6 @@ export default function Product({ edit, publicId }) {
     }
   }, [edit]);
 
-  useEffect(() => {
-    setValid(name && isNumber(price) && src);
-  }, [name, price, src]);
-
   return (
     <div className="grid sm:grid-cols-2 sm:gap-8">
       <div className="w-full pb-full relative block bg-gray-200">
@@ -153,7 +144,7 @@ export default function Product({ edit, publicId }) {
           className="opacity-0 w-0 absolute"
         />
         <label
-          className="absolute bottom-0 left-0 right-0 text-center bg-gray-500 py-5 opacity-90 text-white cursor-pointer"
+          className="absolute bottom-0 left-0 right-0 btn btn-primary m-2"
           htmlFor="file-upload"
         >
           Загрузить фото
@@ -186,15 +177,38 @@ export default function Product({ edit, publicId }) {
         />
         <button
           className={classNames("btn btn-primary w-full mb-4", { loading })}
-          onClick={!valid ? undefined : edit ? save : create}
+          onClick={edit ? save : create}
         >
           {edit ? "Сохранить" : "Добавить"}
         </button>
         {edit && (
-          <button className="btn btn-error btn-outline w-full" onClick={remove}>
+          <label
+            for="delete-modal"
+            className="btn btn-error btn-outline w-full"
+          >
             Удалить
-          </button>
+          </label>
         )}
+      </div>
+      <input type="checkbox" id="delete-modal" class="modal-toggle" />
+      <div className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">
+            Вы уверены, что хотите удалить этот товар?
+          </h3>
+          <p className="pt-4">Вы не сможете восстановить этот товар позже</p>
+          <div className="modal-action">
+            <button
+              onClick={remove}
+              className={classNames("btn btn-error btn-outline", { loading })}
+            >
+              Удалить
+            </button>
+            <label for="delete-modal" className="btn btn-primary">
+              Отмена
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   );
