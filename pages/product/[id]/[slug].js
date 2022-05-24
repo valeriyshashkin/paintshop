@@ -15,7 +15,7 @@ import classNames from "classnames";
 
 function Button({ active, onClick, skeleton }) {
   if (skeleton) {
-    return <button className="btn btn-loading">Загрузка</button>;
+    return <button className="btn btn-loading w-full">Загрузка</button>;
   }
 
   return (
