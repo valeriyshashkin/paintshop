@@ -45,7 +45,10 @@ function ProductSkeleton() {
   );
 }
 
-export default function Product({ name, description, price, publicId, src }) {
+export default function Product({
+  product: { name, description, price, publicId, src },
+  preview,
+}) {
   const [active, setActive] = useState(false);
   const { data } = useSWR("/api/cart", fetcher);
   const { mutate } = useSWRConfig();
@@ -76,33 +79,41 @@ export default function Product({ name, description, price, publicId, src }) {
   }
 
   return (
-    <div className="grid sm:grid-cols-2 gap-8">
-      <Head>
-        <title>{name}</title>
-      </Head>
-      <div className="w-full pb-full relative block">
-        <Image src={src} layout="fill" objectFit="cover" alt="" />
+    <>
+      <Header preview={preview} />
+      <div className="grid sm:grid-cols-2 gap-8">
+        <Head>
+          <title>{name}</title>
+        </Head>
+        <div className="w-full pb-full relative block">
+          <Image src={src} layout="fill" objectFit="cover" alt="" />
+        </div>
+        <div>
+          <h1 contentEditable={preview} className="text-xl font-semibold py-2">
+            {name}
+          </h1>
+          <span className="text-3xl font-bold block mb-4">
+            <span contentEditable={preview}>{price}</span>
+            <span> ₽</span>
+          </span>
+          {data ? (
+            <Button onClick={toggleActive} active={active} />
+          ) : (
+            <Button skeleton />
+          )}
+          {description && (
+            <>
+              <p className="text-xl pt-4">Описание</p>
+              <p>{description}</p>
+            </>
+          )}
+        </div>
       </div>
-      <div>
-        <h1 className="text-xl font-semibold py-2">{name}</h1>
-        <p className="text-3xl font-bold pb-4">{price} ₽</p>
-        {data ? (
-          <Button onClick={toggleActive} active={active} />
-        ) : (
-          <Button skeleton />
-        )}
-        {description && (
-          <>
-            <p className="text-xl pt-4">Описание</p>
-            <p>{description}</p>
-          </>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params, preview }) {
   const product = await prisma.product.findUnique({
     where: {
       publicId: params.id,
@@ -120,8 +131,20 @@ export async function getStaticProps({ params }) {
     return { notFound: true };
   }
 
+  if (preview) {
+    return {
+      props: {
+        product,
+        preview: true,
+      },
+    };
+  }
+
   return {
-    props: product,
+    props: {
+      product,
+      preview: false,
+    },
     revalidate: 60,
   };
 }
@@ -148,10 +171,5 @@ export async function getStaticPaths() {
 }
 
 Product.getLayout = (page) => {
-  return (
-    <Content>
-      <Header />
-      {page}
-    </Content>
-  );
+  return <Content>{page}</Content>;
 };

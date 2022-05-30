@@ -10,20 +10,22 @@ export default function Home({ products, preview }) {
   const { data } = useSWR("/api/cart", fetcher);
 
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      {preview && <span>Вы в режиме превью</span>}
-      {products.map(({ name, price, href, publicId, src }, id) => (
-        <Card
-          src={src}
-          data={data}
-          key={id}
-          title={name}
-          price={price}
-          publicId={publicId}
-          href={href}
-        />
-      ))}
-    </div>
+    <>
+      <Header preview={preview} />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {products.map(({ name, price, href, publicId, src }, id) => (
+          <Card
+            src={src}
+            data={data}
+            key={id}
+            title={name}
+            price={price}
+            publicId={publicId}
+            href={href}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -46,10 +48,7 @@ Home.getLayout = (page) => {
       <Head>
         <title>Каталог красок</title>
       </Head>
-      <Content>
-        <Header />
-        {page}
-      </Content>
+      <Content>{page}</Content>
     </>
   );
 };
