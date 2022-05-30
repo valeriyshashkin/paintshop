@@ -7,23 +7,24 @@ import { useSWRConfig } from "swr";
 import Image from "next/image";
 import classNames from "classnames";
 
-function Button({ active, cart, onClick, admin, skeleton, href }) {
+function Button({ active, cart, onClick, admin, skeleton, href, disabled }) {
   if (skeleton) {
     return <button className="btn loading">Загрузка</button>;
   }
 
   return cart ? (
-    <button onClick={onClick} className="btn btn-primary">
+    <button onClick={onClick} className="btn btn-primary" disabled={disabled}>
       Убрать
     </button>
   ) : admin ? (
-    <a href={href} className="btn btn-primary">
+    <a href={href} className="btn btn-primary" disabled={disabled}>
       Изменить
     </a>
   ) : (
     <button
       onClick={onClick}
       className={classNames("btn btn-primary", { "btn-outline": active })}
+      disabled={disabled}
     >
       {active ? "Добавлено" : "В корзину"}
     </button>
@@ -40,6 +41,7 @@ export default function Card({
   admin,
   onRemoveFromCart,
   src,
+  disabled,
 }) {
   const [active, setActive] = useState(false);
   const router = useRouter();
@@ -99,6 +101,7 @@ export default function Card({
               active={active}
               admin={admin}
               href={`/admin/products/${publicId}`}
+              disabled={disabled}
             />
           ) : (
             <Button skeleton />

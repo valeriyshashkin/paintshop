@@ -10,7 +10,10 @@ export default function Home({ products, preview }) {
   const { data } = useSWR("/api/cart", fetcher);
 
   return (
-    <>
+    <Content preview={preview}>
+      <Head>
+        <title>Каталог красок</title>
+      </Head>
       <Header preview={preview} />
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.map(({ name, price, href, publicId, src }, id) => (
@@ -22,10 +25,11 @@ export default function Home({ products, preview }) {
             price={price}
             publicId={publicId}
             href={href}
+            disabled={preview}
           />
         ))}
       </div>
-    </>
+    </Content>
   );
 }
 
@@ -41,14 +45,3 @@ export async function getStaticProps(context) {
     revalidate: 60,
   };
 }
-
-Home.getLayout = (page) => {
-  return (
-    <>
-      <Head>
-        <title>Каталог красок</title>
-      </Head>
-      <Content>{page}</Content>
-    </>
-  );
-};

@@ -13,7 +13,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 
-function Button({ active, onClick, skeleton }) {
+function Button({ active, onClick, skeleton, disabled }) {
   if (skeleton) {
     return <button className="btn btn-loading w-full">Загрузка</button>;
   }
@@ -24,6 +24,7 @@ function Button({ active, onClick, skeleton }) {
       className={classNames("btn btn-primary w-full", {
         "btn-outline": active,
       })}
+      disabled={disabled}
     >
       {active ? "Добавлено" : "В корзину"}
     </button>
@@ -79,7 +80,7 @@ export default function Product({
   }
 
   return (
-    <>
+    <Content preview={preview}>
       <Header preview={preview} />
       <div className="grid sm:grid-cols-2 gap-8">
         <Head>
@@ -89,27 +90,30 @@ export default function Product({
           <Image src={src} layout="fill" objectFit="cover" alt="" />
         </div>
         <div>
-          <h1 contentEditable={preview} className="text-xl font-semibold py-2">
+          <h1
+            contentEditable={preview}
+            className="outline-none text-xl font-semibold py-2"
+          >
             {name}
           </h1>
           <span className="text-3xl font-bold block mb-4">
-            <span contentEditable={preview}>{price}</span>
+            <span contentEditable={preview} className="outline-none">
+              {price}
+            </span>
             <span> ₽</span>
           </span>
           {data ? (
-            <Button onClick={toggleActive} active={active} />
+            <Button onClick={toggleActive} active={active} disabled={preview} />
           ) : (
             <Button skeleton />
           )}
-          {description && (
-            <>
-              <p className="text-xl pt-4">Описание</p>
-              <p>{description}</p>
-            </>
-          )}
+          <p className="text-xl pt-4">Описание</p>
+          <p className="outline-none" contentEditable={preview}>
+            {description}
+          </p>
         </div>
       </div>
-    </>
+    </Content>
   );
 }
 
@@ -169,7 +173,3 @@ export async function getStaticPaths() {
     fallback: true,
   };
 }
-
-Product.getLayout = (page) => {
-  return <Content>{page}</Content>;
-};
