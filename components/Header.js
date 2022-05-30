@@ -45,7 +45,7 @@ export default function Header({ admin, preview }) {
   return (
     <>
       {preview && (
-        <div className="fixed bottom-0 bg-gray-200 z-10 left-0 right-0 p-2">
+        <div className="fixed bottom-0 bg-blue-500 z-10 left-0 right-0 p-2 text-white">
           <div className="flex justify-center">
             <InformationCircleIcon className="flex-shrink-0 w-6 h-6 mr-2" />
             <span>Вы в режиме редактирования</span>
@@ -55,7 +55,7 @@ export default function Header({ admin, preview }) {
       <header className="flex justify-between items-center pb-4">
         <Link href="/">
           <a>
-            <h1 className="text-2xl font-bold outline-none" contentEditable={preview}>Краски</h1>
+            <h1 className="text-2xl font-bold">Краски</h1>
           </a>
         </Link>
         {!preview && (

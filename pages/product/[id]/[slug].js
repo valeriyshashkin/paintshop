@@ -6,7 +6,7 @@ import prisma from "../../../utils/prisma";
 import slugify from "slugify";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
@@ -54,6 +54,9 @@ export default function Product({
   const { data } = useSWR("/api/cart", fetcher);
   const { mutate } = useSWRConfig();
   const router = useRouter();
+  const nameRef = useRef();
+  const priceRef = useRef();
+  const descriptionRef = useRef();
 
   function toggleActive() {
     if (!active) {
@@ -67,6 +70,16 @@ export default function Product({
 
     setActive(!active);
     mutate("/api/cart");
+  }
+
+  function deleteProduct() {
+    alert("Deleting product");
+  }
+
+  function saveChanges() {
+    console.log(nameRef.current.innerHTML);
+    console.log(priceRef.current.innerHTML);
+    console.log(descriptionRef.current.innerHTML);
   }
 
   useEffect(() => {
@@ -92,23 +105,53 @@ export default function Product({
         <div>
           <h1
             contentEditable={preview}
-            className="outline-none text-xl font-semibold py-2"
+            className={classNames("outline-none text-xl font-semibold py-2", {
+              "input bg-gray-200": preview,
+            })}
+            ref={nameRef}
           >
             {name}
           </h1>
-          <span className="text-3xl font-bold block mb-4">
-            <span contentEditable={preview} className="outline-none">
+          <span className="text-3xl font-bold block my-4">
+            <span
+              contentEditable={preview}
+              className={classNames("outline-none", {
+                "input bg-gray-200 text-3xl mt-4 mr-4": preview,
+              })}
+              ref={priceRef}
+            >
               {price}
             </span>
             <span> ₽</span>
           </span>
-          {data ? (
-            <Button onClick={toggleActive} active={active} disabled={preview} />
+          {preview ? (
+            <>
+              <button
+                className="w-full btn btn-primary mb-4"
+                onClick={saveChanges}
+              >
+                Сохранить
+              </button>
+              <button
+                className="w-full btn btn-outline btn-error"
+                onClick={deleteProduct}
+              >
+                Удалить
+              </button>
+            </>
+          ) : data ? (
+            <Button onClick={toggleActive} active={active} />
           ) : (
             <Button skeleton />
           )}
           <p className="text-xl pt-4">Описание</p>
-          <p className="outline-none" contentEditable={preview}>
+          <p
+            className={classNames("outline-none", {
+              "textarea bg-gray-200 mt-4 min-h-[140px]": preview,
+            })}
+            contentEditable={preview}
+            ref={descriptionRef}
+          >
             {description}
           </p>
         </div>
@@ -118,6 +161,21 @@ export default function Product({
 }
 
 export async function getStaticProps({ params, preview }) {
+  if (params.id === "create" && params.slug === "new") {
+    return {
+      props: {
+        product: {
+          name: "",
+          description: "",
+          price: "",
+          publicId: "",
+          src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1fwAJKAO48yd7dQAAAABJRU5ErkJggg==",
+        },
+        preview: true,
+      },
+    };
+  }
+
   const product = await prisma.product.findUnique({
     where: {
       publicId: params.id,

@@ -77,21 +77,25 @@ export default function Card({
 
   return (
     <div className="bg-white rounded-lg shadow-md">
-      <a href={href} className="w-full pb-full relative block">
-        <Image
-          className="rounded-t-lg"
-          src={src}
-          layout="fill"
-          objectFit="cover"
-          alt=""
-        />
-      </a>
-      <div className="px-5 py-5">
-        <a href={href}>
-          <h5 className="text-xl pb-2 font-semibold tracking-tight text-gray-900">
-            {title}
-          </h5>
+      <Link href={href}>
+        <a className="w-full pb-full relative block">
+          <Image
+            className="rounded-t-lg"
+            src={src}
+            layout="fill"
+            objectFit="cover"
+            alt=""
+          />
         </a>
+      </Link>
+      <div className="px-5 py-5">
+        <Link href={href}>
+          <a>
+            <h5 className="text-xl pb-2 font-semibold tracking-tight text-gray-900">
+              {title}
+            </h5>
+          </a>
+        </Link>
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold text-gray-900">{price} ₽</span>
           {data || cart || admin ? (

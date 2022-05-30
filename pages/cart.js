@@ -59,12 +59,9 @@ export default function Cart({ contacts, preview }) {
         <div className="alert shadow-lg my-5">
           <div>
             <InformationCircleIcon className="stroke-info flex-shrink-0 h-6 w-6" />
-            <span contentEditable={preview} className="outline-none">
+            <span>
               Чтобы заказать товары, напишите нам на почту{" "}
-              <a
-                className="link"
-                href={`mailto:${contacts.email}`}
-              >
+              <a className="link link-primary" href={`mailto:${contacts.email}`}>
                 {contacts.email}
               </a>
               . В тексте письма укажите товары, которые вы хотите приобрести.
@@ -83,10 +80,10 @@ export default function Cart({ contacts, preview }) {
         </div>
       )}
       {!loading && !products.length && (
-        <div className="text-center mt-24 outline-none" contentEditable={preview}>
+        <div className="text-center mt-24">
           Корзина пуста. Добавьте любой товар из{" "}
           <Link href="/">
-            <a className="link">каталога</a>
+            <a className="link link-primary">каталога</a>
           </Link>
         </div>
       )}
