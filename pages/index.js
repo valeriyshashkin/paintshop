@@ -6,11 +6,12 @@ import getProducts from "../utils/getProducts";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 
-export default function Home({ products }) {
+export default function Home({ products, preview }) {
   const { data } = useSWR("/api/cart", fetcher);
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {preview && <span>Вы в режиме превью</span>}
       {products.map(({ name, price, href, publicId, src }, id) => (
         <Card
           src={src}
@@ -26,9 +27,15 @@ export default function Home({ products }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getStaticProps(context) {
+  if (context.preview) {
+    return {
+      props: { products: await getProducts(), preview: true },
+    };
+  }
+
   return {
-    props: { products: await getProducts() },
+    props: { products: await getProducts(), preview: false },
     revalidate: 60,
   };
 }

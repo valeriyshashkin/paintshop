@@ -12,15 +12,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    setCookies(
-      "auth",
-      jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1y" }),
-      {
-        req,
-        res,
-        maxAge: 60 * 60 * 24 * 365,
-      }
-    );
+    res.setPreviewData({});
 
     res.json({ error: false });
   }
