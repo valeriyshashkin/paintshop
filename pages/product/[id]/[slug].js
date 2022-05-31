@@ -12,6 +12,7 @@ import { useSWRConfig } from "swr";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import classNames from "classnames";
+import { CameraIcon } from "@heroicons/react/outline";
 
 function Button({ active, onClick, skeleton, disabled }) {
   if (skeleton) {
@@ -31,32 +32,22 @@ function Button({ active, onClick, skeleton, disabled }) {
   );
 }
 
-function ProductSkeleton() {
-  return (
-    <div className="grid sm:grid-cols-2 gap-8">
-      <div className="w-full pb-full block bg-gray-100"></div>
-      <div>
-        <h1 className="bg-gray-100 rounded-lg my-2 h-[28px]"></h1>
-        <p className="bg-gray-100 rounded-lg mb-4 h-[36px]"></p>
-        <div className="h-[48px] w-full bg-gray-100 rounded-lg"></div>
-        <p className="text-xl mt-4 bg-gray-100 rounded-lg h-[28px]"></p>
-        <p className="bg-gray-100 mt-2 rounded-lg h-[24px]"></p>
-      </div>
-    </div>
-  );
-}
-
 export default function Product({
-  product: { name, description, price, publicId, src },
+  product: { name, description, price, publicId, src } = { name: "" },
   preview,
+  createNew,
 }) {
   const [active, setActive] = useState(false);
+  const [image, setImage] = useState();
+  const [urlToImage, setUrlToImage] = useState(src);
   const { data } = useSWR("/api/cart", fetcher);
   const { mutate } = useSWRConfig();
   const router = useRouter();
   const nameRef = useRef();
   const priceRef = useRef();
   const descriptionRef = useRef();
+  const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   function toggleActive() {
     if (!active) {
@@ -73,13 +64,72 @@ export default function Product({
   }
 
   function deleteProduct() {
-    alert("Deleting product");
+    setLoading(true);
+    fetch("/api/products/delete", {
+      method: "POST",
+      body: JSON.stringify({ publicId }),
+    }).then(() => router.push("/"));
   }
 
   function saveChanges() {
-    console.log(nameRef.current.innerHTML);
-    console.log(priceRef.current.innerHTML);
-    console.log(descriptionRef.current.innerHTML);
+    setLoading(true);
+    fetch("/api/images/sign")
+      .then((res) => res.json())
+      .then(({ timestamp, signature }) => {
+        const fd = new FormData();
+        fd.append("file", image);
+        fd.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
+        fd.append("timestamp", timestamp);
+        fd.append("signature", signature);
+
+        fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          { method: "POST", body: fd }
+        )
+          .then((res) => res.json())
+          .then(({ public_id }) => {
+            if (createNew) {
+              fetch("/api/products/create", {
+                method: "POST",
+                body: JSON.stringify({
+                  name: nameRef.current.innerHTML,
+                  description: descriptionRef.current.innerHTML,
+                  price: priceRef.current.innerHTML,
+                  src: public_id,
+                }),
+              }).then(() => {
+                router.push("/");
+              });
+            } else {
+              fetch("/api/products/edit", {
+                method: "POST",
+                body: JSON.stringify({
+                  name: nameRef.current.innerHTML,
+                  description: descriptionRef.current.innerHTML,
+                  price: priceRef.current.innerHTML,
+                  publicId,
+                  src: public_id,
+                }),
+              }).then(() => {
+                mutate(`/api/products/${publicId}`, {
+                  name,
+                  description,
+                  price,
+                });
+                router.push("/");
+              });
+            }
+          });
+      });
+  }
+
+  function changeImage(e) {
+    if (!e.target.files || e.target.files.length === 0) {
+      return;
+    }
+
+    setImage(e.target.files[0]);
+    setUrlToImage(URL.createObjectURL(e.target.files[0]));
   }
 
   useEffect(() => {
@@ -88,8 +138,12 @@ export default function Product({
     }
   }, [data, publicId]);
 
+  useEffect(() => {
+    setDisabled(!nameRef.current || !descriptionRef.current || !priceRef);
+  }, [nameRef, descriptionRef, priceRef]);
+
   if (router.isFallback) {
-    return <ProductSkeleton />;
+    return null;
   }
 
   return (
@@ -100,7 +154,28 @@ export default function Product({
           <title>{name}</title>
         </Head>
         <div className="w-full pb-full relative block">
-          <Image src={src} layout="fill" objectFit="cover" alt="" />
+          <Image src={urlToImage} layout="fill" objectFit="cover" alt="" />
+          {preview && (
+            <>
+              <input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={changeImage}
+                hidden
+              />
+              <label
+                htmlFor="image"
+                className={classNames(
+                  "m-4 left-0 right-0 btn btn-primary absolute bottom-0",
+                  { loading }
+                )}
+              >
+                <CameraIcon className="w-6 h-6 mr-2" />
+                <span>Загрузить</span>
+              </label>
+            </>
+          )}
         </div>
         <div>
           <h1
@@ -127,17 +202,50 @@ export default function Product({
           {preview ? (
             <>
               <button
-                className="w-full btn btn-primary mb-4"
+                className={classNames("w-full btn btn-primary mb-4", {
+                  loading,
+                })}
                 onClick={saveChanges}
+                disabled={disabled}
               >
                 Сохранить
               </button>
-              <button
-                className="w-full btn btn-outline btn-error"
-                onClick={deleteProduct}
-              >
-                Удалить
-              </button>
+              {!createNew && (
+                <label
+                  htmlFor="delete"
+                  className={classNames(
+                    "w-full btn btn-outline btn-error modal-button",
+                    { loading }
+                  )}
+                >
+                  Удалить
+                </label>
+              )}
+
+              <input type="checkbox" id="delete" className="modal-toggle" />
+              <label htmlFor="delete" className="modal cursor-pointer">
+                <label className="modal-box relative space-y-4" htmlFor="">
+                  <h3 className="text-lg font-bold text-center">
+                    Вы уверены, что хотите удалить этот товар?
+                  </h3>
+                  <button
+                    onClick={deleteProduct}
+                    className={classNames("btn btn-error w-full btn-outline", {
+                      loading,
+                    })}
+                  >
+                    Удалить
+                  </button>
+                  <label
+                    htmlFor="delete"
+                    className={classNames("btn btn-primary w-full", {
+                      loading,
+                    })}
+                  >
+                    Отмена
+                  </label>
+                </label>
+              </label>
             </>
           ) : data ? (
             <Button onClick={toggleActive} active={active} />
@@ -145,15 +253,15 @@ export default function Product({
             <Button skeleton />
           )}
           <p className="text-xl pt-4">Описание</p>
-          <p
+          <div
             className={classNames("outline-none", {
-              "textarea bg-gray-200 mt-4 min-h-[140px]": preview,
+              "textarea bg-gray-200 mt-4 h-full max-h-[140px] overflow-y-auto":
+                preview,
             })}
             contentEditable={preview}
             ref={descriptionRef}
-          >
-            {description}
-          </p>
+            dangerouslySetInnerHTML={{ __html: description }}
+          ></div>
         </div>
       </div>
     </Content>
@@ -172,6 +280,7 @@ export async function getStaticProps({ params, preview }) {
           src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1fwAJKAO48yd7dQAAAABJRU5ErkJggg==",
         },
         preview: true,
+        createNew: true,
       },
     };
   }
