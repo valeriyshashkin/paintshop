@@ -168,7 +168,7 @@ export default function Product({
   return (
     <Content preview={preview}>
       <Header preview={preview} />
-      <div className="grid sm:grid-cols-2 gap-8">
+      <div className="grid sm:grid-cols-2 gap-8 mb-32">
         <Head>
           <title>{name}</title>
         </Head>
@@ -200,7 +200,7 @@ export default function Product({
           {preview ? (
             <ContentEditable
               tagName="h1"
-              className="outline-none text-xl font-semibold py-2 input bg-gray-200"
+              className="outline-none text-xl font-semibold py-2 input h-full max-h-[80px] overflow-y-auto bg-gray-200"
               html={nameRef.current}
               onChange={handleName}
             />
@@ -276,7 +276,7 @@ export default function Product({
           <p className="text-xl pt-4">Описание</p>
           {preview ? (
             <ContentEditable
-              className="outline-none textarea bg-gray-200 mt-4 mb-24 h-full max-h-[140px] overflow-y-auto"
+              className="outline-none textarea bg-gray-200 mt-4 h-full max-h-[140px] overflow-y-auto"
               html={descriptionRef.current}
               onChange={handleDescription}
             />
