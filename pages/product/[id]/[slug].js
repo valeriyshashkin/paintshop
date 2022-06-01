@@ -172,29 +172,31 @@ export default function Product({
         <Head>
           <title>{name}</title>
         </Head>
-        <div className="w-full pb-full relative block">
-          <Image src={urlToImage} layout="fill" objectFit="cover" alt="" />
-          {preview && (
-            <>
-              <input
-                id="image"
-                type="file"
-                accept="image/*"
-                onChange={changeImage}
-                hidden
-              />
-              <label
-                htmlFor="image"
-                className={classNames(
-                  "m-4 left-0 right-0 btn btn-primary absolute bottom-0",
-                  { loading }
-                )}
-              >
-                <CameraIcon className="w-6 h-6 mr-2" />
-                <span>Загрузить</span>
-              </label>
-            </>
-          )}
+        <div>
+          <div className="w-full pb-full relative block">
+            <Image src={urlToImage} layout="fill" objectFit="cover" alt="" />
+            {preview && (
+              <>
+                <input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={changeImage}
+                  hidden
+                />
+                <label
+                  htmlFor="image"
+                  className={classNames(
+                    "m-4 left-0 right-0 btn btn-primary absolute bottom-0",
+                    { loading }
+                  )}
+                >
+                  <CameraIcon className="w-6 h-6 mr-2" />
+                  <span>Загрузить</span>
+                </label>
+              </>
+            )}
+          </div>
         </div>
         <div>
           {preview ? (

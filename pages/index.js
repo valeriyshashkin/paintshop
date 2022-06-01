@@ -26,7 +26,7 @@ export default function Home({ products, preview }) {
         </Link>
       )}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products.map(({ name, price, href, publicId, src }, id) => (
+        {products.slice(0).reverse().map(({ name, price, href, publicId, src }, id) => (
           <Card
             src={src}
             data={data}
