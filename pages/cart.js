@@ -9,10 +9,9 @@ import fetcher from "../utils/fetcher";
 import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { CardSkeleton } from "../components/Card";
-import getContacts from "../utils/getContacts";
 import { InformationCircleIcon } from "@heroicons/react/outline";
 
-export default function Cart({ contacts, preview }) {
+export default function Cart({ preview }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -61,8 +60,8 @@ export default function Cart({ contacts, preview }) {
             <InformationCircleIcon className="stroke-info flex-shrink-0 h-6 w-6" />
             <span>
               Чтобы заказать товары, напишите нам на почту{" "}
-              <a className="link link-primary" href={`mailto:${contacts.email}`}>
-                {contacts.email}
+              <a className="link link-primary" href="mailto:admin@admin.com">
+                admin@admin.com
               </a>
               . В тексте письма укажите товары, которые вы хотите приобрести.
             </span>
@@ -105,18 +104,18 @@ export default function Cart({ contacts, preview }) {
   );
 }
 
-export async function getStaticProps(content) {
-  if (content.preview) {
+export function getStaticProps(context) {
+  if (context.preview) {
     return {
       props: {
-        contacts: await getContacts(),
         preview: true,
       },
     };
   }
 
   return {
-    props: { contacts: await getContacts(), preview: false },
-    revalidate: 60,
+    props: {
+      preview: false,
+    },
   };
 }

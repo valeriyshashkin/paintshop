@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { ShoppingBagIcon } from "@heroicons/react/outline";
 import { LogoutIcon } from "@heroicons/react/outline";
 import { UserCircleIcon } from "@heroicons/react/outline";
@@ -8,14 +7,9 @@ import { InformationCircleIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 
 export default function Header({ admin, preview }) {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
-
-  function logout() {
-    fetch("/api/logout").then(() => router.push("/"));
-  }
 
   function handleEmail(e) {
     setEmail(e.target.value);
@@ -38,7 +32,7 @@ export default function Header({ admin, preview }) {
         }
 
         document.getElementById("login").checked = false;
-        router.push("/");
+        location.reload();
       });
   }
 

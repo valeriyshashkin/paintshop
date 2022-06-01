@@ -276,12 +276,12 @@ export default function Product({
           <p className="text-xl pt-4">Описание</p>
           {preview ? (
             <ContentEditable
-              className="outline-none textarea bg-gray-200 mt-4 h-full max-h-[140px] overflow-y-auto"
+              className="outline-none textarea bg-gray-200 mt-4 mb-24 h-full max-h-[140px] overflow-y-auto"
               html={descriptionRef.current}
               onChange={handleDescription}
             />
           ) : (
-            <div dangerouslySetInnerHTML={{__html: description}}></div>
+            <div dangerouslySetInnerHTML={{ __html: description }}></div>
           )}
         </div>
       </div>
@@ -290,7 +290,7 @@ export default function Product({
 }
 
 export async function getStaticProps({ params, preview }) {
-  if (params.id === "create" && params.slug === "new") {
+  if (params.id === "create" && params.slug === "new" && preview) {
     return {
       props: {
         product: {
