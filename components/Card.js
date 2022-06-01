@@ -7,7 +7,7 @@ import { useSWRConfig } from "swr";
 import Image from "next/image";
 import classNames from "classnames";
 
-function Button({ active, cart, onClick, admin, skeleton, href, disabled }) {
+function Button({ active, cart, onClick, skeleton, disabled }) {
   if (skeleton) {
     return <button className="btn loading">Загрузка</button>;
   }
@@ -16,10 +16,6 @@ function Button({ active, cart, onClick, admin, skeleton, href, disabled }) {
     <button onClick={onClick} className="btn btn-primary" disabled={disabled}>
       Убрать
     </button>
-  ) : admin ? (
-    <a href={href} className="btn btn-primary" disabled={disabled}>
-      Изменить
-    </a>
   ) : (
     <button
       onClick={onClick}
@@ -38,7 +34,6 @@ export default function Card({
   cart,
   href,
   publicId,
-  admin,
   onRemoveFromCart,
   src,
   disabled,
@@ -59,10 +54,6 @@ export default function Card({
 
     setActive(!active);
     mutate("/api/cart");
-  }
-
-  function toEdit() {
-    router.push(`/admin/products/${publicId}`);
   }
 
   function handleRemove() {
@@ -98,13 +89,11 @@ export default function Card({
         </Link>
         <div className="flex justify-between items-center">
           <span className="text-3xl font-bold text-gray-900">{price} ₽</span>
-          {data || cart || admin ? (
+          {data || cart ? (
             <Button
-              onClick={admin ? toEdit : cart ? handleRemove : toggleActive}
+              onClick={cart ? handleRemove : toggleActive}
               cart={cart}
               active={active}
-              admin={admin}
-              href={`/admin/products/${publicId}`}
               disabled={disabled}
             />
           ) : (

@@ -6,7 +6,7 @@ import { XCircleIcon } from "@heroicons/react/outline";
 import { InformationCircleIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 
-export default function Header({ admin, preview }) {
+export default function Header({ preview }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -95,15 +95,11 @@ export default function Header({ admin, preview }) {
             </button>
           </label>
         </label>
-        {admin ? (
-          <LogoutIcon className="w-6 h-6" onClick={logout} />
-        ) : (
-          <Link href="/cart">
-            <a>
-              <ShoppingBagIcon className="w-6 h-6" />
-            </a>
-          </Link>
-        )}
+        <Link href="/cart">
+          <a>
+            <ShoppingBagIcon className="w-6 h-6" />
+          </a>
+        </Link>
       </header>
     </>
   );
