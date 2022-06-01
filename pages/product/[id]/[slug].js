@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { CameraIcon } from "@heroicons/react/outline";
+import ContentEditable from "react-contenteditable";
 
 function Button({ active, onClick, skeleton, disabled }) {
   if (skeleton) {
@@ -43,9 +44,12 @@ export default function Product({
   const { data } = useSWR("/api/cart", fetcher);
   const { mutate } = useSWRConfig();
   const router = useRouter();
-  const nameRef = useRef();
-  const priceRef = useRef();
-  const descriptionRef = useRef();
+  const nameRef = useRef(name);
+  const [name_, setName_] = useState(name);
+  const priceRef = useRef(price);
+  const [price_, setPrice_] = useState(price);
+  const descriptionRef = useRef(description);
+  const [description_, setDescription_] = useState(description);
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
@@ -92,9 +96,9 @@ export default function Product({
               fetch("/api/products/create", {
                 method: "POST",
                 body: JSON.stringify({
-                  name: nameRef.current.innerHTML,
-                  description: descriptionRef.current.innerHTML,
-                  price: priceRef.current.innerHTML,
+                  name: nameRef.current,
+                  description: descriptionRef.current,
+                  price: priceRef.current,
                   src: public_id,
                 }),
               }).then(() => {
@@ -104,9 +108,9 @@ export default function Product({
               fetch("/api/products/edit", {
                 method: "POST",
                 body: JSON.stringify({
-                  name: nameRef.current.innerHTML,
-                  description: descriptionRef.current.innerHTML,
-                  price: priceRef.current.innerHTML,
+                  name: nameRef.current,
+                  description: descriptionRef.current,
+                  price: priceRef.current,
                   publicId,
                   src: public_id,
                 }),
@@ -132,6 +136,21 @@ export default function Product({
     setUrlToImage(URL.createObjectURL(e.target.files[0]));
   }
 
+  function handleName(e) {
+    nameRef.current = e.target.value;
+    setName_(e.target.value);
+  }
+
+  function handlePrice(e) {
+    priceRef.current = e.target.value;
+    setPrice_(e.target.value);
+  }
+
+  function handleDescription(e) {
+    descriptionRef.current = e.target.value;
+    setDescription_(e.target.value);
+  }
+
   useEffect(() => {
     if (data) {
       setActive(data.some((product) => product.publicId === publicId));
@@ -139,8 +158,8 @@ export default function Product({
   }, [data, publicId]);
 
   useEffect(() => {
-    setDisabled(!nameRef.current || !descriptionRef.current || !priceRef);
-  }, [nameRef, descriptionRef, priceRef]);
+    setDisabled(!name_ || !price_ || !description_);
+  }, [name_, price_, description_]);
 
   if (router.isFallback) {
     return null;
@@ -178,25 +197,27 @@ export default function Product({
           )}
         </div>
         <div>
-          <h1
-            contentEditable={preview}
-            className={classNames("outline-none text-xl font-semibold py-2", {
-              "input bg-gray-200": preview,
-            })}
-            ref={nameRef}
-          >
-            {name}
-          </h1>
+          {preview ? (
+            <ContentEditable
+              tagName="h1"
+              className="outline-none text-xl font-semibold py-2 input bg-gray-200"
+              html={nameRef.current}
+              onChange={handleName}
+            />
+          ) : (
+            <h1 className="text-xl font-semibold py-2">{name}</h1>
+          )}
           <span className="text-3xl font-bold block my-4">
-            <span
-              contentEditable={preview}
-              className={classNames("outline-none", {
-                "input bg-gray-200 text-3xl mt-4 mr-4": preview,
-              })}
-              ref={priceRef}
-            >
-              {price}
-            </span>
+            {preview ? (
+              <ContentEditable
+                className="outline-none input bg-gray-200 text-3xl mt-4 mr-4"
+                html={priceRef.current}
+                onChange={handlePrice}
+                tagName="span"
+              />
+            ) : (
+              <span>{price}</span>
+            )}
             <span> ₽</span>
           </span>
           {preview ? (
@@ -253,15 +274,15 @@ export default function Product({
             <Button skeleton />
           )}
           <p className="text-xl pt-4">Описание</p>
-          <div
-            className={classNames("outline-none", {
-              "textarea bg-gray-200 mt-4 h-full max-h-[140px] overflow-y-auto":
-                preview,
-            })}
-            contentEditable={preview}
-            ref={descriptionRef}
-            dangerouslySetInnerHTML={{ __html: description }}
-          ></div>
+          {preview ? (
+            <ContentEditable
+              className="outline-none textarea bg-gray-200 mt-4 h-full max-h-[140px] overflow-y-auto"
+              html={descriptionRef.current}
+              onChange={handleDescription}
+            />
+          ) : (
+            <div dangerouslySetInnerHTML={{__html: description}}></div>
+          )}
         </div>
       </div>
     </Content>
