@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { ShoppingBagIcon } from "@heroicons/react/outline";
-import { LogoutIcon } from "@heroicons/react/outline";
 import { UserCircleIcon } from "@heroicons/react/outline";
 import { XCircleIcon } from "@heroicons/react/outline";
-import { InformationCircleIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 
 export default function Header({ preview }) {
@@ -39,10 +37,13 @@ export default function Header({ preview }) {
   return (
     <>
       {preview && (
-        <div className="fixed bottom-0 bg-blue-500 z-10 left-0 right-0 p-2 text-white">
+        <div className="fixed bottom-0 bg-blue-500 z-10 left-0 right-0 p-1 text-xl text-white">
           <div className="flex justify-center">
-            <InformationCircleIcon className="flex-shrink-0 w-6 h-6 mr-2" />
-            <span>Вы в режиме редактирования</span>
+            <span>
+              <Link href="/api/logout" prefetch={false}>
+                <a>Режим редактирования &mdash; Выйти</a>
+              </Link>
+            </span>
           </div>
         </div>
       )}
