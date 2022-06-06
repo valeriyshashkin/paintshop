@@ -6,14 +6,13 @@ import prisma from "../../../utils/prisma";
 import slugify from "slugify";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { CameraIcon } from "@heroicons/react/outline";
-import ContentEditable from "react-contenteditable";
 
 function Button({ active, onClick, skeleton, disabled }) {
   if (skeleton) {
@@ -34,22 +33,19 @@ function Button({ active, onClick, skeleton, disabled }) {
 }
 
 export default function Product({
-  product: { name, description, price, publicId, src } = { name: "" },
+  product = { name: "" },
   preview,
   createNew,
 }) {
   const [active, setActive] = useState(false);
   const [image, setImage] = useState();
-  const [urlToImage, setUrlToImage] = useState(src);
+  const [urlToImage, setUrlToImage] = useState(product.src);
   const { data } = useSWR("/api/cart", fetcher);
   const { mutate } = useSWRConfig();
   const router = useRouter();
-  const nameRef = useRef(name);
-  const [name_, setName_] = useState(name);
-  const priceRef = useRef(price);
-  const [price_, setPrice_] = useState(price);
-  const descriptionRef = useRef(description);
-  const [description_, setDescription_] = useState(description);
+  const [name, setName] = useState(product.name);
+  const [price, setPrice] = useState(product.price);
+  const [description, setDescription] = useState(product.description);
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
@@ -71,7 +67,7 @@ export default function Product({
     setLoading(true);
     fetch("/api/products/delete", {
       method: "POST",
-      body: JSON.stringify({ publicId }),
+      body: JSON.stringify({ publicId: product.publicId }),
     }).then(() => router.push("/"));
   }
 
@@ -96,9 +92,9 @@ export default function Product({
               fetch("/api/products/create", {
                 method: "POST",
                 body: JSON.stringify({
-                  name: nameRef.current,
-                  description: descriptionRef.current,
-                  price: priceRef.current,
+                  name,
+                  description,
+                  price,
                   src: public_id,
                 }),
               }).then(() => {
@@ -108,14 +104,14 @@ export default function Product({
               fetch("/api/products/edit", {
                 method: "POST",
                 body: JSON.stringify({
-                  name: nameRef.current,
-                  description: descriptionRef.current,
-                  price: priceRef.current,
-                  publicId,
+                  name,
+                  description,
+                  price,
+                  publicId: product.publicId,
                   src: public_id,
                 }),
               }).then(() => {
-                mutate(`/api/products/${publicId}`, {
+                mutate(`/api/products/${product.publicId}`, {
                   name,
                   description,
                   price,
@@ -137,29 +133,26 @@ export default function Product({
   }
 
   function handleName(e) {
-    nameRef.current = e.target.value;
-    setName_(e.target.value);
+    setName(e.target.value);
   }
 
   function handlePrice(e) {
-    priceRef.current = e.target.value;
-    setPrice_(e.target.value);
+    setPrice(e.target.value);
   }
 
   function handleDescription(e) {
-    descriptionRef.current = e.target.value;
-    setDescription_(e.target.value);
+    setDescription(e.target.value);
   }
 
   useEffect(() => {
     if (data) {
-      setActive(data.some((product) => product.publicId === publicId));
+      setActive(data.some((p) => p.publicId === product.publicId));
     }
-  }, [data, publicId]);
+  }, [data, product.publicId]);
 
   useEffect(() => {
-    setDisabled(!name_ || !price_ || !description_);
-  }, [name_, price_, description_]);
+    setDisabled(!name || !price || !description);
+  }, [name, price, description]);
 
   if (router.isFallback) {
     return null;
@@ -170,7 +163,7 @@ export default function Product({
       <Header preview={preview} />
       <div className="grid sm:grid-cols-2 gap-8 mb-32">
         <Head>
-          <title>{name}</title>
+          <title>{product.name}</title>
         </Head>
         <div>
           <div className="w-full pb-full relative block">
@@ -200,25 +193,23 @@ export default function Product({
         </div>
         <div>
           {preview ? (
-            <ContentEditable
-              tagName="h1"
-              className="outline-none text-xl font-semibold py-2 input h-full max-h-[80px] overflow-y-auto bg-gray-200"
-              html={nameRef.current}
+            <input
+              className="outline-none w-full border-dashed border-2 border-gray-500 p-2"
+              value={name}
               onChange={handleName}
             />
           ) : (
-            <h1 className="text-xl font-semibold py-2">{name}</h1>
+            <h1 className="text-xl font-semibold py-2">{product.name}</h1>
           )}
           <span className="text-3xl font-bold block my-4">
             {preview ? (
-              <ContentEditable
-                className="outline-none input bg-gray-200 text-3xl mt-4 mr-4"
-                html={priceRef.current}
+              <input
+                className="outline-none w-28 border-dashed border-2 border-gray-500 p-2"
+                value={price}
                 onChange={handlePrice}
-                tagName="span"
               />
             ) : (
-              <span>{price}</span>
+              <span>{product.price}</span>
             )}
             <span> ₽</span>
           </span>
@@ -277,13 +268,17 @@ export default function Product({
           )}
           <p className="text-xl pt-4">Описание</p>
           {preview ? (
-            <ContentEditable
-              className="outline-none textarea bg-gray-200 mt-4 h-full max-h-[140px] overflow-y-auto"
-              html={descriptionRef.current}
+            <textarea
+              className="outline-none w-full h-48 border-dashed border-2 border-gray-500 p-2 mt-4"
+              value={description}
               onChange={handleDescription}
             />
           ) : (
-            <div dangerouslySetInnerHTML={{ __html: description }}></div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: product.description.replace(/\r?\n/g, "<br />"),
+              }}
+            ></div>
           )}
         </div>
       </div>

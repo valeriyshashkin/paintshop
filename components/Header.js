@@ -37,7 +37,7 @@ export default function Header({ preview }) {
   return (
     <>
       {preview && (
-        <div className="fixed bottom-0 bg-blue-500 z-10 left-0 right-0 p-1 text-xl text-white">
+        <div className="fixed bottom-0 bg-blue-500 z-10 left-0 right-0 p-1 text-lg text-white">
           <div className="flex justify-center">
             <span>
               <Link href="/api/logout" prefetch={false}>
@@ -82,14 +82,14 @@ export default function Header({ preview }) {
               value={email}
               onChange={handleEmail}
               placeholder="Почта"
-              className="input input-bordered w-full max-w-lg"
+              className="input input-bordered w-full max-w-lg shrink-0"
             />
             <input
               type="password"
               value={password}
               onChange={handlePassword}
               placeholder="Пароль"
-              className="input input-bordered w-full max-w-lg"
+              className="input input-bordered w-full max-w-lg shrink-0"
             />
             <button onClick={login} className="btn btn-primary w-full max-w-lg">
               Войти
