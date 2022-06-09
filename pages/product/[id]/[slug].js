@@ -52,11 +52,11 @@ export default function Product({
   function toggleActive() {
     if (!active) {
       const cart = JSON.parse(getCookie("cart") || "[]");
-      cart.push(publicId);
+      cart.push(product.publicId);
       setCookies("cart", JSON.stringify(cart));
     } else {
       const cart = JSON.parse(getCookie("cart") || "[]");
-      setCookies("cart", JSON.stringify(cart.filter((id) => id !== publicId)));
+      setCookies("cart", JSON.stringify(cart.filter((id) => id !== product.publicId)));
     }
 
     setActive(!active);
