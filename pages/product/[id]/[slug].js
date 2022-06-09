@@ -190,6 +190,7 @@ export default function Product({
       <div className="grid sm:grid-cols-2 gap-8 mb-32">
         <Head>
           <title>{createNew ? "Добавление продукта" : product.name}</title>
+          <meta name="description" content={product.description} />
         </Head>
         <div>
           <div className="w-full pb-full relative block">
