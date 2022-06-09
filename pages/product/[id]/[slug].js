@@ -73,6 +73,37 @@ export default function Product({
 
   function saveChanges() {
     setLoading(true);
+
+    if (!image) {
+      if (createNew) {
+        fetch("/api/products/create", {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+            description,
+            price,
+            src: urlToImage,
+          }),
+        }).then(() => {
+          router.push("/");
+        });
+      } else {
+        fetch("/api/products/edit", {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+            description,
+            price,
+            publicId: product.publicId,
+            src: urlToImage,
+          }),
+        }).then(() => {
+          router.push("/");
+        });
+      }
+      return;
+    }
+
     fetch("/api/images/sign")
       .then((res) => res.json())
       .then(({ timestamp, signature }) => {
@@ -111,11 +142,6 @@ export default function Product({
                   src: public_id,
                 }),
               }).then(() => {
-                mutate(`/api/products/${product.publicId}`, {
-                  name,
-                  description,
-                  price,
-                });
                 router.push("/");
               });
             }
@@ -163,7 +189,7 @@ export default function Product({
       <Header preview={preview} />
       <div className="grid sm:grid-cols-2 gap-8 mb-32">
         <Head>
-          <title>{product.name}</title>
+          <title>{createNew ? "Добавление продукта" : product.name}</title>
         </Head>
         <div>
           <div className="w-full pb-full relative block">
@@ -180,7 +206,7 @@ export default function Product({
                 <label
                   htmlFor="image"
                   className={classNames(
-                    "m-4 left-0 right-0 btn btn-primary absolute bottom-0",
+                    "m-4 left-0 right-0 btn absolute bottom-0",
                     { loading }
                   )}
                 >
@@ -197,6 +223,7 @@ export default function Product({
               className="outline-none w-full border-dashed border-2 border-gray-500 p-2"
               value={name}
               onChange={handleName}
+              placeholder="Название"
             />
           ) : (
             <h1 className="text-xl font-semibold py-2">{product.name}</h1>
@@ -207,6 +234,7 @@ export default function Product({
                 className="outline-none w-28 border-dashed border-2 border-gray-500 p-2"
                 value={price}
                 onChange={handlePrice}
+                placeholder="Цена"
               />
             ) : (
               <span>{product.price}</span>
@@ -272,6 +300,7 @@ export default function Product({
               className="outline-none w-full h-48 border-dashed border-2 border-gray-500 p-2 mt-4"
               value={description}
               onChange={handleDescription}
+              placeholder="Описание"
             />
           ) : (
             <div

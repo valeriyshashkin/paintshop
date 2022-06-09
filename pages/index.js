@@ -19,7 +19,7 @@ export default function Home({ products, preview }) {
       <Header preview={preview} />
       {preview && (
         <Link href="/product/create/new">
-          <a className="btn btn-outline btn-primary w-full flex mb-4">
+          <a className="btn btn-outline w-full flex mb-4">
             <PlusCircleIcon className="h-6 w-6 mr-2" />
             Добавить товар
           </a>
