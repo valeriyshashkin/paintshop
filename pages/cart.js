@@ -10,8 +10,10 @@ import { useEffect } from "react";
 import { getCookie, setCookies } from "cookies-next";
 import { CardSkeleton } from "../components/Card";
 import { InformationCircleIcon } from "@heroicons/react/outline";
+import client, { urlFor } from "../client";
+import slugify from "slugify";
 
-export default function Cart({ preview }) {
+export default function Cart({ contacts }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -27,7 +29,7 @@ export default function Cart({ preview }) {
         (p) => p !== publicId
       );
       setCookies("cart", JSON.stringify(filteredIds));
-      const filteredProducts = products.filter((p) => p.publicId !== publicId);
+      const filteredProducts = products.filter((p) => p._id !== publicId);
       setProducts(filteredProducts);
       return filteredProducts;
     }, false);
@@ -46,11 +48,11 @@ export default function Cart({ preview }) {
   }, [data]);
 
   return (
-    <Content preview={preview}>
+    <Content>
       <Head>
         <title>Корзина</title>
       </Head>
-      <Header preview={preview} />
+      <Header />
       <div>
         <p className="text-3xl">
           Итого: <span className="font-bold">{totalPrice} ₽</span>
@@ -60,8 +62,13 @@ export default function Cart({ preview }) {
             <InformationCircleIcon className="stroke-info flex-shrink-0 h-6 w-6" />
             <span>
               Чтобы заказать товары, напишите нам на почту{" "}
-              <a className="link link-primary" href="mailto:admin@admin.com">
-                admin@admin.com
+              <a
+                className="link link-primary"
+                href={`mailto:${
+                  contacts.find((c) => c.name === "Email").value
+                }`}
+              >
+                {contacts.find((c) => c.name === "Email").value}
               </a>
               . В тексте письма укажите товары, которые вы хотите приобрести.
             </span>
@@ -87,15 +94,15 @@ export default function Cart({ preview }) {
         </div>
       )}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products.map(({ name, price, href, publicId, src }, id) => (
+        {products.map(({ name, price, photo, _id }) => (
           <Card
-            src={src}
+            src={urlFor(photo).width(500).url()}
             cart
-            key={id}
+            key={_id}
             title={name}
             price={price}
-            href={href}
-            publicId={publicId}
+            href={`/product/${_id}/${slugify(name)}`}
+            publicId={_id}
             onRemoveFromCart={onRemoveFromCart}
           />
         ))}
@@ -104,18 +111,11 @@ export default function Cart({ preview }) {
   );
 }
 
-export function getStaticProps(context) {
-  if (context.preview) {
-    return {
-      props: {
-        preview: true,
-      },
-    };
-  }
+export async function getStaticProps() {
+  const contacts = await client.fetch(`*[_type == "contacts"]`);
 
   return {
-    props: {
-      preview: false,
-    },
+    props: { contacts },
+    revalidate: 60,
   };
 }

@@ -1,26 +1,24 @@
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/router";
 import { setCookies, getCookie } from "cookies-next";
 import { useEffect } from "react";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
 import classNames from "classnames";
 
-function Button({ active, cart, onClick, skeleton, disabled }) {
+function Button({ active, cart, onClick, skeleton }) {
   if (skeleton) {
     return <button className="btn loading">Загрузка</button>;
   }
 
   return cart ? (
-    <button onClick={onClick} className="btn btn-primary" disabled={disabled}>
+    <button onClick={onClick} className="btn btn-primary">
       Убрать
     </button>
   ) : (
     <button
       onClick={onClick}
       className={classNames("btn btn-primary", { "btn-outline": active })}
-      disabled={disabled}
     >
       {active ? "Добавлено" : "В корзину"}
     </button>
@@ -36,10 +34,8 @@ export default function Card({
   publicId,
   onRemoveFromCart,
   src,
-  disabled,
 }) {
   const [active, setActive] = useState(false);
-  const router = useRouter();
   const { mutate } = useSWRConfig();
 
   function toggleActive() {
@@ -62,7 +58,7 @@ export default function Card({
 
   useEffect(() => {
     if (data) {
-      setActive(data.some((product) => product.publicId === publicId));
+      setActive(data.some((product) => product._id === publicId));
     }
   }, [data, publicId]);
 
@@ -94,7 +90,6 @@ export default function Card({
               onClick={cart ? handleRemove : toggleActive}
               cart={cart}
               active={active}
-              disabled={disabled}
             />
           ) : (
             <Button skeleton />
