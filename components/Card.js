@@ -78,7 +78,7 @@ export default function Card({
       <div className="px-5 py-5">
         <Link href={href}>
           <a>
-            <h5 className="text-xl pb-2 font-semibold tracking-tight text-gray-900">
+            <h5 className="text-xl pb-2 font-semibold tracking-tight text-gray-900 line-clamp-2">
               {title}
             </h5>
           </a>

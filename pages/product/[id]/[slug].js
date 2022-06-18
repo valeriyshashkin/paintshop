@@ -67,7 +67,7 @@ export default function Product({
   return (
     <Content>
       <Header />
-      <div className="grid sm:grid-cols-2 gap-8 mb-32">
+      <div className="grid sm:grid-cols-2 gap-8">
         <Head>
           <title>{name}</title>
           <meta name="description" content={blocksToText(description)} />
