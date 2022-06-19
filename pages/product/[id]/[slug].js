@@ -1,33 +1,30 @@
 import Header from "../../../components/Header";
 import Content from "../../../components/Content";
 import Head from "next/head";
-import { useState } from "react";
 import slugify from "slugify";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCookie, setCookies } from "cookies-next";
-import { useSWRConfig } from "swr";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import classNames from "classnames";
 import client, { urlFor } from "../../../client";
 import { PortableText } from "@portabletext/react";
 import blocksToText from "../../../utils/portabletextToText";
+import Link from "next/link";
 
 function Button({ active, onClick, skeleton }) {
   if (skeleton) {
     return <button className="btn btn-loading w-full">Загрузка</button>;
   }
 
-  return (
-    <button
-      onClick={onClick}
-      className={classNames("btn btn-primary w-full", {
-        "btn-outline": active,
-      })}
-    >
-      {active ? "Добавлено" : "В корзину"}
+  return active ? (
+    <Link href="/cart">
+      <a className="btn btn-primary btn-outline w-full">В корзине</a>
+    </Link>
+  ) : (
+    <button onClick={onClick} className="btn btn-primary w-full">
+      Купить
     </button>
   );
 }
@@ -36,22 +33,23 @@ export default function Product({
   product: { name, description, price, photo, _id },
 }) {
   const [active, setActive] = useState(false);
-  const { data } = useSWR("/api/cart", fetcher);
-  const { mutate } = useSWRConfig();
+  const { data, mutate } = useSWR("/api/cart", fetcher);
   const router = useRouter();
 
-  function toggleActive() {
-    if (!active) {
-      const cart = JSON.parse(getCookie("cart") || "[]");
-      cart.push(_id);
-      setCookies("cart", JSON.stringify(cart));
-    } else {
-      const cart = JSON.parse(getCookie("cart") || "[]");
-      setCookies("cart", JSON.stringify(cart.filter((id) => id !== _id)));
-    }
+  function activate() {
+    const cart = JSON.parse(getCookie("cart") || "[]");
+    cart.push(_id);
+    setCookies("cart", JSON.stringify(cart));
 
-    setActive(!active);
-    mutate("/api/cart");
+    const counts = JSON.parse(localStorage.getItem("counts") || "[]");
+    counts.push({
+      publicId: _id,
+      count: 1,
+    });
+    localStorage.setItem("counts", JSON.stringify(counts));
+
+    setActive(true);
+    mutate();
   }
 
   useEffect(() => {
@@ -86,7 +84,7 @@ export default function Product({
           <h1 className="text-xl font-semibold py-2">{name}</h1>
           <span className="text-3xl font-bold block my-4">{price} ₽</span>
           {data ? (
-            <Button onClick={toggleActive} active={active} />
+            <Button onClick={activate} active={active} />
           ) : (
             <Button skeleton />
           )}
@@ -99,9 +97,12 @@ export default function Product({
 }
 
 export async function getStaticProps({ params }) {
-  const product = await client.fetch(`*[_type == "products" && _id == $id][0]`, {
-    id: params.id,
-  });
+  const product = await client.fetch(
+    `*[_type == "products" && _id == $id][0]`,
+    {
+      id: params.id,
+    }
+  );
 
   if (!product) {
     return { notFound: true };

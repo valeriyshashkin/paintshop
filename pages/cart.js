@@ -102,6 +102,7 @@ export default function Cart({ contacts }) {
             publicId={_id}
             data={data}
             onChange={rerender}
+            cart
           />
         ))}
       </div>

@@ -5,7 +5,15 @@ import { useEffect, useRef } from "react";
 import { useSWRConfig } from "swr";
 import Image from "next/image";
 
-function Button({ active, onClick, skeleton, publicId, deactivate, onChange }) {
+function Button({
+  active,
+  onClick,
+  skeleton,
+  publicId,
+  deactivate,
+  onChange,
+  cart,
+}) {
   const [count, setCount] = useState(1);
   const onChangeRef = useRef();
   onChangeRef.current = onChange;
@@ -69,18 +77,26 @@ function Button({ active, onClick, skeleton, publicId, deactivate, onChange }) {
     return <button className="btn loading">Загрузка</button>;
   }
 
-  return active ? (
-    <div className="btn-group">
-      <button onClick={minus} className="btn btn-primary btn-outline">
-        -
-      </button>
-      <div className="flex items-center bg-primary text-base-100 px-4">
-        {count}
+  if (cart) {
+    return (
+      <div className="btn-group">
+        <button onClick={minus} className="btn btn-primary btn-outline">
+          -
+        </button>
+        <div className="flex items-center bg-primary text-base-100 px-4">
+          {count}
+        </div>
+        <button onClick={plus} className="btn btn-primary btn-outline">
+          +
+        </button>
       </div>
-      <button onClick={plus} className="btn btn-primary btn-outline">
-        +
-      </button>
-    </div>
+    );
+  }
+
+  return active ? (
+    <Link href="/cart">
+      <a className="btn btn-primary btn-outline">В корзине</a>
+    </Link>
   ) : (
     <button onClick={onClick} className="btn btn-primary">
       Купить
@@ -96,6 +112,7 @@ export default function Card({
   publicId,
   src,
   onChange,
+  cart,
 }) {
   const [active, setActive] = useState(false);
   const { mutate } = useSWRConfig();
@@ -104,7 +121,10 @@ export default function Card({
     const cart = JSON.parse(getCookie("cart") || "[]");
     setCookies("cart", JSON.stringify(cart.filter((id) => id !== publicId)));
 
-    mutate("/api/cart", data.filter(d => d._id !== publicId));
+    mutate(
+      "/api/cart",
+      data.filter((d) => d._id !== publicId)
+    );
     setActive(false);
   }
 
@@ -160,6 +180,7 @@ export default function Card({
               publicId={publicId}
               deactivate={deactivate}
               onChange={onChange}
+              cart={cart}
             />
           ) : (
             <Button skeleton />
