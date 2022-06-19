@@ -17,23 +17,13 @@ export default function Cart({ contacts }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [forceUpdateToggler, setForceUpdateToggler] = useState(false);
 
-  const { data, mutate } = useSWR(
-    getCookie("cart") ? "/api/cart" : null,
-    fetcher
-  );
-
-  function onRemoveFromCart(publicId) {
-    mutate(() => {
-      const filteredIds = JSON.parse(getCookie("cart")).filter(
-        (p) => p !== publicId
-      );
-      setCookies("cart", JSON.stringify(filteredIds));
-      const filteredProducts = products.filter((p) => p._id !== publicId);
-      setProducts(filteredProducts);
-      return filteredProducts;
-    }, false);
+  function rerender() {
+    setForceUpdateToggler((v) => !v);
   }
+
+  const { data } = useSWR(getCookie("cart") ? "/api/cart" : null, fetcher);
 
   useEffect(() => {
     if (!getCookie("cart")) {
@@ -41,11 +31,19 @@ export default function Cart({ contacts }) {
     }
 
     if (data) {
-      setTotalPrice(data.reduce((a, b) => a + Number(b.price), 0));
+      const counts = JSON.parse(localStorage.getItem("counts"));
+      setTotalPrice(
+        data.reduce(
+          (a, b) =>
+            a +
+            Number(b.price) * counts.find((c) => c.publicId === b._id).count,
+          0
+        )
+      );
       setProducts(data);
       setLoading(false);
     }
-  }, [data]);
+  }, [data, forceUpdateToggler]);
 
   return (
     <Content>
@@ -97,13 +95,13 @@ export default function Cart({ contacts }) {
         {products.map(({ name, price, photo, _id }) => (
           <Card
             src={urlFor(photo).width(500).url()}
-            cart
             key={_id}
             title={name}
             price={price}
             href={`/product/${_id}/${slugify(name)}`}
             publicId={_id}
-            onRemoveFromCart={onRemoveFromCart}
+            data={data}
+            onChange={rerender}
           />
         ))}
       </div>
