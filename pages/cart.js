@@ -7,9 +7,8 @@ import Link from "next/link";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import { useEffect } from "react";
-import { getCookie, setCookies } from "cookies-next";
+import { getCookie } from "cookies-next";
 import { CardSkeleton } from "../components/Card";
-import { InformationCircleIcon } from "@heroicons/react/outline";
 import client, { urlFor } from "../client";
 import slugify from "slugify";
 
@@ -18,6 +17,22 @@ export default function Cart({ contacts }) {
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
   const [forceUpdateToggler, setForceUpdateToggler] = useState(false);
+  const [textarea, setTextarea] = useState("");
+
+  function updateTextarea() {
+    const counts = JSON.parse(localStorage.getItem("counts"));
+
+    const result = data
+      .map(
+        (c) =>
+          `${c.name} - ${c.price} ₽ x ${
+            counts.find((count) => count.publicId === c._id).count
+          }`
+      )
+      .join("\n");
+
+    setTextarea(`${result}\nИтого: ${totalPrice} ₽`);
+  }
 
   function rerender() {
     setForceUpdateToggler((v) => !v);
@@ -52,24 +67,45 @@ export default function Cart({ contacts }) {
       </Head>
       <Header />
       <div>
-        <p className="text-3xl">
-          Итого: <span className="font-bold">{totalPrice} ₽</span>
-        </p>
-        <div className="alert shadow-lg my-5">
-          <div>
-            <InformationCircleIcon className="stroke-info flex-shrink-0 h-6 w-6" />
-            <span>
-              Чтобы заказать товары, напишите нам на почту{" "}
-              <a
-                className="link link-primary"
-                href={`mailto:${
-                  contacts.find((c) => c.name === "Email").value
-                }`}
+        <div className="fixed bottom-0 left-0 right-0 bg-white z-10 border-t text-3xl">
+          <div className="max-w-screen-lg mx-auto p-4 flex items-center justify-between">
+            <span className="font-bold">{totalPrice} ₽</span>
+            <label
+              htmlFor="buy"
+              onClick={updateTextarea}
+              className="btn btn-primary modal-button"
+            >
+              Купить
+            </label>
+          </div>
+          <input type="checkbox" id="buy" className="modal-toggle" />
+          <div className="modal modal-bottom sm:modal-middle">
+            <div className="modal-box">
+              <h3 className="font-bold text-lg">Заказ товаров</h3>
+              <p className="py-4 text-base">
+                Чтобы заказать выбранные товары, скопируйте список товаров ниже
+                и отправьте его на{" "}
+                <a
+                  className="link link-primary"
+                  href={`mailto:${
+                    contacts.find((c) => c.name === "Email").value
+                  }`}
+                >
+                  {contacts.find((c) => c.name === "Email").value}
+                </a>
+              </p>
+              <textarea
+                value={textarea}
+                readOnly
+                className="textarea textarea-bordered w-full mb-4 h-32"
+              ></textarea>
+              <label
+                htmlFor="buy"
+                className="btn btn-primary btn-outline w-full"
               >
-                {contacts.find((c) => c.name === "Email").value}
-              </a>
-              . В тексте письма укажите товары, которые вы хотите приобрести.
-            </span>
+                Закрыть
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -91,7 +127,7 @@ export default function Cart({ contacts }) {
           </Link>
         </div>
       )}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
         {products.map(({ name, price, photo, _id }) => (
           <Card
             src={urlFor(photo).width(500).url()}
