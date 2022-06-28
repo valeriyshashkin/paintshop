@@ -30,7 +30,7 @@ function Button({ active, onClick, skeleton }) {
 }
 
 export default function Product({
-  product: { name, description, price, photo, _id },
+  product: { name, description, price, photo, _id } = {},
 }) {
   const [active, setActive] = useState(false);
   const { data, mutate } = useSWR("/api/cart", fetcher);
