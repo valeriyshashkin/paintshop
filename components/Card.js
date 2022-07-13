@@ -123,7 +123,7 @@ export default function Card({
 
     mutate(
       "/api/cart",
-      data.filter((d) => d._id !== publicId)
+      data.filter((d) => d.id !== publicId)
     );
     setActive(false);
   }
@@ -146,7 +146,7 @@ export default function Card({
 
   useEffect(() => {
     if (data) {
-      setActive(data.some((product) => product._id === publicId));
+      setActive(data.some((product) => product.id === publicId));
     }
   }, [data, publicId]);
 

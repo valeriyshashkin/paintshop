@@ -9,7 +9,6 @@ import fetcher from "../utils/fetcher";
 import { useEffect } from "react";
 import { getCookie } from "cookies-next";
 import { CardSkeleton } from "../components/Card";
-import client, { urlFor } from "../client";
 import slugify from "slugify";
 
 export default function Cart({ contacts }) {
@@ -25,8 +24,8 @@ export default function Cart({ contacts }) {
     const result = data
       .map(
         (c) =>
-          `${c.name} - ${c.price} ₽ x ${
-            counts.find((count) => count.publicId === c._id).count
+          `${c.content.split("+")[0]} - ${c.content.split("+")[1]} ₽ x ${
+            counts.find((count) => count.publicId === c.id).count
           }`
       )
       .join("\n");
@@ -51,7 +50,8 @@ export default function Cart({ contacts }) {
         data.reduce(
           (a, b) =>
             a +
-            Number(b.price) * counts.find((c) => c.publicId === b._id).count,
+            Number(b.content.split("+")[1]) *
+              counts.find((c) => c.publicId === b.id).count,
           0
         )
       );
@@ -88,10 +88,10 @@ export default function Cart({ contacts }) {
                 <a
                   className="link link-primary"
                   href={`mailto:${
-                    contacts.find((c) => c.name === "Email").value
+                    contacts.find((c) => c.key === "Email").value
                   }`}
                 >
-                  {contacts.find((c) => c.name === "Email").value}
+                  {contacts.find((c) => c.key === "Email").value}
                 </a>
               </p>
               <textarea
@@ -128,14 +128,14 @@ export default function Cart({ contacts }) {
         </div>
       )}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-        {products.map(({ name, price, photo, _id }) => (
+        {products.map(({ content, attachments, id }) => (
           <Card
-            src={urlFor(photo).width(500).url()}
-            key={_id}
-            title={name}
-            price={price}
-            href={`/product/${_id}/${slugify(name)}`}
-            publicId={_id}
+            src={attachments[0].url}
+            key={id}
+            title={content.split("+")[0]}
+            price={content.split("+")[1]}
+            href={`/product/${id}/${slugify(content.split("+")[0])}`}
+            publicId={id}
             data={data}
             onChange={rerender}
             cart
@@ -147,7 +147,18 @@ export default function Cart({ contacts }) {
 }
 
 export async function getStaticProps() {
-  const contacts = await client.fetch(`*[_type == "contacts"]`);
+  const contactsResponse = await fetch(
+    `https://discord.com/api/channels/${process.env.DISCORD_CONTACTS_CHANNEL}/messages`,
+    { headers: { authorization: `Bot ${process.env.DISCORD_TOKEN}` } }
+  );
+
+  const contacts = (await contactsResponse.json()).map((c) => {
+    const [key, value] = c.content.split(" ");
+    return {
+      key,
+      value,
+    };
+  });
 
   return {
     props: { contacts },
