@@ -151,7 +151,7 @@ export default function Card({
   }, [data, publicId]);
 
   return (
-    <div className="bg-white rounded-lg shadow-md">
+    <div className="bg-neutral rounded-lg">
       <Link href={href}>
         <a className="w-full pb-full relative block">
           <Image
@@ -166,13 +166,13 @@ export default function Card({
       <div className="px-5 py-5">
         <Link href={href}>
           <a>
-            <h5 className="text-xl pb-2 font-semibold tracking-tight text-gray-900 line-clamp-2">
+            <h5 className="text-xl pb-2 font-semibold tracking-tight line-clamp-2">
               {title}
             </h5>
           </a>
         </Link>
         <div className="flex justify-between items-center">
-          <span className="text-3xl font-bold text-gray-900">{price} ₽</span>
+          <span className="text-3xl font-bold">{price} ₽</span>
           {data ? (
             <Button
               onClick={activate}

@@ -37,7 +37,7 @@ export default function Cart({ contacts }) {
     setForceUpdateToggler((v) => !v);
   }
 
-  const { data } = useSWR(getCookie("cart") ? "/api/cart" : null, fetcher);
+  const { data } = useSWR("/api/cart", fetcher);
 
   useEffect(() => {
     if (!getCookie("cart")) {
@@ -67,7 +67,7 @@ export default function Cart({ contacts }) {
       </Head>
       <Header />
       <div>
-        <div className="fixed bottom-0 left-0 right-0 bg-white z-10 border-t text-3xl">
+        <div className="fixed bottom-0 bg-neutral left-0 right-0 z-10 text-3xl">
           <div className="max-w-screen-lg mx-auto p-4 flex items-center justify-between">
             <span className="font-bold">{totalPrice} ₽</span>
             <label
