@@ -9,8 +9,6 @@ import { getCookie, setCookies } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import path from "path";
-import { promises as fs } from "fs";
 
 function Button({ active, onClick, skeleton }) {
   if (skeleton) {
@@ -100,9 +98,9 @@ export default function Product({
 }
 
 export async function getStaticProps({ params }) {
-  const product = JSON.parse(
-    await fs.readFile(path.join(process.cwd(), "products.json"))
-  ).find((p) => p.id === params.id);
+  const { products } = await (await fetch("http://localhost:3001")).json();
+
+  const product = products.find((p) => p.id === params.id);
 
   if (!product) {
     return { notFound: true };
@@ -117,9 +115,9 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const paths = JSON.parse(
-    await fs.readFile(path.join(process.cwd(), "products.json"))
-  ).map(({ id, content }) => ({
+  const { products } = await (await fetch("http://localhost:3001")).json();
+
+  const paths = products.map(({ id, content }) => ({
     params: {
       id,
       slug: slugify(content.split("+")[0]),

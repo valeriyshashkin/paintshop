@@ -147,21 +147,18 @@ export default function Cart({ contacts }) {
 }
 
 export async function getStaticProps() {
-  const contactsResponse = await fetch(
-    `https://discord.com/api/channels/${process.env.DISCORD_CONTACTS_CHANNEL}/messages`,
-    { headers: { authorization: `Bot ${process.env.DISCORD_TOKEN}` } }
-  );
-
-  const contacts = (await contactsResponse.json()).map((c) => {
-    const [key, value] = c.content.split(" ");
-    return {
-      key,
-      value,
-    };
-  });
+  const { contacts } = await (await fetch("http://localhost:3001")).json();
 
   return {
-    props: { contacts },
+    props: {
+      contacts: contacts.map((c) => {
+        const [key, value] = c.content.split(" ");
+        return {
+          key,
+          value,
+        };
+      }),
+    },
     revalidate: 60,
   };
 }

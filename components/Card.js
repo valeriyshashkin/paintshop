@@ -193,7 +193,7 @@ export default function Card({
 
 export function CardSkeleton() {
   return (
-    <div className="bg-gray-100 rounded-lg">
+    <div className="bg-neutral-focus rounded-lg">
       <div className="w-full pb-full block"></div>
       <div className="px-5 py-5"></div>
     </div>

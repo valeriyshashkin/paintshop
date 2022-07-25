@@ -5,8 +5,6 @@ import Head from "next/head";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import slugify from "slugify";
-import { promises as fs } from "fs";
-import path from "path";
 
 export default function Home({ products }) {
   const { data } = useSWR("/api/cart", fetcher);
@@ -35,17 +33,7 @@ export default function Home({ products }) {
 }
 
 export async function getStaticProps() {
-  const productsResponse = await fetch(
-    `https://discord.com/api/channels/${process.env.DISCORD_PRODUCTS_CHANNEL}/messages`,
-    { headers: { authorization: `Bot ${process.env.DISCORD_TOKEN}` } }
-  );
-
-  const products = await productsResponse.json();
-
-  await fs.writeFile(
-    path.join(process.cwd(), "products.json"),
-    JSON.stringify(products)
-  );
+  const { products } = await (await fetch("http://localhost:3001")).json();
 
   return {
     props: { products },
