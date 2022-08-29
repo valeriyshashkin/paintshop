@@ -1,23 +1,18 @@
 {
   "name": "paintshop",
   "private": true,
-  "main": "ds.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "ds": "micro -l tcp://localhost:3001"
+    "lint": "next lint"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "classnames": "^2.3.1",
     "cookies-next": "^2.0.4",
     "daisyui": "^2.15.0",
-    "dotenv": "^16.0.1",
-    "micro": "^9.4.0",
     "next": "^12.1.6",
-    "node-fetch": "^3.2.9",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "slugify": "^1.6.5",
