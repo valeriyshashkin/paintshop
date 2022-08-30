@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
-import { setCookies, getCookie } from "cookies-next";
 import { useEffect, useRef } from "react";
-import { useSWRConfig } from "swr";
 import Image from "next/image";
 
 function Button({
@@ -122,7 +120,6 @@ export default function Card({
   cart,
 }) {
   const [active, setActive] = useState(false);
-  const { mutate } = useSWRConfig();
 
   function deactivate() {
     const cart = JSON.parse(getCookie("cart") || "[]");
@@ -192,15 +189,6 @@ export default function Card({
           <Button skeleton />
         )}
       </div>
-    </div>
-  );
-}
-
-export function CardSkeleton() {
-  return (
-    <div className="bg-neutral-focus rounded-lg">
-      <div className="w-full pb-full block"></div>
-      <div className="px-5 py-5"></div>
     </div>
   );
 }

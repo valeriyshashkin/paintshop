@@ -4,16 +4,21 @@ import Content from "../components/Content";
 import Head from "next/head";
 import { useState } from "react";
 import Link from "next/link";
-import useSWR from "swr";
-import fetcher from "../utils/fetcher";
 import { useEffect } from "react";
-import { getCookie } from "cookies-next";
 import { CardSkeleton } from "../components/Card";
 import slugify from "slugify";
+import { promises as fs } from "fs";
+import path from "path";
+import { parse } from "yaml";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+
+const productsInCartAtom = atomWithStorage("productsInCart", []);
 
 export default function Cart({ contacts }) {
+  const [productsInCart] = useAtom(productsInCartAtom);
+
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
   const [forceUpdateToggler, setForceUpdateToggler] = useState(false);
   const [textarea, setTextarea] = useState("");
@@ -21,7 +26,7 @@ export default function Cart({ contacts }) {
   function updateTextarea() {
     const counts = JSON.parse(localStorage.getItem("counts"));
 
-    const result = data
+    const result = productsInCart
       .map(
         (c) =>
           `${c.content.split("+")[0]} - ${c.content.split("+")[1]} ₽ x ${
@@ -37,17 +42,11 @@ export default function Cart({ contacts }) {
     setForceUpdateToggler((v) => !v);
   }
 
-  const { data } = useSWR("/api/cart", fetcher);
-
   useEffect(() => {
-    if (!getCookie("cart")) {
-      setLoading(false);
-    }
-
-    if (data) {
+    if (productsInCart) {
       const counts = JSON.parse(localStorage.getItem("counts"));
       setTotalPrice(
-        data.reduce(
+        productsInCart.reduce(
           (a, b) =>
             a +
             Number(b.content.split("+")[1]) *
@@ -55,10 +54,9 @@ export default function Cart({ contacts }) {
           0
         )
       );
-      setProducts(data);
-      setLoading(false);
+      setProducts(productsInCart);
     }
-  }, [data, forceUpdateToggler]);
+  }, [productsInCart, forceUpdateToggler]);
 
   return (
     <Content>
@@ -87,11 +85,9 @@ export default function Cart({ contacts }) {
                 и отправьте его на{" "}
                 <a
                   className="link link-primary"
-                  href={`mailto:${
-                    contacts.find((c) => c.key === "Email").value
-                  }`}
+                  href={`mailto:${contacts["почта"]}`}
                 >
-                  {contacts.find((c) => c.key === "Email").value}
+                  {contacts["почта"]}
                 </a>
               </p>
               <textarea
@@ -109,17 +105,7 @@ export default function Cart({ contacts }) {
           </div>
         </div>
       </div>
-      {loading && (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-        </div>
-      )}
-      {!loading && !products.length && (
+      {products.length === 0 && (
         <div className="text-center mt-24">
           Корзина пуста. Добавьте любой товар из{" "}
           <Link href="/">
@@ -136,7 +122,7 @@ export default function Cart({ contacts }) {
             price={content.split("+")[1]}
             href={`/product/${id}/${slugify(content.split("+")[0])}`}
             publicId={id}
-            data={data}
+            productsInCart={productsInCart}
             onChange={rerender}
             cart
           />
@@ -147,18 +133,9 @@ export default function Cart({ contacts }) {
 }
 
 export async function getStaticProps() {
-  const { contacts } = await (await fetch("http://localhost:3001")).json();
+  const contacts = parse(
+    await fs.readFile(path.join(process.cwd(), "контакты.yml"), "utf8")
+  );
 
-  return {
-    props: {
-      contacts: contacts.map((c) => {
-        const [key, value] = c.content.split(" ");
-        return {
-          key,
-          value,
-        };
-      }),
-    },
-    revalidate: 60,
-  };
+  return { props: { contacts } };
 }

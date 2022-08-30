@@ -1,14 +1,18 @@
-import Header from "../../../components/Header";
-import Content from "../../../components/Content";
+import Header from "../../components/Header";
+import Content from "../../components/Content";
 import Head from "next/head";
 import slugify from "slugify";
-import useSWR from "swr";
-import fetcher from "../../../utils/fetcher";
 import { useEffect, useState } from "react";
-import { getCookie, setCookies } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import fs from "fs";
+import { parse } from "yaml";
+import path from "path";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+
+const productsInCartAtom = atomWithStorage("productsInCart", []);
 
 function Button({ active, onClick, skeleton }) {
   if (skeleton) {
@@ -26,11 +30,9 @@ function Button({ active, onClick, skeleton }) {
   );
 }
 
-export default function Product({
-  product: { content, attachments, id } = {},
-}) {
+export default function Product({ product }) {
   const [active, setActive] = useState(false);
-  const { data, mutate } = useSWR("/api/cart", fetcher);
+  const [productsInCart] = useAtom(productsInCartAtom);
   const router = useRouter();
 
   function activate() {
@@ -50,10 +52,12 @@ export default function Product({
   }
 
   useEffect(() => {
-    if (data) {
-      setActive(data.some((p) => p.id === id));
+    if (productsInCart) {
+      setActive(
+        productsInCart.some((p) => p["название"] === product["название"])
+      );
     }
-  }, [data, id]);
+  }, [productsInCart, product]);
 
   if (router.isFallback) {
     return null;
@@ -64,13 +68,13 @@ export default function Product({
       <Header />
       <div className="grid sm:grid-cols-2 gap-8">
         <Head>
-          <title>{content.split("+")[0]}</title>
-          <meta name="description" content={content.split("+")[2]} />
+          <title>{p["название"]}</title>
+          <meta name="description" content={p["описание"]} />
         </Head>
         <div>
           <div className="w-full pb-full relative block">
             <Image
-              src={attachments[0].url}
+              src={`/images/${p["фото"]}`}
               layout="fill"
               objectFit="cover"
               alt=""
@@ -78,19 +82,15 @@ export default function Product({
           </div>
         </div>
         <div>
-          <h1 className="text-xl font-semibold py-2">
-            {content.split("+")[0]}
-          </h1>
-          <span className="text-3xl font-bold block my-4">
-            {content.split("+")[1]} ₽
-          </span>
-          {data ? (
+          <h1 className="text-xl font-semibold py-2">{p["название"]}</h1>
+          <span className="text-3xl font-bold block my-4">{p["цена"]} ₽</span>
+          {productsInCart ? (
             <Button onClick={activate} active={active} />
           ) : (
             <Button skeleton />
           )}
           <p className="text-xl pt-4">Описание</p>
-          <span>{content.split("+")[2]}</span>
+          <span>{p["описание"]}</span>
         </div>
       </div>
     </Content>
@@ -98,30 +98,34 @@ export default function Product({
 }
 
 export async function getStaticProps({ params }) {
-  const { products } = await (await fetch("http://localhost:3001")).json();
+  const products = fs
+    .readdirSync(path.join(process.cwd(), "товары"))
+    .map((filename) =>
+      parse(
+        fs.readFileSync(path.join(process.cwd(), "товары", filename), "utf8")
+      )
+    );
 
-  const product = products.find((p) => p.id === params.id);
+  const product = products.find((p) => slugify(p["название"]) === params.slug);
 
   if (!product) {
     return { notFound: true };
   }
 
-  return {
-    props: {
-      product,
-    },
-    revalidate: 60,
-  };
+  return { props: { product } };
 }
 
 export async function getStaticPaths() {
-  const { products } = await (await fetch("http://localhost:3001")).json();
+  const products = fs
+    .readdirSync(path.join(process.cwd(), "товары"))
+    .map((filename) =>
+      parse(
+        fs.readFileSync(path.join(process.cwd(), "товары", filename), "utf8")
+      )
+    );
 
-  const paths = products.map(({ id, content }) => ({
-    params: {
-      id,
-      slug: slugify(content.split("+")[0]),
-    },
+  const paths = products.map((p) => ({
+    params: { slug: slugify(p["название"]) },
   }));
 
   return {
