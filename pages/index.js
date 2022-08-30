@@ -5,6 +5,9 @@ import Head from "next/head";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import slugify from "slugify";
+import path from "path";
+import fs from "fs";
+import { parse } from "yaml";
 
 export default function Home({ products }) {
   const { data } = useSWR("/api/cart", fetcher);
@@ -15,17 +18,19 @@ export default function Home({ products }) {
         <title>Каталог красок</title>
       </Head>
       <Header />
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products.map(({ content, id, attachments }) => (
-          <Card
-            src={attachments[0].url}
-            data={data}
-            key={id}
-            title={content.split("+")[0]}
-            price={content.split("+")[1]}
-            publicId={id}
-            href={`/product/${id}/${slugify(content.split("+")[0])}`}
-          />
+      <div className="space-y-1">
+        {products.map((p, i) => (
+          <>
+            <Card
+              src={`/images/${p["фото"]}`}
+              data={data}
+              key={i}
+              title={p["название"]}
+              price={p["цена"]}
+              href={`/product/${p["название"]}`}
+            />
+            {i + 1 !== products.length && <div className="divider"></div>}
+          </>
         ))}
       </div>
     </Content>
@@ -33,10 +38,15 @@ export default function Home({ products }) {
 }
 
 export async function getStaticProps() {
-  const { products } = await (await fetch("http://localhost:3001")).json();
+  const products = fs
+    .readdirSync(path.join(process.cwd(), "товары"))
+    .map((filename) =>
+      parse(
+        fs.readFileSync(path.join(process.cwd(), "товары", filename), "utf8")
+      )
+    );
 
   return {
     props: { products },
-    revalidate: 60,
   };
 }

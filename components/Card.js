@@ -74,7 +74,14 @@ function Button({
   }
 
   if (skeleton) {
-    return <button className="btn loading">Загрузка</button>;
+    return (
+      <>
+        <button className="md:hidden btn btn-square loading"></button>
+        <div className="hidden md:inline">
+          <button className="btn loading">Загрузка</button>
+        </div>
+      </>
+    );
   }
 
   if (cart) {
@@ -151,41 +158,39 @@ export default function Card({
   }, [data, publicId]);
 
   return (
-    <div className="bg-neutral rounded-lg">
-      <Link href={href}>
-        <a className="w-full pb-full relative block">
-          <Image
-            className="rounded-t-lg"
-            src={src}
-            layout="fill"
-            objectFit="cover"
-            alt=""
-          />
-        </a>
-      </Link>
-      <div className="px-5 py-5">
+    <div className="rounded-lg flex items-center">
+      <div className="max-w-[100px] md:max-w-[200px] w-full">
+        <Link href={href}>
+          <a className="w-full pb-full relative block">
+            <Image src={src} layout="fill" objectFit="cover" alt="" />
+          </a>
+        </Link>
+      </div>
+      <div className="px-5">
         <Link href={href}>
           <a>
-            <h5 className="text-xl pb-2 font-semibold tracking-tight line-clamp-2">
+            <h5 className="text-md md:text-xl pb-2 font-semibold tracking-tight line-clamp-2">
               {title}
             </h5>
           </a>
         </Link>
         <div className="flex justify-between items-center">
-          <span className="text-3xl font-bold">{price} ₽</span>
-          {data ? (
-            <Button
-              onClick={activate}
-              active={active}
-              publicId={publicId}
-              deactivate={deactivate}
-              onChange={onChange}
-              cart={cart}
-            />
-          ) : (
-            <Button skeleton />
-          )}
+          <span className="text-xl md:text-3xl font-bold">{price} ₽</span>
         </div>
+      </div>
+      <div className="ml-auto">
+        {data ? (
+          <Button
+            onClick={activate}
+            active={active}
+            publicId={publicId}
+            deactivate={deactivate}
+            onChange={onChange}
+            cart={cart}
+          />
+        ) : (
+          <Button skeleton />
+        )}
       </div>
     </div>
   );
