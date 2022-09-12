@@ -15,11 +15,9 @@
     "next": "^12.1.6",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "slugify": "^1.6.5",
-    "yaml": "^2.1.1"
+    "slugify": "^1.6.5"
   },
   "devDependencies": {
-    "@tailwindcss/line-clamp": "^0.4.0",
     "autoprefixer": "^10.4.7",
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.10",
