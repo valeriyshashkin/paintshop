@@ -6,9 +6,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import fs from "fs";
-import { parse } from "yaml";
-import path from "path";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 

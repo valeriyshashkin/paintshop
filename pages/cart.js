@@ -5,23 +5,22 @@ import Head from "next/head";
 import { useState } from "react";
 import Link from "next/link";
 import { useEffect } from "react";
-import { CardSkeleton } from "../components/Card";
 import slugify from "slugify";
-import { promises as fs } from "fs";
-import path from "path";
-import { parse } from "yaml";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import data from "../data";
 
 const productsInCartAtom = atomWithStorage("productsInCart", []);
 
-export default function Cart({ contacts }) {
+export default function Cart() {
   const [productsInCart] = useAtom(productsInCartAtom);
 
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [forceUpdateToggler, setForceUpdateToggler] = useState(false);
   const [textarea, setTextarea] = useState("");
+
+  const [modal, setModal] = useState(false);
 
   function updateTextarea() {
     const counts = JSON.parse(localStorage.getItem("counts"));
@@ -58,6 +57,14 @@ export default function Cart({ contacts }) {
     }
   }, [productsInCart, forceUpdateToggler]);
 
+  function showModal() {
+    setModal(true);
+  }
+
+  function hideModal() {
+    setModal(false);
+  }
+
   return (
     <Content>
       <Head>
@@ -65,51 +72,43 @@ export default function Cart({ contacts }) {
       </Head>
       <Header />
       <div>
-        <div className="fixed bottom-0 bg-neutral left-0 right-0 z-10 text-3xl">
+        <div className="fixed bottom-0 left-0 right-0 z-10 text-3xl">
           <div className="max-w-screen-lg mx-auto p-4 flex items-center justify-between">
             <span className="font-bold">{totalPrice} ₽</span>
-            <label
-              htmlFor="buy"
-              onClick={updateTextarea}
-              className="btn btn-primary modal-button"
+            <button
+              onClick={showModal}
+              className="bg-blue-500 px-4 py-2 rounded-xl text-lg"
             >
-              Купить
-            </label>
-          </div>
-          <input type="checkbox" id="buy" className="modal-toggle" />
-          <div className="modal modal-bottom sm:modal-middle">
-            <div className="modal-box">
-              <h3 className="font-bold text-lg">Заказ товаров</h3>
-              <p className="py-4 text-base">
-                Чтобы заказать выбранные товары, скопируйте список товаров ниже
-                и отправьте его на{" "}
-                <a
-                  className="link link-primary"
-                  href={`mailto:${contacts["почта"]}`}
-                >
-                  {contacts["почта"]}
-                </a>
-              </p>
-              <textarea
-                value={textarea}
-                readOnly
-                className="textarea textarea-bordered w-full mb-4 h-32"
-              ></textarea>
-              <label
-                htmlFor="buy"
-                className="btn btn-primary btn-outline w-full"
-              >
-                Закрыть
-              </label>
-            </div>
+              Заказать
+            </button>
           </div>
         </div>
       </div>
+      {modal && (
+        <div className="absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-neutral-800 p-4 m-auto w-1/2 h-1/2">
+          Чтобы заказать выбранные товары, скопируйте список товаров ниже и
+          отправьте его на{" "}
+          <a className="link link-primary" href={`mailto:${data.email}`}>
+            {data.email}
+          </a>
+          {/* <textarea
+            value={textarea}
+            readOnly
+            className="textarea textarea-bordered w-full mb-4 h-32"
+          ></textarea> */}
+          <button
+            onClick={hideModal}
+            className="bg-blue-500 py-2 rounded-xl text-lg w-full"
+          >
+            Закрыть
+          </button>
+        </div>
+      )}
       {products.length === 0 && (
-        <div className="text-center mt-24">
+        <div className="text-center mt-48 text-xl">
           Корзина пуста. Добавьте любой товар из{" "}
           <Link href="/">
-            <a className="link link-primary">каталога</a>
+            <a className="text-blue-500">каталога</a>
           </Link>
         </div>
       )}
@@ -130,12 +129,4 @@ export default function Cart({ contacts }) {
       </div>
     </Content>
   );
-}
-
-export async function getStaticProps() {
-  const contacts = parse(
-    await fs.readFile(path.join(process.cwd(), "контакты.yml"), "utf8")
-  );
-
-  return { props: { contacts } };
 }

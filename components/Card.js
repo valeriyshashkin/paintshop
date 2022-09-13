@@ -155,40 +155,26 @@ export default function Card({
   }, [data, publicId]);
 
   return (
-    <div className="rounded-lg flex items-center">
-      <div className="max-w-[100px] md:max-w-[200px] w-full">
-        <Link href={href}>
-          <a className="w-full pb-full relative block">
-            <Image src={src} layout="fill" objectFit="cover" alt="" />
-          </a>
-        </Link>
-      </div>
-      <div className="px-5">
-        <Link href={href}>
-          <a>
-            <h5 className="text-md md:text-xl pb-2 font-semibold tracking-tight line-clamp-2">
-              {title}
-            </h5>
-          </a>
-        </Link>
-        <div className="flex justify-between items-center">
-          <span className="text-xl md:text-3xl font-bold">{price} ₽</span>
-        </div>
-      </div>
-      <div className="ml-auto">
-        {data ? (
-          <Button
-            onClick={activate}
-            active={active}
-            publicId={publicId}
-            deactivate={deactivate}
-            onChange={onChange}
-            cart={cart}
-          />
-        ) : (
-          <Button skeleton />
-        )}
-      </div>
+    <div>
+      <Link href={href}>
+        <a>
+          <div className="py-2 flex items-center">
+            <div className="max-w-[100px] md:max-w-[200px] w-full">
+              <div className="w-full pb-full relative block">
+                <Image src={src} layout="fill" objectFit="cover" alt="" />
+              </div>
+            </div>
+            <div className="px-5">
+              <h5 className="text-2xl pb-2 font-semibold tracking-tight">
+                {title}
+              </h5>
+              <div className="flex justify-between items-center">
+                <span className="text-xl md:text-3xl font-bold">{price} ₽</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </Link>
     </div>
   );
 }
