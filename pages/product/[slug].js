@@ -2,59 +2,30 @@ import Header from "../../components/Header";
 import Content from "../../components/Content";
 import Head from "next/head";
 import slugify from "slugify";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import data from "../../data";
+import { useEffect, useState } from "react";
 
-const productsInCartAtom = atomWithStorage("productsInCart", []);
+const cartAtom = atomWithStorage("cart", []);
 
-function Button({ active, onClick, skeleton }) {
-  if (skeleton) {
-    return <button className="btn btn-loading w-full">Загрузка</button>;
-  }
-
-  return active ? (
-    <Link href="/cart">
-      <a className="btn btn-primary btn-outline w-full">В корзине</a>
-    </Link>
-  ) : (
-    <button onClick={onClick} className="btn btn-primary w-full">
-      Купить
-    </button>
-  );
-}
-
-export default function Product({ product }) {
-  const [active, setActive] = useState(false);
-  const [productsInCart] = useAtom(productsInCartAtom);
+export default function Product({
+  product: { name, price, description, image },
+}) {
+  const [cart, setCart] = useAtom(cartAtom);
+  const [mount, setMount] = useState(false);
   const router = useRouter();
 
-  function activate() {
-    const cart = JSON.parse(getCookie("cart") || "[]");
-    cart.push(id);
-    setCookies("cart", JSON.stringify(cart));
-
-    const counts = JSON.parse(localStorage.getItem("counts") || "[]");
-    counts.push({
-      publicId: id,
-      count: 1,
-    });
-    localStorage.setItem("counts", JSON.stringify(counts));
-
-    setActive(true);
-    mutate();
+  function addToCart() {
+    setCart([...cart, slugify(name).toLowerCase()]);
   }
 
   useEffect(() => {
-    if (productsInCart) {
-      setActive(
-        productsInCart.some((p) => p["название"] === product["название"])
-      );
-    }
-  }, [productsInCart, product]);
+    setMount(true);
+  }, []);
 
   if (router.isFallback) {
     return null;
@@ -65,29 +36,33 @@ export default function Product({ product }) {
       <Header />
       <div className="grid sm:grid-cols-2 gap-8">
         <Head>
-          <title>{p["название"]}</title>
-          <meta name="description" content={p["описание"]} />
+          <title>{name}</title>
+          <meta name="description" content={description} />
         </Head>
-        <div>
-          <div className="w-full pb-full relative block">
-            <Image
-              src={`/images/${p["фото"]}`}
-              layout="fill"
-              objectFit="cover"
-              alt=""
-            />
-          </div>
+        <div className="w-full pb-full relative block">
+          <Image priority src={image} layout="fill" objectFit="cover" alt="" />
         </div>
         <div>
-          <h1 className="text-xl font-semibold py-2">{p["название"]}</h1>
-          <span className="text-3xl font-bold block my-4">{p["цена"]} ₽</span>
-          {productsInCart ? (
-            <Button onClick={activate} active={active} />
+          <h1 className="text-3xl font-bold pb-4">{name}</h1>
+          <span className="text-3xl block mb-6">{price} ₽</span>
+          {mount && !cart.includes(slugify(name).toLowerCase()) ? (
+            <button
+              onClick={addToCart}
+              className="text-lg py-2 px-4 bg-blue-500 rounded-xl w-full border border-blue-500"
+            >
+              Добавить в корзину
+            </button>
           ) : (
-            <Button skeleton />
+            <Link href="/cart">
+              <a>
+                <button className="text-lg py-2 px-4 border-blue-500 border text-blue-500 rounded-xl w-full">
+                  Перейти в корзину
+                </button>
+              </a>
+            </Link>
           )}
-          <p className="text-xl pt-4">Описание</p>
-          <span>{p["описание"]}</span>
+          <p className="text-xl pt-6 pb-4 font-bold">Описание</p>
+          <span>{description}</span>
         </div>
       </div>
     </Content>
@@ -95,15 +70,9 @@ export default function Product({ product }) {
 }
 
 export async function getStaticProps({ params }) {
-  const products = fs
-    .readdirSync(path.join(process.cwd(), "товары"))
-    .map((filename) =>
-      parse(
-        fs.readFileSync(path.join(process.cwd(), "товары", filename), "utf8")
-      )
-    );
-
-  const product = products.find((p) => slugify(p["название"]) === params.slug);
+  const product = data.products.find(
+    ({ name }) => slugify(name).toLowerCase() === params.slug
+  );
 
   if (!product) {
     return { notFound: true };
@@ -113,20 +82,9 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const products = fs
-    .readdirSync(path.join(process.cwd(), "товары"))
-    .map((filename) =>
-      parse(
-        fs.readFileSync(path.join(process.cwd(), "товары", filename), "utf8")
-      )
-    );
-
-  const paths = products.map((p) => ({
-    params: { slug: slugify(p["название"]) },
+  const paths = data.products.map(({ name }) => ({
+    params: { slug: slugify(name).toLowerCase() },
   }));
 
-  return {
-    paths,
-    fallback: true,
-  };
+  return { paths, fallback: true };
 }

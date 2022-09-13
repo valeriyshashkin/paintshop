@@ -7,22 +7,24 @@ import data from "../data";
 
 export default function Home() {
   return (
-    <Content>
+    <>
       <Head>
         <title>Каталог красок</title>
       </Head>
       <Header />
-      <div className="divide-y divide-gray-500">
-        {data.products.map(({ image, name, price }, i) => (
+      <Content>
+        <div className="divide-y divide-gray-500">
+          {data.products.map(({ image, name, price }, i) => (
             <Card
-              src={image}
-              title={name}
+              image={image}
+              name={name}
               price={price}
               key={i}
               href={`/product/${slugify(name).toLowerCase()}`}
             />
-        ))}
-      </div>
-    </Content>
+          ))}
+        </div>
+      </Content>
+    </>
   );
 }

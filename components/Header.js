@@ -4,10 +4,10 @@ import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { useEffect, useState } from "react";
 
-const productsInCartAtom = atomWithStorage("productsInCart", []);
+const cartAtom = atomWithStorage("cart", []);
 
 export default function Header() {
-  const [productsInCart] = useAtom(productsInCartAtom);
+  const [cart] = useAtom(cartAtom);
   const [mount, setMount] = useState(false);
 
   useEffect(() => {
@@ -15,31 +15,33 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="flex justify-between items-center pb-4">
-      <Link href="/">
-        <a>
-          <h1 className="text-2xl font-bold">Краски</h1>
-        </a>
-      </Link>
-      {mount && productsInCart.length > 0 ? (
-        <div className="indicator">
-          <span className="indicator-item badge badge-sm badge-primary">
-            {productsInCart.length}
-          </span>
-
+    <div className="mx-auto max-w-screen-lg w-full px-4">
+      <header className="mx-auto flex items-center justify-between bg-[#121212] w-full max-w-screen-lg z-10 fixed justify-between items-center h-16">
+        <Link href="/">
+          <a>
+            <h1 className="text-3xl font-bold">Краски</h1>
+          </a>
+        </Link>
+        {mount && cart.length > 0 ? (
+          <Link href="/cart">
+            <a>
+              <div className="relative">
+                <span className="absolute -top-1 -right-1 bg-blue-500 w-5 h-5 text-sm flex justify-center items-center rounded-full">
+                  {cart.length}
+                </span>
+                <ShoppingBagIcon className="w-6 h-6" />
+              </div>
+            </a>
+          </Link>
+        ) : (
           <Link href="/cart">
             <a>
               <ShoppingBagIcon className="w-6 h-6" />
             </a>
           </Link>
-        </div>
-      ) : (
-        <Link href="/cart">
-          <a>
-            <ShoppingBagIcon className="w-6 h-6" />
-          </a>
-        </Link>
-      )}
-    </header>
+        )}
+      </header>
+      <div className="h-16"></div>
+    </div>
   );
 }
