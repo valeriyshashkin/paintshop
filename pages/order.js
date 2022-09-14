@@ -7,6 +7,7 @@ import { atomWithStorage } from "jotai/utils";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import total from "../utils/total";
 
 const cartAtom = atomWithStorage("cart", []);
 
@@ -44,6 +45,7 @@ export default function Order() {
                 </div>
               );
             })}
+            <div>Итого: {total(cart)} ₽</div>
             <Link href="/cart">
               <a className="inline-block mt-8 bg-blue-500 text-lg py-2 px-4 rounded-xl">
                 Вернуться в корзину

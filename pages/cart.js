@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import data from "../data";
+import total from "../utils/total";
 import slugify from "slugify";
 
 const cartAtom = atomWithStorage("cart", []);
@@ -19,15 +20,7 @@ export default function Cart() {
 
   useEffect(() => {
     if (cart.length !== 0) {
-      const total = 0;
-
-      cart.map((c) => {
-        total +=
-          data.products.find((p) => c.name === slugify(p.name).toLowerCase())
-            .price * c.amount;
-      });
-
-      setTotalPrice(total);
+      setTotalPrice(total(cart));
     }
   }, [cart]);
 
