@@ -75,7 +75,7 @@ export default function Cart() {
                       (p) => name === slugify(p.name).toLowerCase()
                     ).price
                   }
-                  cart
+                  forCart
                 />
               ))}
             </div>
