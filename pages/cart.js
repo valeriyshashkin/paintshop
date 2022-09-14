@@ -19,8 +19,6 @@ export default function Cart() {
 
   useEffect(() => {
     if (cart.length !== 0) {
-      console.log(cart);
-
       const total = 0;
 
       cart.map((c) => {
