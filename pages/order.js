@@ -27,13 +27,14 @@ export default function Order() {
       <Header />
       <Content>
         {mount && (
-          <div className="text-center text-xl mt-48">
+          <div className="md:text-xl mt-8 md:mt-32">
             <div className="mb-4">
               Скопируйте ваш заказ ниже и отправьте его на{" "}
               <a className="text-blue-500" href={`mailto:${data.email}`}>
                 {data.email}
               </a>
             </div>
+            <div className="border-b border-gray-500 mb-3"></div>
             {cart.map((c, i) => {
               const { price, name } = data.products.find(
                 (p) => slugify(p.name).toLowerCase() === c.name

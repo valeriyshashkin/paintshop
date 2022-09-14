@@ -14,7 +14,7 @@ import slugify from "slugify";
 const cartAtom = atomWithStorage("cart", []);
 
 export default function Cart() {
-  const [cart, setCart] = useAtom(cartAtom);
+  const [cart] = useAtom(cartAtom);
   const [totalPrice, setTotalPrice] = useState(0);
   const [mount, setMount] = useState(false);
 

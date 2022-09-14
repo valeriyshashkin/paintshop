@@ -49,13 +49,13 @@ export default function Card({ name, price, image, forCart }) {
       <Link href={`/product/${slugify(name).toLowerCase()}`}>
         <a className="block">
           <div className="py-2 flex items-center">
-            <div className="max-w-[100px] md:max-w-[200px] w-full">
+            <div className="max-w-[100px] md:max-w-[200px] min-w-[100px] md:min-w-[200px] w-full">
               <div className="w-full pb-full relative block">
                 <Image src={image} layout="fill" objectFit="cover" alt="" />
               </div>
             </div>
-            <div className="px-5">
-              <h5 className="text-2xl pb-2 font-semibold tracking-tight">
+            <div className="px-5 pb-2">
+              <h5 className="text-lg md:text-2xl font-semibold tracking-tight line-clamp-2">
                 {name}
               </h5>
               <div className="flex justify-between items-center">
@@ -66,10 +66,10 @@ export default function Card({ name, price, image, forCart }) {
         </a>
       </Link>
       {forCart && mount && (
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center ml-auto">
+        <div className="absolute right-0 bottom-0 pb-2 md:pb-0 md:top-1/2 md:-translate-y-1/2 flex items-center ml-auto">
           <button
             onClick={minus}
-            className="border-blue-500 border text-blue-500 w-10 h-10 text-lg rounded-xl"
+            className="border-blue-500 border text-blue-500 w-6 h-6 flex items-center justify-center md:w-10 md:h-10 text-lg rounded-xl"
           >
             -
           </button>
@@ -78,7 +78,7 @@ export default function Card({ name, price, image, forCart }) {
           </div>
           <button
             onClick={plus}
-            className="border-blue-500 border text-blue-500 w-10 h-10 text-lg rounded-xl"
+            className="border-blue-500 border text-blue-500 w-6 h-6 flex items-center justify-center md:w-10 md:h-10 text-lg rounded-xl"
           >
             +
           </button>
