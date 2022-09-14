@@ -2,7 +2,6 @@ import Card from "../components/Card";
 import Header from "../components/Header";
 import Content from "../components/Content";
 import Head from "next/head";
-import slugify from "slugify";
 import data from "../data";
 
 export default function Home() {
@@ -20,7 +19,6 @@ export default function Home() {
               name={name}
               price={price}
               key={i}
-              href={`/product/${slugify(name).toLowerCase()}`}
             />
           ))}
         </div>

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import slugify from "slugify";
 
-export default function Card({ name, price, href, image }) {
+export default function Card({ name, price, image }) {
   return (
     <div>
-      <Link href={href}>
+      <Link href={`/product/${slugify(name).toLowerCase()}`}>
         <a>
           <div className="py-2 flex items-center">
             <div className="max-w-[100px] md:max-w-[200px] w-full">

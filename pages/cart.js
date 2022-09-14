@@ -5,65 +5,37 @@ import Head from "next/head";
 import { useState } from "react";
 import Link from "next/link";
 import { useEffect } from "react";
-import slugify from "slugify";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import data from "../data";
+import slugify from "slugify";
 
-const productsInCartAtom = atomWithStorage("productsInCart", []);
+const cartAtom = atomWithStorage("cart", []);
 
 export default function Cart() {
-  const [productsInCart] = useAtom(productsInCartAtom);
-
-  const [products, setProducts] = useState([]);
+  const [cart, setCart] = useAtom(cartAtom);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [forceUpdateToggler, setForceUpdateToggler] = useState(false);
-  const [textarea, setTextarea] = useState("");
-
-  const [modal, setModal] = useState(false);
-
-  function updateTextarea() {
-    const counts = JSON.parse(localStorage.getItem("counts"));
-
-    const result = productsInCart
-      .map(
-        (c) =>
-          `${c.content.split("+")[0]} - ${c.content.split("+")[1]} ₽ x ${
-            counts.find((count) => count.publicId === c.id).count
-          }`
-      )
-      .join("\n");
-
-    setTextarea(`${result}\nИтого: ${totalPrice} ₽`);
-  }
-
-  function rerender() {
-    setForceUpdateToggler((v) => !v);
-  }
+  const [mount, setMount] = useState(false);
 
   useEffect(() => {
-    if (productsInCart) {
-      const counts = JSON.parse(localStorage.getItem("counts"));
-      setTotalPrice(
-        productsInCart.reduce(
-          (a, b) =>
-            a +
-            Number(b.content.split("+")[1]) *
-              counts.find((c) => c.publicId === b.id).count,
-          0
-        )
-      );
-      setProducts(productsInCart);
+    if (cart.length !== 0) {
+      console.log(cart);
+
+      const total = 0;
+
+      cart.map((c) => {
+        total +=
+          data.products.find((p) => c.name === slugify(p.name).toLowerCase())
+            .price * c.amount;
+      });
+
+      setTotalPrice(total);
     }
-  }, [productsInCart, forceUpdateToggler]);
+  }, [cart]);
 
-  function showModal() {
-    setModal(true);
-  }
-
-  function hideModal() {
-    setModal(false);
-  }
+  useEffect(() => {
+    setMount(true);
+  }, []);
 
   return (
     <>
@@ -73,61 +45,51 @@ export default function Cart() {
           <title>Корзина</title>
         </Head>
         <div>
-          <div className="fixed bottom-0 left-0 right-0 z-10 text-3xl">
+          <div className="fixed bg-[#121212] bottom-0 left-0 right-0 z-10 text-3xl">
             <div className="max-w-screen-lg mx-auto p-4 flex items-center justify-between">
               <span className="font-bold">{totalPrice} ₽</span>
-              <button
-                onClick={showModal}
-                className="bg-blue-500 px-4 py-2 rounded-xl text-lg"
-              >
-                Заказать
-              </button>
+              <Link href="/order">
+                <a className="bg-blue-500 px-4 py-2 rounded-xl text-lg">
+                  Заказать
+                </a>
+              </Link>
             </div>
           </div>
         </div>
-        {modal && (
-          <div className="absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-neutral-800 p-4 m-auto w-1/2 h-1/2">
-            Чтобы заказать выбранные товары, скопируйте список товаров ниже и
-            отправьте его на{" "}
-            <a className="link link-primary" href={`mailto:${data.email}`}>
-              {data.email}
-            </a>
-            {/* <textarea
-            value={textarea}
-            readOnly
-            className="textarea textarea-bordered w-full mb-4 h-32"
-          ></textarea> */}
-            <button
-              onClick={hideModal}
-              className="bg-blue-500 py-2 rounded-xl text-lg w-full"
-            >
-              Закрыть
-            </button>
-          </div>
-        )}
-        {products.length === 0 && (
-          <div className="text-center mt-48 text-xl">
-            Корзина пуста. Добавьте любой товар из{" "}
-            <Link href="/">
-              <a className="text-blue-500">каталога</a>
-            </Link>
-          </div>
-        )}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {products.map(({ content, attachments, id }) => (
-            <Card
-              src={attachments[0].url}
-              key={id}
-              title={content.split("+")[0]}
-              price={content.split("+")[1]}
-              href={`/product/${id}/${slugify(content.split("+")[0])}`}
-              publicId={id}
-              productsInCart={productsInCart}
-              onChange={rerender}
-              cart
-            />
+        {mount &&
+          (cart.length === 0 ? (
+            <div className="text-center mt-48 text-xl">
+              Корзина пуста. Добавьте любой товар из{" "}
+              <Link href="/">
+                <a className="text-blue-500">каталога</a>
+              </Link>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-500">
+              {cart.map(({ name }, i) => (
+                <Card
+                  image={
+                    data.products.find(
+                      (p) => name === slugify(p.name).toLowerCase()
+                    ).image
+                  }
+                  key={i}
+                  name={
+                    data.products.find(
+                      (p) => name === slugify(p.name).toLowerCase()
+                    ).name
+                  }
+                  price={
+                    data.products.find(
+                      (p) => name === slugify(p.name).toLowerCase()
+                    ).price
+                  }
+                  cart
+                />
+              ))}
+            </div>
           ))}
-        </div>
+        <div className="h-16"></div>
       </Content>
     </>
   );
