@@ -2,10 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import slugify from "slugify";
 import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import { useEffect, useState } from "react";
-
-const cartAtom = atomWithStorage("cart", []);
+import cartAtom from "../utils/cart";
 
 export default function Card({ name, price, image, forCart }) {
   const [mount, setMount] = useState(false);

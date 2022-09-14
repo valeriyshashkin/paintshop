@@ -3,13 +3,11 @@ import Content from "../components/Content";
 import Header from "../components/Header";
 import data from "../data";
 import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import total from "../utils/total";
-
-const cartAtom = atomWithStorage("cart", []);
+import cartAtom from "../utils/cart";
 
 export default function Order() {
   const [cart] = useAtom(cartAtom);

@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { ShoppingBagIcon } from "@heroicons/react/outline";
 import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import { useEffect, useState } from "react";
-
-const cartAtom = atomWithStorage("cart", []);
+import cartAtom from "../utils/cart";
 
 export default function Header() {
   const [cart] = useAtom(cartAtom);

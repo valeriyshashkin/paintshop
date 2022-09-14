@@ -6,12 +6,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import data from "../data";
 import total from "../utils/total";
 import slugify from "slugify";
-
-const cartAtom = atomWithStorage("cart", []);
+import cartAtom from "../utils/cart";
 
 export default function Cart() {
   const [cart] = useAtom(cartAtom);

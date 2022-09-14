@@ -6,11 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import data from "../../data";
 import { useEffect, useState } from "react";
-
-const cartAtom = atomWithStorage("cart", []);
+import cartAtom from "../../utils/cart";
 
 export default function Product({
   product: { name, price, description, image },
