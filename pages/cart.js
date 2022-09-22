@@ -17,9 +17,7 @@ export default function Cart() {
   const [mount, setMount] = useState(false);
 
   useEffect(() => {
-    if (cart.length !== 0) {
-      setTotalPrice(total(cart));
-    }
+    setTotalPrice(total(cart));
   }, [cart]);
 
   useEffect(() => {

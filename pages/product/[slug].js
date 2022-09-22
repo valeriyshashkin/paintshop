@@ -10,15 +10,16 @@ import data from "../../data";
 import { useEffect, useState } from "react";
 import cartAtom from "../../utils/cart";
 
-export default function Product({
-  product: { name, price, description, image },
-}) {
+export default function Product({ product }) {
   const [cart, setCart] = useAtom(cartAtom);
   const [mount, setMount] = useState(false);
   const router = useRouter();
 
   function addToCart() {
-    setCart([...cart, { name: slugify(name).toLowerCase(), amount: 1 }]);
+    setCart([
+      ...cart,
+      { name: slugify(product.name).toLowerCase(), amount: 1 },
+    ]);
   }
 
   useEffect(() => {
@@ -35,23 +36,25 @@ export default function Product({
       <Content>
         <div className="grid sm:grid-cols-2 gap-8">
           <Head>
-            <title>{name}</title>
-            <meta name="description" content={description} />
+            <title>{product.name}</title>
+            <meta name="description" content={product.description} />
           </Head>
           <div className="w-full pb-full relative block">
             <Image
               priority
-              src={image}
+              src={product.image}
               layout="fill"
               objectFit="cover"
               alt=""
             />
           </div>
           <div>
-            <h1 className="text-3xl font-bold pb-4">{name}</h1>
-            <span className="text-3xl block mb-6">{price} ₽</span>
+            <h1 className="text-3xl font-bold pb-4">{product.name}</h1>
+            <span className="text-3xl block mb-6">{product.price} ₽</span>
             {mount &&
-            !cart.find((p) => p.name === slugify(name).toLowerCase()) ? (
+            !cart.find(
+              (p) => p.name === slugify(product.name).toLowerCase()
+            ) ? (
               <button
                 onClick={addToCart}
                 className="text-lg py-2 px-4 bg-blue-500 rounded-xl w-full border border-blue-500"
@@ -68,7 +71,7 @@ export default function Product({
               </Link>
             )}
             <p className="text-xl pt-6 pb-4 font-bold">Описание</p>
-            <span>{description}</span>
+            <span>{product.description}</span>
           </div>
         </div>
       </Content>
@@ -89,9 +92,5 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const paths = data.products.map(({ name }) => ({
-    params: { slug: slugify(name).toLowerCase() },
-  }));
-
-  return { paths, fallback: true };
+  return { paths: [], fallback: true };
 }
