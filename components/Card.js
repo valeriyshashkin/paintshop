@@ -5,7 +5,14 @@ import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import cartAtom from "../utils/cart";
 
-export default function Card({ name, price, image, forCart }) {
+export default function Card({
+  name,
+  price,
+  image,
+  forCart,
+  showCart,
+  amount,
+}) {
   const [mount, setMount] = useState(false);
   const [cart, setCart] = useAtom(cartAtom);
 
@@ -59,6 +66,11 @@ export default function Card({ name, price, image, forCart }) {
               <div className="flex justify-between items-center">
                 <span className="text-xl md:text-3xl font-bold">{price} ₽</span>
               </div>
+              {showCart && mount && (
+                <div className="text-2xl font-bold md:text-3xl">
+                  {amount} шт.
+                </div>
+              )}
             </div>
           </div>
         </a>

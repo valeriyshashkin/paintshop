@@ -1,4 +1,3 @@
-import slugify from "slugify";
 import Content from "../components/Content";
 import Header from "../components/Header";
 import data from "../data";
@@ -6,8 +5,11 @@ import { useAtom } from "jotai";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import total from "../utils/total";
 import cartAtom from "../utils/cart";
+import { DocumentDuplicateIcon } from "@heroicons/react/outline";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Order() {
   const [cart] = useAtom(cartAtom);
@@ -17,36 +19,48 @@ export default function Order() {
     setMount(true);
   }, []);
 
+  function copy() {
+    navigator.clipboard.writeText(
+      `https://paintshop.ru/show?cart=${JSON.stringify(cart)}`
+    );
+    toast("Ссылка скопирована", {
+      hideProgressBar: true,
+      position: "bottom-right",
+      autoClose: 3000
+    });
+  }
+
   return (
     <>
       <Head>
         <title>Заказ</title>
       </Head>
+      <ToastContainer />
       <Header />
       <Content>
         {mount && (
-          <div className="md:text-xl mt-8 md:mt-32">
+          <div className="md:text-xl mt-8 md:mt-32 text-center">
             <div className="mb-4">
-              Скопируйте ваш заказ ниже и отправьте его на{" "}
+              Скопируйте ссылку ниже и отправьте её на{" "}
               <a className="text-blue-500" href={`mailto:${data.email}`}>
                 {data.email}
               </a>
             </div>
-            <div className="border-b border-gray-500 mb-3"></div>
-            {cart.map((c, i) => {
-              const { price, name } = data.products.find(
-                (p) => slugify(p.name).toLowerCase() === c.name
-              );
-
-              return (
-                <div key={i}>
-                  {name} ({c.amount} шт.) = {price * c.amount} ₽
-                </div>
-              );
-            })}
-            <div>Итого: {total(cart)} ₽</div>
+            <div className="relative max-w-screen-sm mx-auto">
+              <input
+                className="block rounded-xl px-3 py-2 w-full pr-12"
+                readOnly
+                value={`https://paintshop.ru/show?cart=${JSON.stringify(cart)}`}
+              />
+              <button
+                onClick={copy}
+                className="absolute right-0 top-1/2 -translate-y-1/2 p-1 mr-2 bg-neutral-800 rounded-xl"
+              >
+                <DocumentDuplicateIcon className="w-6" />
+              </button>
+            </div>
             <Link href="/cart">
-              <a className="inline-block mt-8 bg-blue-500 text-lg py-2 px-4 rounded-xl">
+              <a className="inline-block mt-6 bg-blue-500 text-lg py-2 px-4 rounded-xl">
                 Вернуться в корзину
               </a>
             </Link>
