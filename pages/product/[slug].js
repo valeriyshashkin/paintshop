@@ -52,9 +52,9 @@ export default function Product({ product }) {
             <h1 className="text-3xl font-bold pb-4">{product.name}</h1>
             <span className="text-3xl block mb-6">{product.price} ₽</span>
             {mount &&
-            !cart.find(
-              (p) => p.name === slugify(product.name).toLowerCase()
-            ) ? (
+              !cart.find(
+                (p) => p.name === slugify(product.name).toLowerCase()
+              ) ? (
               <button
                 onClick={addToCart}
                 className="text-lg py-2 px-4 bg-blue-500 rounded-xl w-full border border-blue-500"
@@ -72,6 +72,24 @@ export default function Product({ product }) {
             )}
             <p className="text-xl pt-6 pb-4 font-bold">Описание</p>
             <span>{product.description}</span>
+            <div className="mt-6">
+              <h2 className="text-xl font-bold pb-2">Характеристики</h2>
+              <ul>
+                {Object.entries(product.technicalSpecifications).map(([category, specs], index) => (
+                  <div key={index}>
+                    <h3 className="font-semibold">{category}</h3>
+                    <ul>
+                      {Object.entries(specs).map(([label, value], idx) => (
+                        <li key={idx} className="mb-2">
+                          <span className="font-semibold">{label}: </span>
+                          <span>{value}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </Content>
