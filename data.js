@@ -90,6 +90,20 @@ const data = {
       image: "/6.jpg",
     },
   ],
+  labels: {
+    nonVolatileSubstances: "Нелетучие вещества",
+    density: "Плотность",
+    viscosity: "Вязкость",
+    theoreticalConsumption: "Теоретическое потребление",
+    dryingTime: "Время высыхания",
+    dryLayerThickness: "Толщина сухого слоя",
+    colorAndAppearance: "Цвет и внешний вид",
+    adhesion: "Адгезия",
+    impactStrength: "Ударная прочность",
+    flexibility: "Гибкость",
+    primerPaint: "Основной лак",
+    coating: "Покрытие",
+  }
 };
 
 export default data;

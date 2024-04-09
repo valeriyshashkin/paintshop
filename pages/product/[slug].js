@@ -9,6 +9,7 @@ import { useAtom } from "jotai";
 import data from "../../data";
 import { useEffect, useState } from "react";
 import cartAtom from "../../utils/cart";
+import React from "react";
 
 export default function Product({ product }) {
   const [cart, setCart] = useAtom(cartAtom);
@@ -39,14 +40,16 @@ export default function Product({ product }) {
             <title>{product.name}</title>
             <meta name="description" content={product.description} />
           </Head>
-          <div className="w-full pb-full relative block">
-            <Image
-              priority
-              src={product.image}
-              layout="fill"
-              objectFit="cover"
-              alt=""
-            />
+          <div>
+            <div className="w-full pb-full relative block">
+              <Image
+                priority
+                src={product.image}
+                layout="fill"
+                objectFit="cover"
+                alt=""
+              />
+            </div>
           </div>
           <div>
             <h1 className="text-3xl font-bold pb-4">{product.name}</h1>
@@ -73,22 +76,26 @@ export default function Product({ product }) {
             <p className="text-xl pt-6 pb-4 font-bold">Описание</p>
             <span>{product.description}</span>
             <div className="mt-6">
-              <h2 className="text-xl font-bold pb-2">Характеристики</h2>
-              <ul>
-                {Object.entries(product.technicalSpecifications).map(([category, specs], index) => (
-                  <div key={index}>
-                    <h3 className="font-semibold">{category}</h3>
-                    <ul>
+              <h2 className="text-xl font-bold pb-6">Характеристики</h2>
+              <table className="w-full border-collapse table-auto">
+                <tbody>
+                  {Object.entries(product.technicalSpecifications).map(([category, specs], index) => (
+                    <React.Fragment key={index}>
+                      <tr>
+                        <td className="border px-4 py-2 font-semibold text-center" colSpan={3}>
+                          {data.labels[category]}
+                        </td>
+                      </tr>
                       {Object.entries(specs).map(([label, value], idx) => (
-                        <li key={idx} className="mb-2">
-                          <span className="font-semibold">{label}: </span>
-                          <span>{value}</span>
-                        </li>
+                        <tr key={idx}>
+                          <td className={`${idx % 2 === 0 ? "bg-neutral-800 " : ""}border px-4 py-2 font-semibold`}>{data.labels[label]}</td>
+                          <td className={`${idx % 2 === 0 ? "bg-neutral-800 " : ""}border px-4 py-2`}>{value}</td>
+                        </tr>
                       ))}
-                    </ul>
-                  </div>
-                ))}
-              </ul>
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
