@@ -67,7 +67,7 @@ export default function Product({ product }) {
             ) : (
               <Link href="/cart">
                 <a>
-                  <button className="text-lg py-2 px-4 border-blue-500 border text-blue-500 rounded-xl w-full">
+                  <button className="text-lg py-2 px-4 border-blue-500 border text-blue-500 rounded-xl w-full hover:bg-blue-500 hover:text-white transition">
                     Перейти в корзину
                   </button>
                 </a>

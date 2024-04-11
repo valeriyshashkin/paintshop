@@ -13,11 +13,11 @@ export default function Home() {
       <Header />
       <Content>
         <div className="divide-y divide-gray-500">
-          {data.products.map(({ image, name, price }, i) => (
+          {data.products.map(({ image, name, description }, i) => (
             <Card
               image={image}
               name={name}
-              price={price}
+              description={description}
               key={i}
             />
           ))}

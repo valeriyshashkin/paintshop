@@ -7,7 +7,7 @@ import cartAtom from "../utils/cart";
 
 export default function Card({
   name,
-  price,
+  description,
   image,
   forCart,
   showCart,
@@ -50,7 +50,7 @@ export default function Card({
   }
 
   return (
-    <div className="relative">
+    <div className="relative md:hover:bg-neutral-800 transition">
       <Link href={`/product/${slugify(name).toLowerCase()}`}>
         <a className="block">
           <div className="py-2 flex items-center">
@@ -64,7 +64,7 @@ export default function Card({
                 {name}
               </h5>
               <div className="flex justify-between items-center">
-                <span className="text-xl md:text-3xl font-bold">{price} ₽</span>
+                <span className="text-sm md:text-xl mt-4">{description}</span>
               </div>
               {showCart && mount && (
                 <div className="text-2xl font-bold md:text-3xl">
