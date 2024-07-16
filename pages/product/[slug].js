@@ -10,8 +10,10 @@ import data from "../../data";
 import { useEffect, useState } from "react";
 import cartAtom from "../../utils/cart";
 import React from "react";
+import { promises as fs } from 'fs'
+import path from 'path'
 
-export default function Product({ product }) {
+export default function Product({ product, productInfo }) {
   const [cart, setCart] = useAtom(cartAtom);
   const [mount, setMount] = useState(false);
   const router = useRouter();
@@ -40,7 +42,7 @@ export default function Product({ product }) {
             <title>{product.name}</title>
             <meta name="description" content={product.description} />
           </Head>
-          <div>
+          <div className="sm:sticky top-[64px] self-start">
             <div className="w-full pb-full relative block">
               <Image
                 priority
@@ -53,7 +55,6 @@ export default function Product({ product }) {
           </div>
           <div>
             <h1 className="text-3xl font-bold pb-4">{product.name}</h1>
-            <span className="text-3xl block mb-6">{product.price} ₽</span>
             {mount &&
               !cart.find(
                 (p) => p.name === slugify(product.name).toLowerCase()
@@ -73,29 +74,9 @@ export default function Product({ product }) {
                 </a>
               </Link>
             )}
-            <p className="text-xl pt-6 pb-4 font-bold">Описание</p>
-            <span>{product.description}</span>
             <div className="mt-6">
-              <h2 className="text-xl font-bold pb-6">Характеристики</h2>
-              <table className="w-full border-collapse table-auto">
-                <tbody>
-                  {Object.entries(product.technicalSpecifications).map(([category, specs], index) => (
-                    <React.Fragment key={index}>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold text-center" colSpan={3}>
-                          {data.labels[category]}
-                        </td>
-                      </tr>
-                      {Object.entries(specs).map(([label, value], idx) => (
-                        <tr key={idx}>
-                          <td className={`${idx % 2 === 0 ? "bg-neutral-800 " : ""}border px-4 py-2 font-semibold`}>{data.labels[label]}</td>
-                          <td className={`${idx % 2 === 0 ? "bg-neutral-800 " : ""}border px-4 py-2`}>{value}</td>
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </tbody>
-              </table>
+              <p className="text-3xl pb-2 font-bold">Полное название</p>
+              <div className="prose prose-a:text-blue-500 prose-invert prose-xl" style={{ all: "unset" }} dangerouslySetInnerHTML={{ __html: productInfo }}></div>
             </div>
           </div>
         </div>
@@ -113,7 +94,15 @@ export async function getStaticProps({ params }) {
     return { notFound: true };
   }
 
-  return { props: { product } };
+  const productInfo = await fs.readFile(path.join(path.join(process.cwd(), 'productInfo'), product.info), 'utf8');
+
+  let cleanedHtml = productInfo.replace(/<style.*?>.*?<\/style>/gs, '');
+  cleanedHtml = cleanedHtml.replace(/<([a-z]+) class="c9">(.*?)<\/\1>/gs, '<h2>$2</h2>');
+  cleanedHtml = cleanedHtml.replace(/&nbsp;/g, '');
+  cleanedHtml = cleanedHtml.replace(/<h2>(.*?)<\/h2>\s*<span class="c4"><\/span>\s*<h2>(.*?)<\/h2>/gs, '<h2>$1 $2</h2>');
+  cleanedHtml = cleanedHtml.replace(/<p class="c20">.*?<\/p>/g, '', 5);
+
+  return { props: { product, productInfo: cleanedHtml } };
 }
 
 export async function getStaticPaths() {

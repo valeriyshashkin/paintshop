@@ -17,7 +17,7 @@ export default function Header() {
       <header className="p-4 pt-3 flex items-center justify-between bg-[#121212] w-full max-w-screen-lg z-10 fixed justify-between items-center">
         <Link href="/">
           <a>
-            <h1 className="text-3xl font-bold">Краски</h1>
+            <h1 className="text-3xl font-bold">ПромТехКраски</h1>
           </a>
         </Link>
         {mount && cart.length > 0 ? (

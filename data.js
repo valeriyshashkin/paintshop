@@ -2,6 +2,7 @@ const data = {
   email: "example@example.com",
   products: [
     {
+      info: "/1.html",
       image: "/7.jpeg",
       name: "TiOTon АЛ-12",
       specification: "ТУ 20.30.12-003-05436512-2017",
