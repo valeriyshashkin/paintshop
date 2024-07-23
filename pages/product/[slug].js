@@ -13,7 +13,7 @@ import React from "react";
 import { promises as fs } from 'fs'
 import path from 'path'
 
-export default function Product({ product, productInfo }) {
+export default function Product({ product, productMeta, productInfo }) {
   const [cart, setCart] = useAtom(cartAtom);
   const [mount, setMount] = useState(false);
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function Product({ product, productInfo }) {
         <div className="grid sm:grid-cols-2 gap-8">
           <Head>
             <title>{product.name}</title>
-            <meta name="description" content={product.description} />
+            <meta name="description" content={productMeta.description} />
           </Head>
           <div className="sm:sticky top-[64px] self-start">
             <div className="w-full pb-full relative block">
@@ -95,11 +95,23 @@ export async function getStaticProps({ params }) {
     return { notFound: true };
   }
 
-  const productInfo = await fs.readFile(path.join(path.join(process.cwd(), 'productInfo'), product.info), 'utf8');
+  const htmlString = await fs.readFile(path.join(path.join(process.cwd(), 'productInfo'), product.info), 'utf8');
 
-  let cleanedHtml = productInfo.replace(/<style.*?>.*?<\/style>/gs, '');
+  const description_regex = /<span class="description">(.*?)<\/span>/;
+  const match = htmlString.match(description_regex);
 
-  return { props: { product, productInfo: cleanedHtml } };
+  let description = '';
+  if (match && match[1]) {
+    description = match[1];
+  }
+
+  const productMeta = {
+    description
+  };
+
+  console.log(productMeta);
+
+  return { props: { product, productMeta, productInfo: htmlString } };
 }
 
 export async function getStaticPaths() {
