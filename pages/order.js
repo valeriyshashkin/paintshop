@@ -14,14 +14,16 @@ import "react-toastify/dist/ReactToastify.css";
 export default function Order() {
   const [cart] = useAtom(cartAtom);
   const [mount, setMount] = useState(false);
+  const [domain, setDomain] = useState("");
 
   useEffect(() => {
     setMount(true);
+    setDomain(window.location.hostname);
   }, []);
 
   function copy() {
     navigator.clipboard.writeText(
-      `https://paintshop.ru/show?cart=${JSON.stringify(cart)}`
+      `https://${domain}/show?cart=${JSON.stringify(cart)}`
     );
     toast("Ссылка скопирована", {
       hideProgressBar: true,
@@ -50,7 +52,7 @@ export default function Order() {
               <input
                 className="block rounded-xl px-3 py-2 w-full pr-12"
                 readOnly
-                value={`https://paintshop.ru/show?cart=${JSON.stringify(cart)}`}
+                value={`https://${domain}/show?cart=${JSON.stringify(cart)}`}
               />
               <button
                 onClick={copy}
