@@ -12,7 +12,7 @@ export default function Home() {
       </Head>
       <Header />
       <Content>
-        <div className="divide-y divide-gray-500">
+        <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-0">
           {data.products.map(({ image, name, description }, i) => (
             <Card
               image={image}

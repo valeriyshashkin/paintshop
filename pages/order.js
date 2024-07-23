@@ -60,7 +60,7 @@ export default function Order() {
               </button>
             </div>
             <Link href="/cart">
-              <a className="inline-block mt-6 bg-blue-500 text-lg py-2 px-4 rounded-xl">
+              <a className="border border-blue-500 transition sm:hover:bg-transparent sm:hover:text-blue-500 inline-block mt-6 bg-blue-500 text-lg py-2 px-4 rounded-xl">
                 Вернуться в корзину
               </a>
             </Link>

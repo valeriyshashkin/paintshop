@@ -50,10 +50,11 @@ export default function Product({ product, productInfo }) {
                 layout="fill"
                 objectFit="cover"
                 alt=""
+                className="rounded-xl"
               />
             </div>
           </div>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-3xl font-bold pb-4">{product.name}</h1>
             {mount &&
               !cart.find(
@@ -61,22 +62,22 @@ export default function Product({ product, productInfo }) {
               ) ? (
               <button
                 onClick={addToCart}
-                className="text-lg py-2 px-4 bg-blue-500 rounded-xl w-full border border-blue-500"
+                className="sm:hover:bg-transparent sm:hover:text-blue-500 border border-blue-500 transition text-lg py-2 px-4 bg-blue-500 rounded-xl w-full border border-blue-500"
               >
                 Добавить в корзину
               </button>
             ) : (
               <Link href="/cart">
                 <a>
-                  <button className="text-lg py-2 px-4 border-blue-500 border text-blue-500 rounded-xl w-full hover:bg-blue-500 hover:text-white transition">
+                  <button className="text-lg py-2 px-4 border-blue-500 border text-blue-500 rounded-xl w-full sm:hover:bg-blue-500 sm:hover:text-white transition">
                     Перейти в корзину
                   </button>
                 </a>
               </Link>
             )}
             <div className="mt-6">
-              <p className="text-3xl pb-2 font-bold">Полное название</p>
-              <div className="prose prose-a:text-blue-500 prose-invert prose-xl" style={{ all: "unset" }} dangerouslySetInnerHTML={{ __html: productInfo }}></div>
+              <p className="text-3xl pt-4 font-bold">Полное название</p>
+              <div className="prose prose-invert prose-xl" style={{ all: "unset" }} dangerouslySetInnerHTML={{ __html: productInfo }}></div>
             </div>
           </div>
         </div>
@@ -97,10 +98,6 @@ export async function getStaticProps({ params }) {
   const productInfo = await fs.readFile(path.join(path.join(process.cwd(), 'productInfo'), product.info), 'utf8');
 
   let cleanedHtml = productInfo.replace(/<style.*?>.*?<\/style>/gs, '');
-  cleanedHtml = cleanedHtml.replace(/<([a-z]+) class="c9">(.*?)<\/\1>/gs, '<h2>$2</h2>');
-  cleanedHtml = cleanedHtml.replace(/&nbsp;/g, '');
-  cleanedHtml = cleanedHtml.replace(/<h2>(.*?)<\/h2>\s*<span class="c4"><\/span>\s*<h2>(.*?)<\/h2>/gs, '<h2>$1 $2</h2>');
-  cleanedHtml = cleanedHtml.replace(/<p class="c20">.*?<\/p>/g, '', 5);
 
   return { props: { product, productInfo: cleanedHtml } };
 }

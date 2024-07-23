@@ -32,11 +32,11 @@ export default function Cart() {
           <title>Корзина</title>
         </Head>
         <div>
-          <div className="fixed bg-[#121212] bottom-0 left-0 right-0 z-10 text-3xl">
+          <div className="fixed bg-black bottom-0 left-0 right-0 z-10 text-3xl">
             <div className="max-w-screen-lg mx-auto p-4 flex items-center justify-between">
-              <span className="font-bold">{totalPrice} ₽</span>
+              {/* <span className="font-bold">{totalPrice} ₽</span> */}
               <Link href="/order">
-                <a className="bg-blue-500 px-4 py-2 rounded-xl text-lg">
+                <a className="sm:hover:bg-transparent sm:hover:text-blue-500 border border-blue-500 transition bg-blue-500 w-full sm:ml-auto sm:w-[140px] text-center py-2 rounded-xl text-lg">
                   Заказать
                 </a>
               </Link>
@@ -52,7 +52,7 @@ export default function Cart() {
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-gray-500">
+            <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-0">
               {cart.map(({ name }, i) => (
                 <Card
                   image={

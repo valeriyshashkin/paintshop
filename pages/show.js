@@ -36,7 +36,7 @@ export default function Cart() {
         <Head>
           <title>Заказ</title>
         </Head>
-        <div>
+        {/* <div>
           <div className="fixed bg-[#121212] bottom-0 left-0 right-0 z-10 text-3xl">
             <div className="max-w-screen-lg mx-auto p-4 flex items-center justify-between">
               <span className="font-bold">{totalPrice} ₽</span>
@@ -45,9 +45,9 @@ export default function Cart() {
               </span>
             </div>
           </div>
-        </div>
+        </div> */}
         {mount && (
-          <div className="divide-y divide-gray-500">
+          <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-0">
             {showCart.map(({ name, amount }, i) => (
               <Card
                 showCart

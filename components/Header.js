@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <div className="flex justify-center">
-      <header className="p-4 pt-3 flex items-center justify-between bg-[#121212] w-full max-w-screen-lg z-10 fixed justify-between items-center">
+      <header className="p-4 pt-3 flex items-center justify-between bg-black w-full max-w-screen-lg z-10 fixed justify-between items-center">
         <Link href="/">
           <a>
             <h1 className="text-3xl font-bold">ПромТехКраски</h1>
@@ -39,7 +39,7 @@ export default function Header() {
           </Link>
         )}
       </header>
-      <div className="h-11"></div>
+      <div className="h-12"></div>
     </div>
   );
 }
