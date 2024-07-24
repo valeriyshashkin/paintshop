@@ -34,7 +34,7 @@ export default function Cart() {
       <Header />
       <Content>
         <Head>
-          <title>Заказ</title>
+          <title>Заказ | ПромТехКраски</title>
         </Head>
         {/* <div>
           <div className="fixed bg-[#121212] bottom-0 left-0 right-0 z-10 text-3xl">

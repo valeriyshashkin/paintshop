@@ -85,10 +85,10 @@ export default function Card({
                     +
                   </button>
                 </div>
-              ) :
-                <button className="text-blue-500 transition sm:hover:text-white sm:hover:bg-blue-500 mt-4 border border-blue-500 py-2 w-full rounded-xl">
-                  Купить
-                </button>
+              ) : !showCart &&
+              <button className="text-blue-500 transition sm:hover:text-white sm:hover:bg-blue-500 mt-4 border border-blue-500 py-2 w-full rounded-xl">
+                Купить
+              </button>
               }
               {showCart && mount && (
                 <div className="text-2xl font-bold md:text-3xl">

@@ -37,11 +37,11 @@ export default function Product({ product, productMeta, productInfo }) {
     <>
       <Header />
       <Content>
+        <Head>
+          <title>{product.name} | ПромТехКраски</title>
+          <meta name="description" content={productMeta.description} />
+        </Head>
         <div className="grid sm:grid-cols-2 gap-8">
-          <Head>
-            <title>{product.name}</title>
-            <meta name="description" content={productMeta.description} />
-          </Head>
           <div className="sm:sticky top-[64px] self-start">
             <div className="w-full pb-full relative block">
               <Image
@@ -76,8 +76,8 @@ export default function Product({ product, productMeta, productInfo }) {
               </Link>
             )}
             <div className="mt-6">
-              <p className="text-3xl pt-4 font-bold">Полное название</p>
-              <div className="prose prose-invert prose-xl" style={{ all: "unset" }} dangerouslySetInnerHTML={{ __html: productInfo }}></div>
+              <p className="text-2xl pt-4 pb-6 font-bold">Полное название</p>
+              <div className="prose prose-invert prose" dangerouslySetInnerHTML={{ __html: productInfo }}></div>
             </div>
           </div>
         </div>
@@ -108,8 +108,6 @@ export async function getStaticProps({ params }) {
   const productMeta = {
     description
   };
-
-  console.log(productMeta);
 
   return { props: { product, productMeta, productInfo: htmlString } };
 }

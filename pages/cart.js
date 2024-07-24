@@ -29,7 +29,7 @@ export default function Cart() {
       <Header />
       <Content>
         <Head>
-          <title>Корзина</title>
+          <title>Корзина | ПромТехКраски</title>
         </Head>
         <div>
           <div className="fixed bg-black bottom-0 left-0 right-0 z-10 text-3xl">

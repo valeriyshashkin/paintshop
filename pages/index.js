@@ -8,7 +8,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Каталог красок</title>
+        <title>ПромТехКраски</title>
+        <meta name="description" content="ПромТехКраски" />
       </Head>
       <Header />
       <Content>

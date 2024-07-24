@@ -35,7 +35,7 @@ export default function Order() {
   return (
     <>
       <Head>
-        <title>Заказ</title>
+        <title>Заказ | ПромТехКраски</title>
       </Head>
       <ToastContainer />
       <Header />

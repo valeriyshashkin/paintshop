@@ -1,5 +1,5 @@
 const data = {
-  email: "example@example.com",
+  email: "kbptk@yandex.ru",
   products: [
     {
       info: "/1.html",
