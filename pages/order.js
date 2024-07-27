@@ -50,7 +50,7 @@ export default function Order() {
             </div>
             <div className="relative max-w-screen-sm mx-auto">
               <input
-                className="block rounded-xl px-3 py-2 w-full pr-12"
+                className="block rounded-xl px-3 py-2 w-full pr-12 bg-neutral-900"
                 readOnly
                 value={`https://${domain}/show?cart=${JSON.stringify(cart)}`}
               />
