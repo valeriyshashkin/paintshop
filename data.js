@@ -3,7 +3,7 @@ const data = {
   products: [
     {
       info: "/1.html",
-      image: "/8.jpeg",
+      image: "/7.jpeg",
       name: "TiOTon АЛ-12",
     },
     {
